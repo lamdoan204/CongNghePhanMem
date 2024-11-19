@@ -14,8 +14,11 @@ public class Account {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name= "id")
-    private int user_id;
+    private int id;
     
+    @Column(name="user_id")
+    private int user_id;
+
     @Column(name= "user_name")
     private String user_name;
 
@@ -62,6 +65,14 @@ public class Account {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
 }
