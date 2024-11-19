@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="Order", schema = "dbo")
+@Table(name="Orders", schema = "dbo")
 public class Order {
 
     @Id
