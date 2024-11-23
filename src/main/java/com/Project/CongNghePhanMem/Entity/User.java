@@ -1,10 +1,14 @@
 	package com.Project.CongNghePhanMem.Entity;
 	
-	import jakarta.persistence.Entity;
+	import java.util.List;
+
+import jakarta.persistence.Entity;
 	import jakarta.persistence.GeneratedValue;
 	import jakarta.persistence.GenerationType;
 	import jakarta.persistence.Id;
-	import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 	import lombok.Data;
 	
 	@Entity
@@ -22,7 +26,27 @@
 		private String password;
 	    private String role;
 	    
-	    public int getUserId() {
+	    @OneToOne(mappedBy = "user")
+	    private Cart cart;
+	    
+	    
+	    @OneToMany(mappedBy = "user")
+	    private List<Order> orders;
+	    
+	    
+	    public Cart getCart() {
+			return cart;
+		}
+		public void setCart(Cart cart) {
+			this.cart = cart;
+		}
+		public List<Order> getOrders() {
+			return orders;
+		}
+		public void setOrders(List<Order> orders) {
+			this.orders = orders;
+		}
+		public int getUserId() {
 			return userId;
 		}
 		public void setUserId(int userId) {

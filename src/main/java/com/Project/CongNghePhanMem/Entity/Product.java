@@ -1,13 +1,24 @@
 package com.Project.CongNghePhanMem.Entity;
 
+import java.io.Serializable;
 import java.util.List;
+
+import org.aspectj.weaver.ast.Or;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "products")
-public class Product {
-    @Id
+public class Product implements Serializable
+
+
+{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6070287017178476598L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productID;
 
@@ -19,7 +30,10 @@ public class Product {
 
     @ManyToMany(mappedBy = "applicableProducts")
     private List<Promotion> promotions;
-
+    
+    @OneToMany(mappedBy = "product")
+    private List<OrderDetail> orderDetails;
+    
 	public int getProductID() {
 		return productID;
 	}
@@ -30,6 +44,16 @@ public class Product {
 
 	public String getName() {
 		return name;
+	}
+
+	
+
+	public List<OrderDetail> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
 	}
 
 	public void setName(String name) {
@@ -91,6 +115,13 @@ public class Product {
 	public Product() {
 		super();
 		
+	}
+
+	@Override
+	public String toString() {
+		return "Product [productID=" + productID + ", name=" + name + ", price=" + price + ", kind=" + kind + ", brand="
+				+ brand + ", description=" + description + ", promotions=" + promotions + ", orderDetails="
+				+ orderDetails + "]";
 	}
     
     

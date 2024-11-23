@@ -2,6 +2,7 @@ package com.Project.CongNghePhanMem.Entity;
 
 import java.sql.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.persistence.*;
@@ -17,19 +18,29 @@ public class Order {
     private Date orderDate;
 
     private float totalPrice;
-
-    @ElementCollection
-    @CollectionTable(name = "order_products", 
-                     joinColumns = @JoinColumn(name = "order_id"))
-    @MapKeyJoinColumn(name = "product_id")
-    @Column(name = "quantity")
-    private Map<Product, Integer> products = new HashMap<>();
-
+    
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> orderDetails;
+    
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User customer;
+    private User user;
+    
+    
+    public Order(int orderID, Date orderDate, float totalPrice, List<OrderDetail> orderDetails, User user) {
+		super();
+		this.orderID = orderID;
+		this.orderDate = orderDate;
+		this.totalPrice = totalPrice;
+		this.orderDetails = orderDetails;
+		this.user = user;
+	}
 
-    public int getOrderID() {
+	public Order() {
+		super();
+	}
+
+	public int getOrderID() {
         return orderID;
     }
 
@@ -53,19 +64,29 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public Map<Product, Integer> getProducts() {
-        return products;
-    }
+	public List<OrderDetail> getOrderDetails() {
+		return orderDetails;
+	}
 
-    public void setProducts(Map<Product, Integer> products) {
-        this.products = products;
-    }
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
 
-    public User getCustomer() {
-        return customer;
-    }
+	public User getUser() {
+		return user;
+	}
 
-    public void setCustomer(User customer) {
-        this.customer = customer;
-    }
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	@Override
+	public String toString() {
+		return "Order [orderID=" + orderID + ", orderDate=" + orderDate + ", totalPrice=" + totalPrice
+				+ ", orderDetails=" + orderDetails + ", user=" + user + "]";
+	}
+
+	
+    
+    
 }
