@@ -37,8 +37,19 @@ public class PageController {
 	
     @GetMapping("/")
     public String Home() {
-        return "/it-next/index" ;
+        return "index" ;
     }
+    
+    @GetMapping("/it_home_dark")
+    public String Home_dark() {
+        return "it_home_dark" ;
+    }
+    
+    @GetMapping("/it_home")
+    public String Home_white() {
+        return "it_home" ;
+    }
+    
     
     @GetMapping("/login")
     public String login() {
