@@ -16,6 +16,8 @@ import com.Project.CongNghePhanMem.Service.IUserService;
 import jakarta.servlet.http.HttpSession;
 
 
+
+
 @Controller
 public class PageController {
 	
@@ -39,7 +41,7 @@ public class PageController {
     public String Home() {
         return "index" ;
     }
-    
+   
     @GetMapping("/it_home_dark")
     public String Home_dark() {
         return "it_home_dark" ;
@@ -89,5 +91,16 @@ public class PageController {
         }
         return "redirect:/register";
     }
+
+    @GetMapping("/manager/home")
+    public String getMethodName() {
+        return "manager/index";
+    }
+    @GetMapping("/manage-employees")
+    public String getMethodEmployeeManagerment() {
+        return "/manager/employeemanagement";
+    }
+    
+    
 
 }
