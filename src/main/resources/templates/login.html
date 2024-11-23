@@ -17,17 +17,17 @@
 						<div class="card-header text-center text-white bg-primary fs-4">
 							<i class="fas fa-user-plus me-2"></i>Login
 						</div>
-						<div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-							Invalid username & password
-							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-						</div>
-						<div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show"
-							role="alert">
-							Logout successfully
-							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-						</div>
-						<!-- Body -->
+
+						<!-- Alert Messages -->
 						<div class="card-body">
+							<div th:if="${param.error}" class="alert alert-danger text-center" role="alert">
+								Invalid username & password
+							</div>
+							<div th:if="${param.logout}" class="alert alert-success text-center" role="alert">
+								Logout successfully
+							</div>
+
+							<!-- Login Form -->
 							<form action="/signin" method="post">
 								<!-- Email -->
 								<div class="mb-3">
@@ -35,7 +35,7 @@
 									<div class="input-group">
 										<span class="input-group-text"><i class="fas fa-envelope"></i></span>
 										<input type="email" id="username" name="username" class="form-control"
-											placeholder="Enter your email">
+											placeholder="Enter your email" required>
 									</div>
 								</div>
 
@@ -45,10 +45,9 @@
 									<div class="input-group">
 										<span class="input-group-text"><i class="fas fa-lock"></i></span>
 										<input type="password" id="password" name="password" class="form-control"
-											placeholder="Enter your password">
+											placeholder="Enter your password" required>
 									</div>
 								</div>
-
 
 								<!-- Submit Button -->
 								<div class="d-grid">
@@ -57,13 +56,17 @@
 									</button>
 								</div>
 							</form>
+
+							<!-- Forgot Password Link -->
+							<div class="text-center mt-3">
+								<a href="/forgotPassword" class="text-decoration-none fs-5">Forgot Password?</a>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
-
 </body>
 
 </html>
