@@ -3,12 +3,11 @@
 
 <head>
 	<meta charset="ISO-8859-1">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Register Page</title>
-
+		<title>Insert title here</title>
 </head>
 
-<body>
+
+<body id="default_theme" class="it_service">
 	<section class="mt-5">
 		<div class="container">
 			<div class="row">
@@ -19,10 +18,10 @@
 							<i class="fas fa-user-plus me-2"></i>Register Page
 						</div>
 						<th:block th:if="${msg}">
-						    <p class="text-center fs-4 fw-bold" 
-						       th:class="${msg.contains('successful') ? 'text-success' : 'text-danger'}" 
-						       th:text="${msg}" 
-						       style="display: flex; justify-content: center; align-items: center;"></p>
+							<p class="text-center fs-4 fw-bold"
+								th:class="${msg.contains('successful') ? 'text-success' : 'text-danger'}"
+								th:text="${msg}" style="display: flex; justify-content: center; align-items: center;">
+							</p>
 						</th:block>
 
 
@@ -30,7 +29,7 @@
 
 						<!-- Body -->
 						<div class="card-body">
-							<form action ="createUser" method="post">
+							<form action="createUser" method="post">
 								<!-- Full Name -->
 								<div class="mb-3">
 									<label for="fullName" class="form-label">Enter Full Name</label>
