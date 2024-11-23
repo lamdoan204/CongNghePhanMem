@@ -1,73 +1,98 @@
 package com.Project.CongNghePhanMem.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.util.List;
+
+import jakarta.persistence.*;
 
 @Entity
-@Table(name="Product", schema = "dbo")
+@Table(name = "products")
 public class Product {
-
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name= "id")
-    private int id;
-    @Column(name= "name")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int productID;
+
     private String name;
-    @Column(name = "price")
     private float price;
-    @Column(name = "kind")
-    private int kind;
-    @Column(name="brand")
-    private int brand;
-    @Column(name ="description")
+    private String kind;
+    private String brand;
     private String description;
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public float getPrice() {
-        return price;
-    }
-    public void setPrice(float price) {
-        this.price = price;
-    }
-    public int getKind() {
-        return kind;
-    }
-    public void setKind(int kind) {
-        this.kind = kind;
-    }
-    public int getBrand() {
-        return brand;
-    }
-    public void setBrand(int brand) {
-        this.brand = brand;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public Product(int id, String name, float price, int kind, int brand, String description) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.kind = kind;
-        this.brand = brand;
-        this.description = description;
-    }
+
+    @ManyToMany(mappedBy = "applicableProducts")
+    private List<Promotion> promotions;
+
+	public int getProductID() {
+		return productID;
+	}
+
+	public void setProductID(int productID) {
+		this.productID = productID;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<Promotion> getPromotions() {
+		return promotions;
+	}
+
+	public void setPromotions(List<Promotion> promotions) {
+		this.promotions = promotions;
+	}
+
+	public Product(int productID, String name, float price, String kind, String brand, String description,
+			List<Promotion> promotions) {
+		super();
+		this.productID = productID;
+		this.name = name;
+		this.price = price;
+		this.kind = kind;
+		this.brand = brand;
+		this.description = description;
+		this.promotions = promotions;
+	}
+
+	public Product() {
+		super();
+		
+	}
+    
+    
 
 }
