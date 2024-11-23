@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ</title>
+</head>
+<body>
+    <section class="container mt-5">
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Trang chủ của User</h4>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Xin chào, [[${user.fullName}]]</h5>
+                <p class="card-text"><strong>Email:</strong> [[${user.email}]]</p>
+                <!-- Logout Form -->
+                <form action="/logout" method="post" th:csrf="true">
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
