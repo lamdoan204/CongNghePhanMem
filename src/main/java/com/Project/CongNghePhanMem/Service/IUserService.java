@@ -9,6 +9,8 @@ public interface IUserService  {
 	
 	public boolean checkEmail(String email);
 	
+	User getUserById(int id);
+	
 	User getUserByEmail(String email);
 
 	boolean checkPassword(String rawPassword, String encodedPassword);
