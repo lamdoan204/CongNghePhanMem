@@ -1,5 +1,6 @@
 package com.Project.CongNghePhanMem.Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +23,29 @@ public class User {
 	private String password;
 	private String role;
 	private boolean accounNonLocked;
+	
+	@Column(nullable = false, columnDefinition = "bit default 0")
+	private boolean enabled = false;
+
+	
+	private String verificationCode;
+	
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
 
 	public boolean isAccounNonLocked() {
 		return accounNonLocked;
