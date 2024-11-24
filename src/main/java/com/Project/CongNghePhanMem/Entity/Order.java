@@ -18,7 +18,10 @@ public class Order {
     private Date orderDate;
 
     private float totalPrice;
-    
+
+    @Column(name = "status", columnDefinition = "INTEGER DEFAULT 0")
+    private int status;
+	
     @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetails;
     
