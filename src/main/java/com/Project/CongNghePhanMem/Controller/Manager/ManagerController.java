@@ -11,6 +11,10 @@ public class ManagerController {
     public String getMethodName() {
         return "manager/index";
     }
+	@GetMapping("/home")
+    public String getMethodHome() {
+        return "manager/index";
+    }
 	 @GetMapping("/manage-employees")
 	    public String getMethodEmployeeManagerment() {
 	        return "/manager/employeemanagement";

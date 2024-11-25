@@ -15,7 +15,7 @@ import com.Project.CongNghePhanMem.Service.IProductService;
 
 @Controller
 @RequestMapping("/manager/manage-products")
-public class ProductController {
+public class ProductsController {
     @Autowired
     private IProductService productService;
 

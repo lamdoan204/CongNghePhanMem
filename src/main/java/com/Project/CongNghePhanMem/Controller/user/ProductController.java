@@ -19,7 +19,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RestController("userProductController")
 public class ProductController {
 	
 	private final IProductService productService;
