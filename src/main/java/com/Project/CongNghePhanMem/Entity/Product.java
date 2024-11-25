@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -29,6 +30,7 @@ public class Product implements Serializable
 
     private String name;
     private float price;
+    private String image;
     private String kind;
     
     @JoinColumn(name = "brandId")
@@ -74,6 +76,16 @@ public class Product implements Serializable
 	public void setPrice(float price) {
 		this.price = price;
 	}
+	
+	
+	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public String getKind() {
 		return kind;
@@ -83,13 +95,8 @@ public class Product implements Serializable
 		this.kind = kind;
 	}
 
-	public int getBrand() {
-		return brandId;
-	}
-
-	public void setBrand(int brandId) {
-		this.brandId = brandId;
-	}
+	
+	
 
 	public String getDescription() {
 		return description;
@@ -107,21 +114,53 @@ public class Product implements Serializable
 		this.promotions = promotions;
 	}
 
-	public Product(int productID, String name, float price, String kind, int brandId, String description,
-			List<Promotion> promotions) {
-		super();
-		this.productID = productID;
-		this.name = name;
-		this.price = price;
-		this.kind = kind;
+	
+
+	
+
+	
+
+	public int getBrandId() {
+		return brandId;
+	}
+
+	public void setBrandId(int brandId) {
 		this.brandId = brandId;
-		this.description = description;
-		this.promotions = promotions;
 	}
 
 	public Product() {
 		super();
 		
 	}
+
+	public Product(int productID, String name, float price, String image, String kind, int brandId, String description,
+			List<Promotion> promotions, List<OrderDetail> orderDetails) {
+		super();
+		this.productID = productID;
+		this.name = name;
+		this.price = price;
+		this.image = image;
+		this.kind = kind;
+		this.brandId = brandId;
+		this.description = description;
+		this.promotions = promotions;
+		this.orderDetails = orderDetails;
+	}
+
+	@Override
+	public String toString() {
+		return "Product [productID=" + productID + ", name=" + name + ", price=" + price + ", image=" + image
+				+ ", kind=" + kind + ", brandId=" + brandId + ", description=" + description + ", promotions="
+				+ promotions + ", orderDetails=" + orderDetails + "]";
+	}
+	
+	
+	
+	
+	
+
+	
+    
+    
 
 }
