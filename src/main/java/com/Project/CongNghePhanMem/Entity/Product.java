@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -94,13 +95,8 @@ public class Product implements Serializable
 		this.kind = kind;
 	}
 
-	public int getBrand() {
-		return brandId;
-	}
-
-	public void setBrand(int brandId) {
-		this.brandId = brandId;
-	}
+	
+	
 
 	public String getDescription() {
 		return description;
@@ -120,6 +116,23 @@ public class Product implements Serializable
 
 	
 
+	
+
+	
+
+	public int getBrandId() {
+		return brandId;
+	}
+
+	public void setBrandId(int brandId) {
+		this.brandId = brandId;
+	}
+
+	public Product() {
+		super();
+		
+	}
+
 	public Product(int productID, String name, float price, String image, String kind, int brandId, String description,
 			List<Promotion> promotions, List<OrderDetail> orderDetails) {
 		super();
@@ -134,17 +147,17 @@ public class Product implements Serializable
 		this.orderDetails = orderDetails;
 	}
 
-	public Product() {
-		super();
-		
-	}
-
 	@Override
 	public String toString() {
 		return "Product [productID=" + productID + ", name=" + name + ", price=" + price + ", image=" + image
-				+ ", kind=" + kind + ", brand=" + brandId + ", description=" + description + ", promotions=" + promotions
-				+ ", orderDetails=" + orderDetails + "]";
+				+ ", kind=" + kind + ", brandId=" + brandId + ", description=" + description + ", promotions="
+				+ promotions + ", orderDetails=" + orderDetails + "]";
 	}
+	
+	
+	
+	
+	
 
 	
     
