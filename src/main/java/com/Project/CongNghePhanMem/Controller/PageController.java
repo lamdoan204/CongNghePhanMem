@@ -146,17 +146,20 @@ public class PageController {
             session.removeAttribute("msg");
         }
 
-        long otpTimestamp = (long) session.getAttribute("otpTimestamp");
+        Long otpTimestamp = (Long) session.getAttribute("otpTimestamp");
+        if (otpTimestamp == null) {
+            model.addAttribute("remainingTime", 0);
+            return "verifyOTP";
+        }
+
         long currentTime = System.currentTimeMillis();
         long remainingTime = (5 * 60 * 1000) - (currentTime - otpTimestamp);
 
-        if (remainingTime < 0) {
-            remainingTime = 0;
-        }
-        System.out.println("Remaining Time: " + remainingTime);
+        if (remainingTime < 0) remainingTime = 0;
         model.addAttribute("remainingTime", remainingTime);
         return "verifyOTP";
     }
+
 
 
 
@@ -164,6 +167,7 @@ public class PageController {
     public String verifyOtp(@RequestParam("otp") int otp, HttpSession session, RedirectAttributes redirectAttributes) {
         int generatedOtp = (int) session.getAttribute("otp");
         long otpTimestamp = (long) session.getAttribute("otpTimestamp");
+        System.out.println("otpTimestamp in session: " + otpTimestamp);
         long currentTime = System.currentTimeMillis();
 
         if (currentTime - otpTimestamp > 5 * 60 * 1000) {
@@ -192,6 +196,9 @@ public class PageController {
         session.setAttribute("otp", otp);
         session.setAttribute("otpTimestamp", otpTimestamp);
         session.setAttribute("email", email);
+        
+        System.out.println("otp: " + session.getAttribute("otp"));
+        System.out.println("otpTimestamp: " + session.getAttribute("otpTimestamp"));
 
         try {
             MimeMessage message = mailSender.createMimeMessage();

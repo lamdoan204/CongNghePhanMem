@@ -29,7 +29,10 @@ public class Product implements Serializable
     private String name;
     private float price;
     private String kind;
-    private String brand;
+    
+    @JoinColumn(name = "brandId")
+    private int brandId;
+    
     private String description;
 
     @ManyToMany(mappedBy = "applicableProducts")
@@ -79,12 +82,12 @@ public class Product implements Serializable
 		this.kind = kind;
 	}
 
-	public String getBrand() {
-		return brand;
+	public int getBrand() {
+		return brandId;
 	}
 
-	public void setBrand(String brand) {
-		this.brand = brand;
+	public void setBrand(int brandId) {
+		this.brandId = brandId;
 	}
 
 	public String getDescription() {
@@ -103,14 +106,14 @@ public class Product implements Serializable
 		this.promotions = promotions;
 	}
 
-	public Product(int productID, String name, float price, String kind, String brand, String description,
+	public Product(int productID, String name, float price, String kind, int brandId, String description,
 			List<Promotion> promotions) {
 		super();
 		this.productID = productID;
 		this.name = name;
 		this.price = price;
 		this.kind = kind;
-		this.brand = brand;
+		this.brandId = brandId;
 		this.description = description;
 		this.promotions = promotions;
 	}
