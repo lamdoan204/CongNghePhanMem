@@ -67,14 +67,15 @@ public class UserController {
         return "redirect:/user/changePass";
     }
 
-    @GetMapping("/changePass")
-    public String changePassword(HttpSession session, Model model) {
-        String msg = (String) session.getAttribute("msg");
-        if (msg != null) {
-            model.addAttribute("msg", msg);
-            session.removeAttribute("msg");
-        }
-        return "user/changePassword";
-    }
+	@GetMapping("/changePass")
+	public String changePassword(HttpSession session, Model model) {
+		String msg = (String) session.getAttribute("msg");
+		if (msg != null) {
+			model.addAttribute("msg", msg);
+			session.removeAttribute("msg");
+		}
+		return "user/changePassword";
+	}
+	
 
 }
