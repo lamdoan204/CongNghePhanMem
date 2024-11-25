@@ -110,4 +110,9 @@ public class UserService implements IUserService {
 		}
 		return false;
 	}
+
+    @Override
+    public User getUserByUserId(int id) {
+		return userRepo.findByUserId(id);
+    }
 }

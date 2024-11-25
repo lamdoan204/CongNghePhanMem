@@ -14,4 +14,5 @@ public interface IUserService  {
 	boolean checkPassword(String rawPassword, String encodedPassword);
 	
 	public boolean verifyAccount(String code);
+	public User getUserByUserId(int id);
 }
