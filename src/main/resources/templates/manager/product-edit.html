@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sửa sản phẩm</title>
+    <!-- Import các thư viện CSS cần thiết -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Định nghĩa các biến màu sắc chính để dễ dàng tùy chỉnh */
+        :root {
+            --primary-color: #4CAF50;    /* Màu xanh lá cây chính */
+            --secondary-color: #2196F3;   /* Màu xanh dương phụ */
+            --accent-color: #FF9800;      /* Màu cam nhấn mạnh */
+            --background-color: #f8f9fa;  /* Màu nền nhẹ nhàng */
+        }
+
+        /* Thiết lập style chung cho toàn bộ trang */
+        body {
+            background-color: var(--background-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Style cho phần header trang */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* Gradient màu cho header */
+            color: white;
+            padding: 2rem;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+             position: relative;
+            overflow: hidden;
+        }
+
+        /* Style cho container chứa form */
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+
+        /* Style cho nhãn của các trường input */
+        .form-label {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Style cho icon trong label */
+        .icon-label {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        /* Style cho các ô input */
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10rem;
+            transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt */
+        }
+
+        /* Hiệu ứng khi focus vào input */
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+        }
+
+        /* Style cho textarea */
+        .form-textarea {
+            width: 100%;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 0.8rem;
+            resize: vertical; /* Cho phép kéo dãn chiều cao */
+        }
+
+        /* Style cho nút Lưu */
+        .btn-custom {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Hiệu ứng hover cho nút Lưu */
+        .btn-custom:hover {
+            background: #388E3C;
+            transform: translateY(-2px); /* Nút nổi lên khi hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Style cho nút Quay lại */
+        .btn-back {
+            background: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Hiệu ứng hover cho nút Quay lại */
+        .btn-back:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        /* Style cho icon trong input */
+        .input-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+        }
+
+        /* Style cho form floating (label nổi) */
+        .form-floating {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Hiệu ứng nền động cho header */
+        .page-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0.1) 25%, 
+                transparent 25%, 
+                transparent 50%, 
+                rgba(255,255,255,0.1) 50%, 
+                rgba(255,255,255,0.1) 75%, 
+                transparent 75%, 
+                transparent);
+            background-size: 60px 60px;
+            animation: moveStripes 3s linear infinite;
+            opacity: 0.2;
+        }
+      
+
+        /* Định nghĩa animation cho hiệu ứng di chuyển của background */
+        @keyframes moveStripes {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 60px 60px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Import header từ template -->
+    <div th:replace="manager/header"></div>
+
+    <!-- Phần tiêu đề trang với animation -->
+    <div class="page-header text-center">
+        <h1><i class="fas fa-edit me-2"></i>Sửa sản phẩm</h1>
+        <p class="lead">Cập nhật thông tin sản phẩm của bạn</p>
+    </div>
+
+    <div class="container">
+        <!-- Form chỉnh sửa sản phẩm -->
+        <!-- Action form sẽ gửi dữ liệu đến endpoint /manager/manage-products/save/{productID} -->
+        <form th:action="@{/manager/manage-products/save/{productID}(productID=${product.productID})}" 
+              method="POST" 
+              th:object="${product}" 
+              class="form-container">
+            
+            <!-- Trường nhập tên sản phẩm -->
+            <div class="form-floating mb-3" style="border: 2px solid #00FF99;border-radius: 10px;">
+                <input type="text" 
+                       class="form-control" 
+                       th:field="*{name}" 
+                       id="productName" 
+                       placeholder="Tên sản phẩm"
+                       required>
+                <label for="productName">
+                    <i class="fas fa-tag text-primary me-2"></i>
+                    Tên sản phẩm
+                </label>
+            </div>
+
+            <!-- Trường nhập giá sản phẩm -->
+            <div class="form-floating mb-3" style="border: 2px solid #00FF99;border-radius: 10px;">
+                <input type="number" 
+                       class="form-control" 
+                       th:field="*{price}" 
+                       id="productPrice" 
+                       placeholder="Giá"
+                       required>
+                <label for="productPrice">
+                    <i class="fas fa-dollar-sign text-success me-2"></i>
+                    Giá
+                </label>
+            </div>
+
+            <!-- Trường nhập loại sản phẩm -->
+            <div class="form-floating mb-3" style="border: 2px solid #00FF99;border-radius: 10px;">
+                <input type="text" 
+                       class="form-control" 
+                       th:field="*{kind}" 
+                       id="productKind" 
+                       placeholder="Loại">
+                <label for="productKind">
+                    <i class="fas fa-cogs text-warning me-2"></i>
+                    Loại
+                </label>
+            </div>
+
+            <!-- Trường nhập thương hiệu -->
+            <div class="form-floating mb-3" style="border: 2px solid #00FF99;border-radius: 10px;">
+                <input type="text" 
+                       class="form-control" 
+                       th:field="*{brand}" 
+                       id="productBrand" 
+                       placeholder="Thương hiệu">
+                <label for="productBrand">
+                    <i class="fas fa-building text-info me-2"></i>
+                    Thương hiệu
+                </label>
+            </div>
+
+            <!-- Trường nhập mô tả sản phẩm -->
+            <label for="productDescription" >
+                    <i class="fas fa-pencil-alt text-secondary me-2"></i>
+                    Mô tả
+                </label>
+            <div class="form-floating mb-4" style="border: 2px solid #00FF99;border-radius: 10px;">
+                <textarea class="form-textarea" 
+                          th:field="*{description}" 
+                          id="productDescription" 
+                          rows="4"
+                          placeholder="Mô tả"></textarea>
+                
+            </div>
+
+            <!-- Container chứa các nút điều hướng -->
+            <div class="d-flex justify-content-between mt-4" >
+                <!-- Nút Quay lại -->
+                <a href="/manager/manage-products" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Quay lại
+                </a>
+                <!-- Nút Lưu thay đổi -->
+                <button type="submit" class="btn-custom">
+                    <i class="fas fa-save"></i>
+                    Lưu thay đổi
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Import footer từ template -->
+    <div th:replace="manager/footer"></div>
+
+    <!-- Import thư viện JavaScript cần thiết -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

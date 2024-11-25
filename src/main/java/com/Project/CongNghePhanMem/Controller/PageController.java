@@ -224,15 +224,7 @@ public class PageController {
         }
     }
 
-    @GetMapping("/manager/home")
-    public String getMethodName() {
-        return "manager/index";
-    }
-    @GetMapping("/manage-employees")
-    public String getMethodEmployeeManagerment() {
-        return "/manager/employeemanagement";
-    }
-    
+   
     
 
 }
