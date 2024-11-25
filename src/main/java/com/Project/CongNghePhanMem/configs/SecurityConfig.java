@@ -1,5 +1,6 @@
 package com.Project.CongNghePhanMem.configs;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,11 +11,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+	@Autowired
+	public AuthenticationSuccessHandler customsuccessHandler;
+	
     @Bean
     public UserDetailsService userDetailsServices() {
         return new UserDetailsServiceImpl(); 
@@ -42,15 +47,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/admin/**").hasRole("ADMIN") 
+                .requestMatchers("/manager/**").hasRole("MANAGER") 
                 .requestMatchers("/user/**").hasRole("USER")  
+                .requestMatchers("/employee/**").hasRole("EMPLOYEE")  
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
                 .requestMatchers("/**").permitAll()           
             )
             .formLogin(form -> form
                 .loginPage("/login")                     
-                .loginProcessingUrl("/signin")             
-                .defaultSuccessUrl("/user/")              
+                .loginProcessingUrl("/signin")
+                .successHandler(customsuccessHandler)        
                 .permitAll()                              
             )
            

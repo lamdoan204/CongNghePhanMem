@@ -121,6 +121,11 @@
 			<version>3.2.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
 
 		<!-- 
 		https://mvnrepository.com/artifact/jakarta.servlet.jsp/jakarta.servlet.jsp-api  -->

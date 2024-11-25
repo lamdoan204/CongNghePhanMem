@@ -3,9 +3,14 @@ package com.Project.CongNghePhanMem.Entity;
 import java.io.Serializable;
 import java.util.List;
 
-import org.aspectj.weaver.ast.Or;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "products")
@@ -26,7 +31,10 @@ public class Product implements Serializable
     private float price;
     private String image;
     private String kind;
-    private String brand;
+    
+    @JoinColumn(name = "brandId")
+    private int brandId;
+    
     private String description;
 
     @ManyToMany(mappedBy = "applicableProducts")
@@ -47,7 +55,6 @@ public class Product implements Serializable
 		return name;
 	}
 
-	
 
 	public List<OrderDetail> getOrderDetails() {
 		return orderDetails;
@@ -87,12 +94,12 @@ public class Product implements Serializable
 		this.kind = kind;
 	}
 
-	public String getBrand() {
-		return brand;
+	public int getBrand() {
+		return brandId;
 	}
 
-	public void setBrand(String brand) {
-		this.brand = brand;
+	public void setBrand(int brandId) {
+		this.brandId = brandId;
 	}
 
 	public String getDescription() {
@@ -113,7 +120,7 @@ public class Product implements Serializable
 
 	
 
-	public Product(int productID, String name, float price, String image, String kind, String brand, String description,
+	public Product(int productID, String name, float price, String image, String kind, int brandId, String description,
 			List<Promotion> promotions, List<OrderDetail> orderDetails) {
 		super();
 		this.productID = productID;
@@ -121,7 +128,7 @@ public class Product implements Serializable
 		this.price = price;
 		this.image = image;
 		this.kind = kind;
-		this.brand = brand;
+		this.brandId = brandId;
 		this.description = description;
 		this.promotions = promotions;
 		this.orderDetails = orderDetails;
@@ -135,7 +142,7 @@ public class Product implements Serializable
 	@Override
 	public String toString() {
 		return "Product [productID=" + productID + ", name=" + name + ", price=" + price + ", image=" + image
-				+ ", kind=" + kind + ", brand=" + brand + ", description=" + description + ", promotions=" + promotions
+				+ ", kind=" + kind + ", brand=" + brandId + ", description=" + description + ", promotions=" + promotions
 				+ ", orderDetails=" + orderDetails + "]";
 	}
 

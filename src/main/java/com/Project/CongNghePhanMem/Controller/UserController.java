@@ -33,16 +33,16 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder passEncoder;
 
-	@ModelAttribute
-	private void userDetails(Model m, Principal p) {
-		if (p != null) {
-			String email = p.getName();
-			User user = userRepo.findByEmail(email);
-			if (user != null) {
-				m.addAttribute("user", user);
-			}
-		}
-	}
+    @ModelAttribute
+    private void userDetails(Model m, Principal p) {
+        if (p != null) {
+            String email = p.getName();
+            User user = userRepo.findByEmail(email);
+            if (user != null) {
+                m.addAttribute("user", user);
+            }
+        }
+    }
 
 	@GetMapping("/")
 	public String home(Model model) {
@@ -51,29 +51,29 @@ public class UserController {
 		return "user/home";
 	}
 
-	@PostMapping("/updatePassword")
-	public String UpdatePassword(HttpSession session, Principal p, @RequestParam("oldPass") String oldPass,
-			@RequestParam("newPass") String newPass) {
-		String email = p.getName();
+    @PostMapping("/updatePassword")
+    public String UpdatePassword(HttpSession session, Principal p, @RequestParam("oldPass") String oldPass,
+            @RequestParam("newPass") String newPass) {
+        String email = p.getName();
 
-		User user = userRepo.findByEmail(email);
+        User user = userRepo.findByEmail(email);
 
-		boolean check = passEncoder.matches(oldPass, user.getPassword());
+        boolean check = passEncoder.matches(oldPass, user.getPassword());
 
-		if (check) {
-			user.setPassword(passEncoder.encode(newPass));
-			User u = userRepo.save(user);
+        if (check) {
+            user.setPassword(passEncoder.encode(newPass));
+            User u = userRepo.save(user);
 
-			if (u != null) {
-				session.setAttribute("msg", "Update Password successful!");
-			} else {
-				session.setAttribute("msg", "Something went wrong!");
-			}
-		} else {
-			session.setAttribute("msg", "Old Password incorrect!");
-		}
-		return "redirect:/user/changePass";
-	}
+            if (u != null) {
+                session.setAttribute("msg", "Update Password successful!");
+            } else {
+                session.setAttribute("msg", "Something went wrong!");
+            }
+        } else {
+            session.setAttribute("msg", "Old Password incorrect!");
+        }
+        return "redirect:/user/changePass";
+    }
 
 	@GetMapping("/changePass")
 	public String changePassword(HttpSession session, Model model) {
