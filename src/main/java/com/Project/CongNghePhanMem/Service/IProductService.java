@@ -17,5 +17,4 @@ public interface IProductService {
     void deleteProduct(int id);
     public void deleteProductsByIds(List<Integer> ids);
 
-
 }
