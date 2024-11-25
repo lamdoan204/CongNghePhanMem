@@ -1,6 +1,7 @@
 package com.Project.CongNghePhanMem.Controller;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
+import com.Project.CongNghePhanMem.Service.IProductService;
 import com.Project.CongNghePhanMem.Service.IUserService;
 
 import jakarta.mail.MessagingException;
@@ -29,29 +32,36 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class PageController {
-
+	
+	@Autowired
+	private IUserService userService;
+	
+	@Autowired
+	private UserRepository userRepo;
+	
+	@Autowired
+	private IProductService productService;
+	
+	@ModelAttribute
+	private void userDetails(Model m, Principal p) {
+		if(p!= null) {
+			String email = p.getName();
+			User user = userRepo.findByEmail(email);
+			
+			m.addAttribute("user", user);	
+		}
+	}
+	
+    @GetMapping("/")
+    public String Home(Model model) {
+    	List<Product> products = this.productService.fetchProducts();
+    	model.addAttribute("products", products);
+    	
+        return "index" ;
+    }
+    
     @Autowired
     private JavaMailSender mailSender;
-
-    @Autowired
-    private IUserService userService;
-
-    @Autowired
-    private UserRepository userRepo;
-
-    @ModelAttribute
-    private void userDetails(Model m, Principal p) {
-        if (p != null) {
-            String email = p.getName();
-            User user = userRepo.findByEmail(email);
-            m.addAttribute("user", user);
-        }
-    }
-
-    @GetMapping("/")
-    public String Home() {
-        return "index";
-    }
    
     @GetMapping("/it_home_dark")
     public String Home_dark() {

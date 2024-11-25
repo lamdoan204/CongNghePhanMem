@@ -1,6 +1,7 @@
 package com.Project.CongNghePhanMem.Controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
+import com.Project.CongNghePhanMem.Service.IProductService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -21,11 +24,14 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/user/")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
-    private BCryptPasswordEncoder passEncoder;
+	@Autowired
+	private UserRepository userRepo;
+	
+	@Autowired
+	private IProductService productService;
+	
+	@Autowired
+	private BCryptPasswordEncoder passEncoder;
 
     @ModelAttribute
     private void userDetails(Model m, Principal p) {
@@ -38,10 +44,12 @@ public class UserController {
         }
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "user/home";
-    }
+	@GetMapping("/")
+	public String home(Model model) {
+		List<Product> products = this.productService.fetchProducts();
+    	model.addAttribute("products", products);
+		return "user/home";
+	}
 
     @PostMapping("/updatePassword")
     public String UpdatePassword(HttpSession session, Principal p, @RequestParam("oldPass") String oldPass,
@@ -77,5 +85,6 @@ public class UserController {
 		return "user/changePassword";
 	}
 	
+
 
 }
