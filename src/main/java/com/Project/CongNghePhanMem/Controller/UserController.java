@@ -1,6 +1,7 @@
 package com.Project.CongNghePhanMem.Controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
+import com.Project.CongNghePhanMem.Service.IProductService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,7 +26,10 @@ public class UserController {
 
 	@Autowired
 	private UserRepository userRepo;
-
+	
+	@Autowired
+	private IProductService productService;
+	
 	@Autowired
 	private BCryptPasswordEncoder passEncoder;
 
@@ -39,7 +45,9 @@ public class UserController {
 	}
 
 	@GetMapping("/")
-	public String home() {
+	public String home(Model model) {
+		List<Product> products = this.productService.fetchProducts();
+    	model.addAttribute("products", products);
 		return "user/home";
 	}
 
