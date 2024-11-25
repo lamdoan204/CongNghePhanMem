@@ -2,7 +2,6 @@ package com.Project.CongNghePhanMem.Entity;
 
 import java.util.List;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,8 +22,8 @@ public class Department {
 	private int id;
 	
 	@OneToOne
-	@JoinColumn(name = "user_id")
-	private int managerId;
+	@JoinColumn(name = "userId")
+	private User manager;
 	
 	@OneToMany
 	private List<User> employee; 

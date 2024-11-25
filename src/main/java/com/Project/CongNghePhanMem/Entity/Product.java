@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -122,14 +123,5 @@ public class Product implements Serializable
 		super();
 		
 	}
-
-	@Override
-	public String toString() {
-		return "Product [productID=" + productID + ", name=" + name + ", price=" + price + ", kind=" + kind + ", brand="
-				+ brand + ", description=" + description + ", promotions=" + promotions + ", orderDetails="
-				+ orderDetails + "]";
-	}
-    
-    
 
 }
