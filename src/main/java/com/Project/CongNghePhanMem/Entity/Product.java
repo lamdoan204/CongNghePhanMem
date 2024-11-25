@@ -24,6 +24,7 @@ public class Product implements Serializable
 
     private String name;
     private float price;
+    private String image;
     private String kind;
     private String brand;
     private String description;
@@ -67,6 +68,16 @@ public class Product implements Serializable
 	public void setPrice(float price) {
 		this.price = price;
 	}
+	
+	
+	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public String getKind() {
 		return kind;
@@ -100,16 +111,20 @@ public class Product implements Serializable
 		this.promotions = promotions;
 	}
 
-	public Product(int productID, String name, float price, String kind, String brand, String description,
-			List<Promotion> promotions) {
+	
+
+	public Product(int productID, String name, float price, String image, String kind, String brand, String description,
+			List<Promotion> promotions, List<OrderDetail> orderDetails) {
 		super();
 		this.productID = productID;
 		this.name = name;
 		this.price = price;
+		this.image = image;
 		this.kind = kind;
 		this.brand = brand;
 		this.description = description;
 		this.promotions = promotions;
+		this.orderDetails = orderDetails;
 	}
 
 	public Product() {
@@ -119,10 +134,12 @@ public class Product implements Serializable
 
 	@Override
 	public String toString() {
-		return "Product [productID=" + productID + ", name=" + name + ", price=" + price + ", kind=" + kind + ", brand="
-				+ brand + ", description=" + description + ", promotions=" + promotions + ", orderDetails="
-				+ orderDetails + "]";
+		return "Product [productID=" + productID + ", name=" + name + ", price=" + price + ", image=" + image
+				+ ", kind=" + kind + ", brand=" + brand + ", description=" + description + ", promotions=" + promotions
+				+ ", orderDetails=" + orderDetails + "]";
 	}
+
+	
     
     
 

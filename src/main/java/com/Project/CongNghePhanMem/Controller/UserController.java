@@ -76,5 +76,7 @@ public class UserController {
 		}
 		return "user/changePassword";
 	}
+	
+
 
 }

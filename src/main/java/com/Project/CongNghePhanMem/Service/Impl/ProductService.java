@@ -1,5 +1,6 @@
 package com.Project.CongNghePhanMem.Service.Impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -70,5 +71,10 @@ public class ProductService implements IProductService {
 		} else {
 			throw new RuntimeException("User not found");
 		}
+	}
+	
+	@Override
+	public List<Product> fetchProducts(){
+		return this.productRepository.findAll();
 	}
 }

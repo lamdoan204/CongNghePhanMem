@@ -1,6 +1,7 @@
 package com.Project.CongNghePhanMem.Controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
+import com.Project.CongNghePhanMem.Service.IProductService;
 import com.Project.CongNghePhanMem.Service.IUserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +28,9 @@ public class PageController {
 	@Autowired
 	private UserRepository userRepo;
 	
+	@Autowired
+	private IProductService productService;
+	
 	@ModelAttribute
 	private void userDetails(Model m, Principal p) {
 		if(p!= null) {
@@ -36,7 +42,10 @@ public class PageController {
 	}
 	
     @GetMapping("/")
-    public String Home() {
+    public String Home(Model model) {
+    	List<Product> products = this.productService.fetchProducts();
+    	model.addAttribute("products", products);
+    	
         return "index" ;
     }
     
