@@ -14,7 +14,15 @@ public class Order {
 
     @Temporal(TemporalType.DATE)
     private Date orderDate;
-
+    
+    private int status;
+    
+    public static final int PENDING = 0; // Đang chờ xác nhận
+    public static final int CONFIRMED = 1; // Đã xác nhận
+    public static final int IN_DELIVERY = 2; // Đang giao
+    public static final int DELIVERED = 3; // Đã giao
+    public static final int CANCELLED = 4; // Đã hủy
+    
     private float totalPrice;
     
     @OneToMany(mappedBy = "order")
@@ -53,8 +61,18 @@ public class Order {
     public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
     }
+    
+    
+    
+    public int getStatus() {
+		return status;
+	}
 
-    public float getTotalPrice() {
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public float getTotalPrice() {
         return totalPrice;
     }
 
@@ -80,11 +98,8 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [orderID=" + orderID + ", orderDate=" + orderDate + ", totalPrice=" + totalPrice
-				+ ", orderDetails=" + orderDetails + ", user=" + user + "]";
+		return "Order [orderID=" + orderID + ", orderDate=" + orderDate + ", status=" + status + ", totalPrice="
+				+ totalPrice + ", orderDetails=" + orderDetails + ", user=" + user + "]";
 	}
-
-	
-    
     
 }
