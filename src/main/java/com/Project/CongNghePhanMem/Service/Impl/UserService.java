@@ -5,12 +5,15 @@ import java.security.SecureRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.IUserService;
+import com.Project.CongNghePhanMem.configs.CustomUserDetails;
 
 import jakarta.mail.internet.MimeMessage;
 
@@ -73,7 +76,7 @@ public class UserService implements IUserService {
 
 	@Override
 	public User getUserById(int id) {
-		return userRepo.findById(id);
+		return userRepo.findByUserId(id);
 	}
 
 	public void sendVerificationMail(User user, String url) {
@@ -117,4 +120,28 @@ public class UserService implements IUserService {
 		}
 		return false;
 	}
+
+    @Override
+    public User getUserByUserId(int id) {
+		return userRepo.findByUserId(id);
+    }
+
+    @Override
+    public User getUserByPhone(String phone) {
+        return userRepo.findByPhone(phone);
+    }
+
+    @Override
+    public User getUserCurentLogged() {
+         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Người dùng chưa đăng nhập");
+        }
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        int managerId = userDetails.getUserId();
+        // Lấy User từ UserService
+        User user = this.getUserByUserId(managerId);
+		return user;
+
+    }
 }

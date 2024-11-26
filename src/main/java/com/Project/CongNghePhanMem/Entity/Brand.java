@@ -1,5 +1,6 @@
 package com.Project.CongNghePhanMem.Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,16 +15,17 @@ public class Brand {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int branId;
+	@Column(name = "brand_id")
+	int brandId;
 	
 	private String brand;
 
-	public int getBranId() {
-		return branId;
+	public int getBrandId() {
+		return brandId;
 	}
 
-	public void setBranId(int branId) {
-		this.branId = branId;
+	public void setBrandId(int branId) {
+		this.brandId = branId;
 	}
 
 	public String getBrand() {
