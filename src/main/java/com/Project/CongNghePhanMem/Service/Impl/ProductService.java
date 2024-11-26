@@ -59,53 +59,65 @@ public class ProductService implements IProductService {
 
 			if (p.isPresent()) {
 				Product realProduct = p.get();
-				CartDetail cartDetail = new CartDetail();
+				CartDetail oldDetail = this.cartDetailRepository.findByCartAndProduct(cart, realProduct);
 
-				cartDetail.setCart(cart);
-				cartDetail.setProduct(realProduct);
-				cartDetail.setPrice(realProduct.getPrice());
-				cartDetail.setQuantity(1);
+				if (oldDetail == null) {
+					CartDetail cartDetail = new CartDetail();
 
-				this.cartDetailRepository.save(cartDetail);
+					cartDetail.setCart(cart);
+					cartDetail.setProduct(realProduct);
+					cartDetail.setPrice(realProduct.getPrice());
+					cartDetail.setQuantity(1);
+
+					this.cartDetailRepository.save(cartDetail);
+					
+					cart.setSum(cart.getSum() + 1);
+					this.cartRepository.save(cart);
+				} else {
+					oldDetail.setQuantity(oldDetail.getQuantity() + 1);
+					this.cartDetailRepository.save(oldDetail);
+				}
 
 			}
+			
 
 		} else {
 			throw new RuntimeException("User not found");
 		}
 	}
-	
+
 	@Override
-	public List<Product> fetchProducts(){
+	public List<Product> fetchProducts() {
 		return this.productRepository.findAll();
 	}
+
 	@Override
-    public Page<Product> findAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
-    }
+	public Page<Product> findAllProducts(Pageable pageable) {
+		return productRepository.findAll(pageable);
+	}
 
-    @Override
-    public Page<Product> searchProducts(String keyword, Pageable pageable) {
-        return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
-    }
+	@Override
+	public Page<Product> searchProducts(String keyword, Pageable pageable) {
+		return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
+	}
 
-    @Override
-    public Product findProductById(int id) {
-        return productRepository.findById(id).orElse(null);
-    }
+	@Override
+	public Product findProductById(int id) {
+		return productRepository.findById(id).orElse(null);
+	}
 
-    @Override
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
-    }
+	@Override
+	public Product saveProduct(Product product) {
+		return productRepository.save(product);
+	}
 
-    @Override
-    public void deleteProduct(int id) {
-        productRepository.deleteById(id);
-    }
+	@Override
+	public void deleteProduct(int id) {
+		productRepository.deleteById(id);
+	}
 
- // Xóa sản phẩm theo danh sách productID
-    public void deleteProductsByIds(List<Integer> ids) {
-    	 productRepository.deleteAllById(ids);
-    }
+	// Xóa sản phẩm theo danh sách productID
+	public void deleteProductsByIds(List<Integer> ids) {
+		productRepository.deleteAllById(ids);
+	}
 }
