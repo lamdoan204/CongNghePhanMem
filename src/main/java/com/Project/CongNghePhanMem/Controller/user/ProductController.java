@@ -2,6 +2,7 @@ package com.Project.CongNghePhanMem.Controller.user;
 
 import java.net.http.HttpRequest;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,18 +56,17 @@ public class ProductController {
 		User currentUser = new User();//null
 		HttpSession session = request.getSession(false);
 		//int id = (int) session.getAttribute("id");
-		int id = 5;
+		int id = 4;
 		
 		currentUser.setUserId(id);
 		
 		Cart cart = this.productService.fetchByUser(currentUser);
 		
-		List<CartDetail> cartDetails = cart.getCartDetails();
+		List<CartDetail> cartDetails = cart == null ? new ArrayList<CartDetail>(): cart.getCartDetails();
 		
 		double totalPrice = 0;
 		for(CartDetail cd : cartDetails) {
 			totalPrice += cd.getPrice() * cd.getQuantity();
-			System.out.println(cd.getId());
 		}
 		
 		model.addAttribute("cartDetails", cartDetails);
