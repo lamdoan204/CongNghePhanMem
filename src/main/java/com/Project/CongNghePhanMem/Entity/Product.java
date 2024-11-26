@@ -3,9 +3,15 @@ package com.Project.CongNghePhanMem.Entity;
 import java.io.Serializable;
 import java.util.List;
 
-import org.aspectj.weaver.ast.Or;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "products")
@@ -24,8 +30,12 @@ public class Product implements Serializable
 
     private String name;
     private float price;
+    private String image;
     private String kind;
-    private String brand;
+    
+    @JoinColumn(name = "brandId")
+    private int brandId;
+    
     private String description;
 
     @ManyToMany(mappedBy = "applicableProducts")
@@ -46,7 +56,6 @@ public class Product implements Serializable
 		return name;
 	}
 
-	
 
 	public List<OrderDetail> getOrderDetails() {
 		return orderDetails;
@@ -67,6 +76,16 @@ public class Product implements Serializable
 	public void setPrice(float price) {
 		this.price = price;
 	}
+	
+	
+	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public String getKind() {
 		return kind;
@@ -76,13 +95,8 @@ public class Product implements Serializable
 		this.kind = kind;
 	}
 
-	public String getBrand() {
-		return brand;
-	}
-
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
+	
+	
 
 	public String getDescription() {
 		return description;
@@ -100,16 +114,18 @@ public class Product implements Serializable
 		this.promotions = promotions;
 	}
 
-	public Product(int productID, String name, float price, String kind, String brand, String description,
-			List<Promotion> promotions) {
-		super();
-		this.productID = productID;
-		this.name = name;
-		this.price = price;
-		this.kind = kind;
-		this.brand = brand;
-		this.description = description;
-		this.promotions = promotions;
+	
+
+	
+
+	
+
+	public int getBrandId() {
+		return brandId;
+	}
+
+	public void setBrandId(int brandId) {
+		this.brandId = brandId;
 	}
 
 	public Product() {
@@ -117,12 +133,33 @@ public class Product implements Serializable
 		
 	}
 
+	public Product(int productID, String name, float price, String image, String kind, int brandId, String description,
+			List<Promotion> promotions, List<OrderDetail> orderDetails) {
+		super();
+		this.productID = productID;
+		this.name = name;
+		this.price = price;
+		this.image = image;
+		this.kind = kind;
+		this.brandId = brandId;
+		this.description = description;
+		this.promotions = promotions;
+		this.orderDetails = orderDetails;
+	}
+
 	@Override
 	public String toString() {
-		return "Product [productID=" + productID + ", name=" + name + ", price=" + price + ", kind=" + kind + ", brand="
-				+ brand + ", description=" + description + ", promotions=" + promotions + ", orderDetails="
-				+ orderDetails + "]";
+		return "Product [productID=" + productID + ", name=" + name + ", price=" + price + ", image=" + image
+				+ ", kind=" + kind + ", brandId=" + brandId + ", description=" + description + ", promotions="
+				+ promotions + ", orderDetails=" + orderDetails + "]";
 	}
+	
+	
+	
+	
+	
+
+	
     
     
 

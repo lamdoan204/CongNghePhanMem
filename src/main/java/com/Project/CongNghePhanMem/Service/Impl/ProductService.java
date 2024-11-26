@@ -1,7 +1,10 @@
 package com.Project.CongNghePhanMem.Service.Impl;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.Project.CongNghePhanMem.Entity.Cart;
@@ -71,4 +74,38 @@ public class ProductService implements IProductService {
 			throw new RuntimeException("User not found");
 		}
 	}
+	
+	@Override
+	public List<Product> fetchProducts(){
+		return this.productRepository.findAll();
+	}
+	@Override
+    public Page<Product> findAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Product> searchProducts(String keyword, Pageable pageable) {
+        return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
+    }
+
+    @Override
+    public Product findProductById(int id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Product saveProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    @Override
+    public void deleteProduct(int id) {
+        productRepository.deleteById(id);
+    }
+
+ // Xóa sản phẩm theo danh sách productID
+    public void deleteProductsByIds(List<Integer> ids) {
+    	 productRepository.deleteAllById(ids);
+    }
 }

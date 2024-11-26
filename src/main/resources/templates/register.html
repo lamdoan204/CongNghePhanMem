@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="ISO-8859-1">
-		<title>Insert title here</title>
+	<title>Insert title here</title>
 </head>
 
 
@@ -23,9 +23,6 @@
 								th:text="${msg}" style="display: flex; justify-content: center; align-items: center;">
 							</p>
 						</th:block>
-
-
-
 
 						<!-- Body -->
 						<div class="card-body">
@@ -74,7 +71,7 @@
 									<label for="password1" class="form-label">Confirm Password</label>
 									<div class="input-group">
 										<span class="input-group-text"><i class="fas fa-lock"></i></span>
-										<input type="password1" id="password1" name="password1" class="form-control"
+										<input type="password" id="password1" name="password1" class="form-control"
 											placeholder="Enter your password">
 									</div>
 								</div>
@@ -102,7 +99,17 @@
 			</div>
 		</div>
 	</section>
+	<script>
+		document.querySelector("form").addEventListener("submit", function (event) {
+			const password = document.getElementById("password").value;
+			const confirmPassword = document.getElementById("password1").value;
 
+			if (password !== confirmPassword) {
+				event.preventDefault();
+				alert("Mật khẩu không khớp. Vui lòng thử lại!");
+			}
+		});
+	</script>
 </body>
 
 </html>
