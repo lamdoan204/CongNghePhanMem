@@ -1,27 +1,26 @@
 package com.Project.CongNghePhanMem.Controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.Project.CongNghePhanMem.Entity.Brand;
+import com.Project.CongNghePhanMem.Entity.Department;
 import com.Project.CongNghePhanMem.Entity.User;
+import com.Project.CongNghePhanMem.Service.BrandService;
 import com.Project.CongNghePhanMem.Service.IManagerService;
 import com.Project.CongNghePhanMem.Service.IUserService;
 import com.Project.CongNghePhanMem.Service.Impl.DepartmentService;
 import com.Project.CongNghePhanMem.Service.Impl.ManagerService;
 import com.Project.CongNghePhanMem.Service.Impl.UserService;
-import com.Project.CongNghePhanMem.configs.CustomUserDetails;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.Project.CongNghePhanMem.Entity.Department;
-import com.Project.CongNghePhanMem.Service.BrandService;
 
 @Controller
 @RequestMapping("/manager")
@@ -38,39 +37,34 @@ public class ManagerController {
 
     @GetMapping("/")
     public String getMethodName(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("Người dùng chưa đăng nhập");
-        }
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        int userId = userDetails.getUserId();
-        // Lấy User từ UserService
-        User manager = userService.getUserByUserId(userId);
+
+        User manager = userService.getUserCurentLogged();
         if (manager == null) {
             throw new RuntimeException("Không tìm thấy người dùng");
         }
         // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
+        // lấy một số sản phẩm, nhân viên doanh thu và chương trình khuyến mãi
+
         return "manager/index"; // Trả về view `manager/index`
     }
 
     @GetMapping("/employeeManagement")
     public String employee(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("Người dùng chưa đăng nhập");
-        }
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        int userId = userDetails.getUserId();
-        // Lấy User từ UserService
-        User manager = userService.getUserByUserId(userId);
+
+        User manager = userService.getUserCurentLogged();
         if (manager == null) {
             throw new RuntimeException("Không tìm thấy người dùng");
         }
         // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
+        // lấy danh sách nhân viên
+        List<User> employee = managerService.getListEmployee(manager);
+
+        model.addAttribute("employees", employee);
+
         return "manager/employeemanagement";
     }
 
@@ -85,18 +79,18 @@ public class ManagerController {
 
         if (fullname.isBlank() || email.isBlank() || phone.isBlank() || password.isBlank() || address.isBlank()) {
             model.addAttribute("error", "Vui lòng điền đầy đủ thông tin!");
-            return "manager/employeeManagement"; 
+            return "manager/employeeManagement";
         }
-        
+
         User user = userService.getUserByEmail(email);
-        if (user != null ) {
+        if (user != null) {
             model.addAttribute("error", "Email đã tồn tại");
-            return "manager/employeeManagement"; 
+            return "manager/employeeManagement";
         }
         user = userService.getUserByPhone(phone);
-        if (user != null ) {
+        if (user != null) {
             model.addAttribute("error", "Số điện thoại đã tồn tại");
-            return "manager/employeeManagement"; 
+            return "manager/employeeManagement";
         }
         // thêm nhân viên vào bảng Users
         user = new User();
@@ -107,30 +101,39 @@ public class ManagerController {
         user.setPassword(password);
         user.setRole("EMPLOYEE");
         user.setEnabled(true);
+        user.setAccounNonLocked(true);
         managerService.add_Employee(user);
 
         // thêm nhân viên vào Phòng ban
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("Người dùng chưa đăng nhập");
-        }
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        int userId = userDetails.getUserId();
-        // Lấy User từ UserService
-        User manager = userService.getUserByUserId(userId);
+        User manager = userService.getUserCurentLogged();
         if (manager == null) {
             throw new RuntimeException("Không tìm thấy người dùng");
         }
-        // Gọi Service để lấy tên thương hiệu
-        String brand_name = managerService.get_DepartmentName(manager);
-        Brand brand = brandService.getBrandbyBrand(brand_name);
-        
-        Department department = departmentService.getDepartmentByBrandId(brand.getBrandId());
+       
+
+        Department department = departmentService.getDepartmentByManager(manager);
         user = userService.getUserByEmail(email);
 
         departmentService.addEmployeeToDepartment(department.getId(), user);
-        
+
         return "redirect:/manager/employeeManagement";
+    }
+
+    @PostMapping("/deleteEmployee")
+    public String postDeleteEmployee(@RequestParam("userId") Integer userId) {
+        User manager = userService.getUserCurentLogged();
+        if (manager == null) {
+            throw new RuntimeException("Không tìm thấy người dùng");
+        }
+
+        User employee = userService.getUserById(userId);
+
+        Department department = departmentService.getDepartmentByManager(manager);
+
+        departmentService.deleteEmployeeToDepartment(department.getId(), employee);
+        managerService.delete_Employee(employee);
+
+        return "redirect:/manager/";
     }
 
 }

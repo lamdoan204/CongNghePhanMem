@@ -36,8 +36,15 @@ public class Department {
             employee.add(employe);
         }
     }
+	public void deleteEmployee(User employe){
+		if(employee != null){
+			employee.remove(employe);
+		}
+	}
 	public int getBrandId(){
 		return this.brandId;
 	}
-	
+	public List<User> getEmployee(){
+		return this.employee;
+	}
 }

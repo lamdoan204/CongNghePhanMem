@@ -20,4 +20,6 @@ public interface IUserService  {
 	public User getUserByUserId(int id);
 
 	public User getUserByPhone(String phone);
+
+	public User getUserCurentLogged();
 }
