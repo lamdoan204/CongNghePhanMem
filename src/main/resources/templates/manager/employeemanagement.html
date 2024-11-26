@@ -22,7 +22,7 @@
             color: white;
         }
         .header {
-            background-color: #007bff;
+            background-color: #006699;
             color: white;
             padding: 10px 15px;
         }
@@ -31,36 +31,41 @@
 </head>
 <body>
    
-
-    <div class="container mt-4">
-        <div th:replace="manager/header"></div>
+    <div th:replace="manager/header"></div>
+    <div class="container mt-1">
+        
         <div class="header rounded">
-            <h2 class="text-center">Quản lý nhân viên</h2>
+            <h2 class="text-center">Danh sách nhân viên</h2>
+        </div>
+        <div th:if="${error}" class="alert alert-danger">
+            <p th:text="${error}"></p>
         </div>
         <div class="mt-4 mb-2 text-end">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">Thêm nhân viên</button>
         </div>
-        <table class="table table-striped table-bordered">
+        <table class="table table-striped table-bordered text-center">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Họ tên</th>
-                    <th>Vị trí</th>
+                    <th>Địa chỉ</th>
                     <th>Email</th>
                     <th>Số điện thoại</th>
-                    <th>Hành động</th>
+                    <th>Password</th>
+                    <th>Thao tác</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>1</td>
                     <td>Nguyễn Văn A</td>
-                    <td>Nhân viên IT</td>
+                    <td>Thành Phố Thủ Đức</td>
                     <td>nva@example.com</td>
                     <td>0123456789</td>
+                    <td>123</td>
                     <td>
-                        <button class="btn btn-warning btn-sm">Sửa</button>
-                        <button class="btn btn-danger btn-sm">Xóa</button>
+                        <button class="btn btn-info  btn-sm">Sửa</button>
+                        <button class="btn btn-danger  btn-sm">Xóa</button>
                     </td>
                 </tr>
                 <!-- Thêm các dòng dữ liệu khác tại đây -->
@@ -77,24 +82,28 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
+                    <form method="post" action="/manager/employeeManagement">
+                        <div class="mb-2">
                             <label for="employeeName" class="form-label">Họ tên</label>
-                            <input type="text" class="form-control" id="employeeName" placeholder="Nhập họ tên">
+                            <input type="text" name="fullname" class="form-control" id="employeeName" placeholder="Nhập họ tên">
                         </div>
-                        <div class="mb-3">
-                            <label for="employeePosition" class="form-label">Vị trí</label>
-                            <input type="text" class="form-control" id="employeePosition" placeholder="Nhập vị trí">
+                        <div class="mb-2">
+                            <label for="employeeAddress" class="form-label">Địa chỉ</label>
+                            <input type="text" name="address" class="form-control" id="employeeAddress" placeholder="Nhập địa chỉ">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label for="employeeEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="employeeEmail" placeholder="Nhập email">
+                            <input type="email" name="email" class="form-control" id="employeeEmail" placeholder="Nhập email">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label for="employeePhone" class="form-label">Số điện thoại</label>
-                            <input type="tel" class="form-control" id="employeePhone" placeholder="Nhập số điện thoại">
+                            <input type="tel" name="phone" class="form-control" id="employeePhone" placeholder="Nhập số điện thoại">
                         </div>
-                        <button type="submit" class="btn btn-custom w-100">Thêm nhân viên</button>
+                        <div class="mb-2">
+                            <label for="employeePass" class="form-label">Mật khẩu</label>
+                            <input type="tel" name="password" class="form-control" id="employeePass" placeholder="Nhập mật khẩu">
+                        </div>
+                        <button type="submit" class="btn btn-success btn-custom  w-100">Thêm nhân viên</button>
                     </form>
                 </div>
             </div>

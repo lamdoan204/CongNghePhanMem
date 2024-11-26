@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .navbar {
-            background-color: #007BFF;
+            background-color: #023468;
             /* Xanh biển */
         }
 
@@ -38,7 +38,7 @@
             <a class="navbar-brand" href="/manager/">PHÒNG BAN QUẢN LÝ THƯƠNG HIỆU: <span th:text="${brand}"></span></a>
 
 
-            
+
             <!-- Menu toggle cho màn hình nhỏ -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@
             <!-- Menu -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    
+
                     <li class="nav-item">
                         <a class="nav-link" href="#manage-products">SẢN PHẨM</a>
                     </li>
@@ -61,6 +61,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#manage-employees">CHƯƠNG TRÌNH KHUYẾN MÃI</a>
                     </li>
+                    <li class="nav-item">
+                        <form action="/logout" method="POST" class="d-inline">
+                            <button class="btn btn-danger ms-auto btn-sm nav-link " type="submit"
+                                style="color: red; border: none;">
+                                ĐĂNG XUẤT
+                            </button>
+                        </form>
+                    </li>
+
                 </ul>
             </div>
         </div>

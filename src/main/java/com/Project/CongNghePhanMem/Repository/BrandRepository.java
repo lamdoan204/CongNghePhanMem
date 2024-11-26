@@ -5,7 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import com.Project.CongNghePhanMem.Entity.Brand;
 
+
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Integer> {
-    Brand findByBrandId(Integer brandId);
+    public Brand findByBrandId(Integer brandId);
+    public Brand findByBrand(String brand);
 }

@@ -8,6 +8,7 @@ import com.Project.CongNghePhanMem.Entity.Department;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.BrandRepository;
 import com.Project.CongNghePhanMem.Repository.DepartmentRepository;
+import com.Project.CongNghePhanMem.Repository.UserRepository;
 
 
 @Service
@@ -18,10 +19,17 @@ public class ManagerService implements com.Project.CongNghePhanMem.Service.IMana
     DepartmentRepository departmentRepository;
     @Autowired
     BrandRepository brandRepository;
-
+    @Autowired
+    UserRepository userRepository;
     @Override
     public void add_Employee(User employee) {
-
+        if(employee != null){
+            userRepository.save(employee);
+            
+        }
+        else{
+            throw new RuntimeException("user is null");
+        }
     }
 
     @Override

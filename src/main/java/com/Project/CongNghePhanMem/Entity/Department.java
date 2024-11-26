@@ -30,6 +30,14 @@ public class Department {
 	
 	@JoinColumn(name = "brandId")
 	private int brandId;	
-	
+
+	public void addEmployee(User employe) {
+        if (employee != null) {
+            employee.add(employe);
+        }
+    }
+	public int getBrandId(){
+		return this.brandId;
+	}
 	
 }

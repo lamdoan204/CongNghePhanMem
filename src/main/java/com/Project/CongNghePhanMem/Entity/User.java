@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -13,116 +15,118 @@ import lombok.Data;
 @Table(name = "Users")
 public class User {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int userId;
-	private String email;
-	private String phone;
-	private String fullName;
-	private String address;
-	private String password;
-	private String role;
-	private boolean accounNonLocked;
-	
-	@Column(nullable = false, columnDefinition = "bit default 0")
-	private boolean enabled = false;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int userId;
+    private String email;
+    private String phone;
+    private String fullName;
+    private String address;
+    private String password;
+    private String role;
+    private boolean accounNonLocked;
 
-	
-	private String verificationCode;
-	
+    @ManyToOne
+    @JoinColumn(name = "department_id") // Tên cột khóa ngoại
+    private Department department;
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+    @Column(nullable = false, columnDefinition = "bit default 0")
+    private boolean enabled = false;
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    private String verificationCode;
 
-	public String getVerificationCode() {
-		return verificationCode;
-	}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	public void setVerificationCode(String verificationCode) {
-		this.verificationCode = verificationCode;
-	}
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-	public boolean isAccounNonLocked() {
-		return accounNonLocked;
-	}
+    public String getVerificationCode() {
+        return verificationCode;
+    }
 
-	public void setAccounNonLocked(boolean accounNonLocked) {
-		this.accounNonLocked = accounNonLocked;
-	}
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
 
-	public int getUserId() {
-		return userId;
-	}
+    public boolean isAccounNonLocked() {
+        return accounNonLocked;
+    }
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+    public void setAccounNonLocked(boolean accounNonLocked) {
+        this.accounNonLocked = accounNonLocked;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public int getUserId() {
+        return userId;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getFullName() {
-		return fullName;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public String getFullName() {
+        return fullName;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public String getRole() {
-		return role;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setRole(String role) {
-		this.role = role;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public User(int userId, String email, String phone, String fullName, String address, String password) {
-		super();
-		this.userId = userId;
-		this.email = email;
-		this.phone = phone;
-		this.fullName = fullName;
-		this.address = address;
-		this.password = password;
-	}
+    public String getRole() {
+        return role;
+    }
 
-	public User() {
-		super();
-	}
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public User(int userId, String email, String phone, String fullName, String address, String password) {
+        super();
+        this.userId = userId;
+        this.email = email;
+        this.phone = phone;
+        this.fullName = fullName;
+        this.address = address;
+        this.password = password;
+    }
+
+    public User() {
+        super();
+    }
 
 }

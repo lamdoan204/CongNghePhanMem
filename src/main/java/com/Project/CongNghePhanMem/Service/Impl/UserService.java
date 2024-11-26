@@ -73,7 +73,7 @@ public class UserService implements IUserService {
 
 	@Override
 	public User getUserById(int id) {
-		return userRepo.findById(id);
+		return userRepo.findByUserId(id);
 	}
 
 	public void sendVerificationMail(User user, String url) {
@@ -121,5 +121,10 @@ public class UserService implements IUserService {
     @Override
     public User getUserByUserId(int id) {
 		return userRepo.findByUserId(id);
+    }
+
+    @Override
+    public User getUserByPhone(String phone) {
+        return userRepo.findByPhone(phone);
     }
 }

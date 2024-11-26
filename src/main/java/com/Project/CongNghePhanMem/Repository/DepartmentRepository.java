@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 import com.Project.CongNghePhanMem.Entity.Department;
 import com.Project.CongNghePhanMem.Entity.User;
 
+
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Integer>{
     public Department findByManager(User manager);
+    public Department findByBrandId(int brandId);
 
 }
