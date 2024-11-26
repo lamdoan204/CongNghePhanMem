@@ -54,7 +54,8 @@ public class ProductController {
 	public String getCartPage(Model model, HttpServletRequest request) {
 		User currentUser = new User();//null
 		HttpSession session = request.getSession(false);
-		int id = (int) session.getAttribute("id");
+		//int id = (int) session.getAttribute("id");
+		int id = 5;
 		
 		currentUser.setUserId(id);
 		
@@ -65,6 +66,7 @@ public class ProductController {
 		double totalPrice = 0;
 		for(CartDetail cd : cartDetails) {
 			totalPrice += cd.getPrice() * cd.getQuantity();
+			System.out.println(cd.getId());
 		}
 		
 		model.addAttribute("cartDetails", cartDetails);

@@ -79,100 +79,36 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+								<!-- Lặp qua danh sách cartDetails -->
+								<tr th:each="cartDetail : ${cartDetails}">
 									<td class="col-sm-8 col-md-6">
 										<div class="media">
 											<a class="thumbnail pull-left" href="#">
-												<img class="media-object" src="images/it_service/1.jpg" alt="#"
+												<img class="media-object" th:src="@{'images/products/' + ${cartDetail.product.image}}" alt="#"
 													width="110" height="110">
 											</a>
 											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Norton Internet Security</a></h4>
+												<h4 class="media-heading"><a href="#" th:text="${cartDetail.product.name}"></a></h4>
 												<span>Status: </span><span class="text-success">In Stock</span>
 											</div>
 										</div>
 									</td>
-									<td class="col-sm-1 col-md-1" style="text-align: center"><input class="form-control"
-											value="3" type="email"></td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
+									<td class="col-sm-1 col-md-1" style="text-align: center">
+										<input class="form-control" th:value="${cartDetail.quantity}" type="number" min="1">
 									</td>
 									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
+										<p class="price_table" th:text="'$' + ${cartDetail.price}"></p>
+									</td>
+									<td class="col-sm-1 col-md-1 text-center">
+										<p class="price_table" th:text="'$' + ${cartDetail.price * cartDetail.quantity}"></p>
 									</td>
 									<td class="col-sm-1 col-md-1">
 										<button type="button" class="bt_main"><i class="fa fa-trash"></i>
 											Remove</button>
 									</td>
 								</tr>
-								<tr>
-									<td class="col-md-6">
-										<div class="media"> <a class="thumbnail pull-left" href="#"> <img
-													class="media-object" src="images/it_service/2.jpg" alt="#" width="110" height="110"></a>
-											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Kaspersky Internet Security</a>
-												</h4>
-												<span>Status: </span><span class="text-danger">Out Stock</span>
-											</div>
-										</div>
-									</td>
-									<td class="col-md-1" style="text-align: center"><input class="form-control"
-											value="2" type="email">
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-md-1"><button type="button" class="bt_main"><i
-												class="fa fa-trash"></i> Remove</button></td>
-								</tr>
-								<tr>
-									<td class="col-sm-8 col-md-6">
-										<div class="media"> <a class="thumbnail pull-left" href="#"> <img
-													class="media-object" src="images/it_service/3.jpg" alt="#"  width="110" height="110"></a>
-											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Mcafee Livesafe Antivirus</a></h4>
-												<span>Status: </span><span class="text-success">In Stock</span>
-											</div>
-										</div>
-									</td>
-									<td class="col-sm-1 col-md-1" style="text-align: center"><input class="form-control"
-											value="3" type="email">
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1"><button type="button" class="bt_main"><i
-												class="fa fa-trash"></i> Remove</button></td>
-								</tr>
-								<tr>
-									<td class="col-md-6">
-										<div class="media"> <a class="thumbnail pull-left" href="#"> <img
-													class="media-object" src="images/it_service/4.jpg" alt="#"  width="110" height="110"></a>
-											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Norton Internet Security</a></h4>
-												<span>Status: </span><span class="text-danger">Out Stock</span>
-											</div>
-										</div>
-									</td>
-									<td class="col-md-1" style="text-align: center"><input class="form-control"
-											value="2" type="email">
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-md-1"><button type="button" class="bt_main"><i
-												class="fa fa-trash"></i> Remove</button></td>
-								</tr>
 							</tbody>
+
 						</table>
 						<table class="table">
 							<tbody>
