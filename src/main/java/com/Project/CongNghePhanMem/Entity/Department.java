@@ -30,6 +30,21 @@ public class Department {
 	
 	@JoinColumn(name = "brandId")
 	private int brandId;	
-	
-	
+
+	public void addEmployee(User employe) {
+        if (employee != null) {
+            employee.add(employe);
+        }
+    }
+	public void deleteEmployee(User employe){
+		if(employee != null){
+			employee.remove(employe);
+		}
+	}
+	public int getBrandId(){
+		return this.brandId;
+	}
+	public List<User> getEmployee(){
+		return this.employee;
+	}
 }

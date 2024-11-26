@@ -7,7 +7,6 @@
 </head>
 
 <body id="default_theme" class="it_service">
-
 	<section class="mt-5">
 		<div class="container">
 			<div class="row">
@@ -22,11 +21,11 @@
 								<p class="text-center fs-4 fw-bold"
 									th:class="${msg.contains('successful') ? 'text-success' : 'text-danger'}"
 									th:text="${msg}"></p>
-							</div>
 						</th:block>
-
+						<div></div>
 						<div class="card-body">
-							<div id="countdown" class="text-center fs-4 mb-3"></div>
+							<div id="countdown" class="text-center fs-4 mb-3" style="color: black;"></div>
+
 							<!-- Login Form -->
 							<form action="/verifyOTP" method="post">
 								<!-- OTP -->
