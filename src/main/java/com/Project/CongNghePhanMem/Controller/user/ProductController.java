@@ -1,6 +1,8 @@
 package com.Project.CongNghePhanMem.Controller.user;
 
+import java.net.http.HttpRequest;
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Project.CongNghePhanMem.Entity.Cart;
+import com.Project.CongNghePhanMem.Entity.CartDetail;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.IProductService;
@@ -47,16 +51,38 @@ public class ProductController {
 	}
 	
 	@GetMapping("/cart")
-	public String shoppingCart(Model model, Principal principal) {
-		// Kiểm tra xem người dùng đã đăng nhập chưa
-        if (principal != null) {
-            String email = principal.getName();
-            User user = userRepository.findByEmail(email);
-            model.addAttribute("user", user);  // Thêm đối tượng user vào model
-        } else {
-            model.addAttribute("user", null);  // Nếu chưa đăng nhập, truyền user là null
-        }
+	public String getCartPage(Model model, HttpServletRequest request) {
+		User currentUser = new User();//null
+		HttpSession session = request.getSession(false);
+		int id = (int) session.getAttribute("id");
+		
+		currentUser.setUserId(id);
+		
+		Cart cart = this.productService.fetchByUser(currentUser);
+		
+		List<CartDetail> cartDetails = cart.getCartDetails();
+		
+		double totalPrice = 0;
+		for(CartDetail cd : cartDetails) {
+			totalPrice += cd.getPrice() * cd.getQuantity();
+		}
+		
+		model.addAttribute("cartDetails", cartDetails);
+		model.addAttribute("totalPrice", totalPrice);
 		
 		return "user/shoppingCart";
+		
+		
 	}
+	
+	/*
+	 * @GetMapping("/cart") public String shoppingCart(Model model, Principal
+	 * principal) { // Kiểm tra xem người dùng đã đăng nhập chưa if (principal !=
+	 * null) { String email = principal.getName(); User user =
+	 * userRepository.findByEmail(email); model.addAttribute("user", user); // Thêm
+	 * đối tượng user vào model } else { model.addAttribute("user", null); // Nếu
+	 * chưa đăng nhập, truyền user là null }
+	 * 
+	 * return "user/shoppingCart"; }
+	 */
 }

@@ -48,7 +48,7 @@ public class ProductService implements IProductService {
 			if (cart == null) {
 				// tao moi cart
 				Cart newCart = new Cart();
-				newCart.setSum(1);
+				newCart.setSum(0);
 				newCart.setUser(user);
 				cart = this.cartRepository.save(newCart);
 			}
@@ -84,6 +84,11 @@ public class ProductService implements IProductService {
 		} else {
 			throw new RuntimeException("User not found");
 		}
+	}
+	
+	@Override
+	public Cart fetchByUser(User user) {
+		return this.cartRepository.findByUser(user);
 	}
 
 	@Override
