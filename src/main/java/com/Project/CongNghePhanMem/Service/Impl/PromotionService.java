@@ -1,4 +1,4 @@
-package com.Project.CongNghePhanMem.Service;
+package com.Project.CongNghePhanMem.Service.Impl;
 
 import java.util.List;
 
