@@ -123,9 +123,18 @@
 											th:text="'$' + ${cartDetail.price * cartDetail.quantity}"></p>
 									</td>
 									<td class="col-sm-1 col-md-1">
-										<button type="button" class="btn btn-remove" th:data-cart-id="${cartDetail.id}">
+										<!--<button type="button" class="btn btn-remove" th:data-cart-id="${cartDetail.id}">
 											<i class="fa fa-trash"></i> Remove
-										</button>
+										</button>-->
+
+										<form method="post"
+											th:action="@{/delete-cart-product/{id}(id=${cartDetail.id})}">
+											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+											<button class="btn btn-md rounded-circle bg-light border mt-4">
+												<i class="fa fa-times text-danger"></i>
+											</button>
+										</form>
+
 									</td>
 								</tr>
 							</tbody>

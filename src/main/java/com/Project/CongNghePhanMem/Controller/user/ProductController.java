@@ -77,6 +77,14 @@ public class ProductController {
 		
 	}
 	
+	@PostMapping("/delete-cart-product/{id}")
+    public String deleteCartDetail(@PathVariable int id, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        int cartDetailId = id;
+        this.productService.handleRemoveCartDetail(cartDetailId, session);
+        return "redirect:/cart";
+    }
+	
 	/*
 	 * @GetMapping("/cart") public String shoppingCart(Model model, Principal
 	 * principal) { // Kiểm tra xem người dùng đã đăng nhập chưa if (principal !=

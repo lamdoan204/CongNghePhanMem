@@ -17,6 +17,8 @@ import com.Project.CongNghePhanMem.Repository.ProductRepository;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.IProductService;
 
+import jakarta.servlet.http.HttpSession;
+
 @Service
 public class ProductService implements IProductService {
 
@@ -85,6 +87,31 @@ public class ProductService implements IProductService {
 			throw new RuntimeException("User not found");
 		}
 	}
+	
+	@Override
+	public void handleRemoveCartDetail(int cartDetailId, HttpSession session) {
+        Optional<CartDetail> cartDetailOptional = this.cartDetailRepository.findById(cartDetailId);
+        if (cartDetailOptional.isPresent()) {
+            CartDetail cartDetail = cartDetailOptional.get();
+
+            Cart currentCart = cartDetail.getCart();
+            // delete cart-detail
+            this.cartDetailRepository.deleteById(cartDetailId);
+
+            // update cart
+            if (currentCart.getSum() > 1) {
+                // update current cart
+                int s = currentCart.getSum() - 1;
+                currentCart.setSum(s);
+                session.setAttribute("sum", s);
+                this.cartRepository.save(currentCart);
+            } else {
+                // delete cart (sum = 1)
+                this.cartRepository.deleteById(currentCart.getId());
+                session.setAttribute("sum", 0);
+            }
+        }
+    }
 	
 	@Override
 	public Cart fetchByUser(User user) {

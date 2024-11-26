@@ -9,6 +9,8 @@ import com.Project.CongNghePhanMem.Entity.Cart;
 import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 
+import jakarta.servlet.http.HttpSession;
+
 public interface IProductService {
 	void handleAddProductToCart(String email, int id);
 	List<Product> fetchProducts();
@@ -19,5 +21,6 @@ public interface IProductService {
     void deleteProduct(int id);
     public void deleteProductsByIds(List<Integer> ids);
 	Cart fetchByUser(User user);
+	void handleRemoveCartDetail(int cartDetailId, HttpSession session);
 
 }
