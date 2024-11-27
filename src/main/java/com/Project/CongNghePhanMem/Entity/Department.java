@@ -47,4 +47,24 @@ public class Department {
 	public List<User> getEmployee(){
 		return this.employee;
 	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public User getManager() {
+		return manager;
+	}
+	public void setManager(User manager) {
+		this.manager = manager;
+	}
+	public void setEmployee(List<User> employee) {
+		this.employee = employee;
+	}
+	public void setBrandId(int brandId) {
+		this.brandId = brandId;
+	}
+	
+	
 }

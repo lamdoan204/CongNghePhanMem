@@ -79,100 +79,68 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+								<!-- Lặp qua danh sách cartDetails -->
+								<tr th:each="cartDetail : ${cartDetails}">
 									<td class="col-sm-8 col-md-6">
 										<div class="media">
 											<a class="thumbnail pull-left" href="#">
-												<img class="media-object" src="images/it_service/1.jpg" alt="#"
-													width="110" height="110">
+												<img class="media-object"
+													th:src="@{'images/products/' + ${cartDetail.product.image}}"
+													alt="Product Image" width="110" height="110">
 											</a>
 											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Norton Internet Security</a></h4>
+												<h4 class="media-heading">
+													<a href="#" th:text="${cartDetail.product.name}"></a>
+												</h4>
 												<span>Status: </span><span class="text-success">In Stock</span>
 											</div>
 										</div>
 									</td>
-									<td class="col-sm-1 col-md-1" style="text-align: center"><input class="form-control"
-											value="3" type="email"></td>
 									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
+										<div class="input-group quantity">
+											<!-- Nút giảm -->
+											<button class="btn btn-sm btn-minus" th:data-cart-id="${cartDetail.id}"
+												th:data-cart-price="${cartDetail.price}">
+												<i class="fa fa-minus"></i>
+											</button>
+											<!-- Ô nhập số lượng -->
+											<input class="form-control text-center cart-quantity" type="number" min="1"
+												th:value="${cartDetail.quantity}" th:data-cart-id="${cartDetail.id}"
+												th:data-cart-price="${cartDetail.price}">
+											<!-- Nút tăng -->
+											<button class="btn btn-sm btn-plus" th:data-cart-id="${cartDetail.id}"
+												th:data-cart-price="${cartDetail.price}">
+												<i class="fa fa-plus"></i>
+											</button>
+										</div>
 									</td>
 									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
+										<p class="price_table" th:text="'$' + ${cartDetail.price}"></p>
+									</td>
+									<td class="col-sm-1 col-md-1 text-center">
+										<!-- Giá tổng cho từng sản phẩm -->
+										<p class="total-price" th:data-cart-id="${cartDetail.id}"
+											th:text="'$' + ${cartDetail.price * cartDetail.quantity}"></p>
 									</td>
 									<td class="col-sm-1 col-md-1">
-										<button type="button" class="bt_main"><i class="fa fa-trash"></i>
-											Remove</button>
+										<!--<button type="button" class="btn btn-remove" th:data-cart-id="${cartDetail.id}">
+											<i class="fa fa-trash"></i> Remove
+										</button>-->
+
+										<form method="post"
+											th:action="@{/delete-cart-product/{id}(id=${cartDetail.id})}">
+											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+											<button class="btn btn-md rounded-circle bg-light border mt-4">
+												<i class="fa fa-times text-danger"></i>
+											</button>
+										</form>
+
 									</td>
-								</tr>
-								<tr>
-									<td class="col-md-6">
-										<div class="media"> <a class="thumbnail pull-left" href="#"> <img
-													class="media-object" src="images/it_service/2.jpg" alt="#" width="110" height="110"></a>
-											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Kaspersky Internet Security</a>
-												</h4>
-												<span>Status: </span><span class="text-danger">Out Stock</span>
-											</div>
-										</div>
-									</td>
-									<td class="col-md-1" style="text-align: center"><input class="form-control"
-											value="2" type="email">
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-md-1"><button type="button" class="bt_main"><i
-												class="fa fa-trash"></i> Remove</button></td>
-								</tr>
-								<tr>
-									<td class="col-sm-8 col-md-6">
-										<div class="media"> <a class="thumbnail pull-left" href="#"> <img
-													class="media-object" src="images/it_service/3.jpg" alt="#"  width="110" height="110"></a>
-											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Mcafee Livesafe Antivirus</a></h4>
-												<span>Status: </span><span class="text-success">In Stock</span>
-											</div>
-										</div>
-									</td>
-									<td class="col-sm-1 col-md-1" style="text-align: center"><input class="form-control"
-											value="3" type="email">
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1"><button type="button" class="bt_main"><i
-												class="fa fa-trash"></i> Remove</button></td>
-								</tr>
-								<tr>
-									<td class="col-md-6">
-										<div class="media"> <a class="thumbnail pull-left" href="#"> <img
-													class="media-object" src="images/it_service/4.jpg" alt="#"  width="110" height="110"></a>
-											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Norton Internet Security</a></h4>
-												<span>Status: </span><span class="text-danger">Out Stock</span>
-											</div>
-										</div>
-									</td>
-									<td class="col-md-1" style="text-align: center"><input class="form-control"
-											value="2" type="email">
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-md-1"><button type="button" class="bt_main"><i
-												class="fa fa-trash"></i> Remove</button></td>
 								</tr>
 							</tbody>
+
+
+
 						</table>
 						<table class="table">
 							<tbody>
@@ -205,7 +173,7 @@
 										<h4>Subtotal</h4>
 									</td>
 									<td class="text-right">
-										<h4>$50.00</h4>
+										<h4 id="subtotal-price" th:text="'$' + ${totalPrice}"></h4>
 									</td>
 								</tr>
 								<tr>
@@ -213,7 +181,7 @@
 										<h5>Estimated shipping</h5>
 									</td>
 									<td class="text-right">
-										<h4>$5.00</h4>
+										<h4>$0.00</h4>
 									</td>
 								</tr>
 								<tr>
@@ -221,7 +189,7 @@
 										<h3>Total</h3>
 									</td>
 									<td class="text-right">
-										<h4>$55.00</h4>
+										<h4 id="total-price" th:text="'$' + ${totalPrice}"></h4>
 									</td>
 								</tr>
 								<tr>
@@ -466,6 +434,8 @@
 	</footer>
 	<!-- end footer -->
 	<!-- js section -->
+	<script src="/js/main.js"></script>
+
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<!-- menu js -->
