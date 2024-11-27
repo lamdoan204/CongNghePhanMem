@@ -218,19 +218,24 @@
                     Giá
                 </label>
             </div>
-
-            <!-- Loại sản phẩm -->
-            <div class="form-floating mb-3" style="border: 2px solid #6699FF;border-radius: 10px;">
-                <input type="text" 
-                       class="form-control" 
-                       th:field="*{kind}" 
-                       id="productKind" 
-                       placeholder="Loại">
-                <label for="productKind">
-                    <i class="fas fa-cogs text-primary me-2"></i>
-                    Loại
-                </label>
-            </div>
+<!-- Loại sản phẩm -->
+<div class="form-floating mb-3" style="border: 2px solid #6699FF; border-radius: 10px;">
+    <select class="form-control" th:field="*{kind}" id="productKind" required>
+        <option value="" disabled selected>Chọn loại sản phẩm</option>
+        <option value="CPU"></option>
+        <option value="CPU">CPU</option>
+        <option value="GPU">GPU</option>
+        <option value="Motherboard">Motherboard</option>
+        <option value="RAM">RAM</option>
+        <option value="Storage">Storage</option>
+        <option value="PSU">PSU</option>
+        <option value="Case">Case</option>
+    </select>
+    <label for="productKind">
+        <i class="fas fa-cogs text-primary me-2"></i>
+        Loại
+    </label>
+</div>
              
            <!-- Hình ảnh sản phẩm -->
            <div class="mb-3">
@@ -315,6 +320,55 @@
             }
         });
     </script>
+    <script>
+    // Validate form before submission
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const nameInput = document.getElementById('productName');
+        const imageInput = document.getElementById('imageFile');
+        
+        // Kiểm tra tên sản phẩm
+        if (!nameInput.value.trim()) {
+            e.preventDefault();
+            alert('Please enter the product name');
+            nameInput.focus();
+            return;
+        }
+
+        // Kiểm tra hình ảnh
+        if (!imageInput.files.length) {
+            e.preventDefault();
+            alert('Please choose a product image');
+            imageInput.focus();
+            return;
+        }
+    });
+
+    // Preview image before upload
+    document.getElementById('imageFile').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('preview');
+        
+        if (file) {
+            // Kiểm tra kích thước
+            if (file.size > 5242880) { // 5MB
+                alert('File size should not exceed 5MB');
+                this.value = '';
+                preview.style.display = 'none';
+                return;
+            }
+            
+            // Hiển thị preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+</script>
     <div>
     <footer th:replace="~{manager/footer}"></footer>
 </div>
