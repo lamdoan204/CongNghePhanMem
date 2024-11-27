@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Thiết lập chung */
+        body {
+            background-color: #F7F9FC;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #2C3E50;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header kéo rộng hết màn hình */
+        .product-header {
+            background: linear-gradient(135deg, #FF6B6B, #FFE66D);
+            padding: 50px;
+            color: white;
+            text-align: center;
+            position: relative;
+            width: 100%;
+        }
+
+        .product-header h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Bố cục chính */
+        .product-details-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 30px auto;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Hình ảnh sản phẩm */
+        .product-image {
+            flex: 1;
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+        }
+
+        /* Chi tiết sản phẩm */
+        .product-info {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .info-title {
+            color: #FF6B6B;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-tag {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #FF6B6B;
+            margin-top: 20px;
+        }
+
+        .description-section {
+            margin-top: 30px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        /* Container nút */
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-custom {
+            background: linear-gradient(135deg, #4ECDC4, #556270);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .product-details-container {
+                flex-direction: column;
+            }
+
+            .product-image {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header từ template -->
+    <div th:replace="manager/header"></div>
+
+    <!-- Header sản phẩm -->
+    <div class="product-header">
+        <h1 th:text="${product.name}">Tên Sản Phẩm</h1>
+        <div class="custom-badge">
+            <i class="fas fa-tag"></i>
+            <span th:text="${brand}">Thương hiệu</span>
+        </div>
+    </div>
+
+    <!-- Container chi tiết sản phẩm -->
+    <div class="product-details-container">
+        <!-- Hình ảnh sản phẩm -->
+    <div class="product-image" 
+         >
+         <img th:if="${product.image != null}"
+                     th:src="@{'/image?fname=' + ${product.image}}" class="product-image" id="currentImage" 
+                     th:alt="${product.name}">
+    </div>
+
+        <!-- Thông tin sản phẩm -->
+        <div class="product-info">
+            <div class="info-title">
+                <i class="fas fa-info-circle"></i> Thông tin chi tiết
+            </div>
+            <p><strong>Loại:</strong> <span th:text="${product.kind}">Loại sản phẩm</span></p>
+            <p><strong>Thương hiệu:</strong> <span th:text="${brand}">Thương hiệu</span></p>
+            <div class="price-tag">
+                Giá: <span th:text="${product.price}">0</span> VNĐ
+            </div>
+            <div class="description-section">
+                <h4>Mô tả sản phẩm:</h4>
+                <p th:text="${product.description}">
+                    Mô tả chi tiết sản phẩm sẽ xuất hiện ở đây...
+                </p>
+            </div>
+
+            <!-- Container nút điều hướng -->
+            <div class="button-container">
+                <a href="/manager/manage-products" class="btn-custom">
+                    <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                </a>
+                <a th:href="@{/manager/manage-products/edit/{id}(id=${product.productID})}" class="btn-custom">
+                    <i class="fas fa-edit"></i> Chỉnh sửa
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer từ template -->
+    <div th:replace="~{manager/footer}"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.Project.CongNghePhanMem.Controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
+import com.Project.CongNghePhanMem.Service.IProductService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -24,11 +27,14 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/user/")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
-    private BCryptPasswordEncoder passEncoder;
+	@Autowired
+	private UserRepository userRepo;
+	
+	@Autowired
+	private IProductService productService;
+	
+	@Autowired
+	private BCryptPasswordEncoder passEncoder;
 
     @ModelAttribute
     private void userDetails(Model m, Principal p) {
@@ -52,10 +58,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "user/home";
-    }
+	@GetMapping("/")
+	public String home(Model model) {
+		List<Product> products = this.productService.fetchProducts();
+    	model.addAttribute("products", products);
+		return "user/home";
+	}
 
     @PostMapping("/updatePassword")
     public String UpdatePassword(Principal p, 
@@ -107,5 +115,6 @@ public class UserController {
 	        return password.matches(regex);
 	    }
 	
+
 
 }

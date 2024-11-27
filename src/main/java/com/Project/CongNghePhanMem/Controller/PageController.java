@@ -1,6 +1,7 @@
 package com.Project.CongNghePhanMem.Controller;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.Project.CongNghePhanMem.Entity.Product;
+import com.Project.CongNghePhanMem.Entity.Review;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
+import com.Project.CongNghePhanMem.Service.IProductService;
 import com.Project.CongNghePhanMem.Service.IUserService;
 import com.Project.CongNghePhanMem.Service.JwtService;
 import com.Project.CongNghePhanMem.dto.AuthResponse;
 import com.Project.CongNghePhanMem.dto.UserRequest;
+import com.Project.CongNghePhanMem.Service.Impl.ReviewService;
+
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -53,21 +59,31 @@ public class PageController {
 	
 	@Autowired 
 	private UserDetailsService detailsService; 
-	
 
+	@Autowired
+	private IProductService productService;
+	
+	@Autowired
+    private ReviewService reviewService;
+	
 	@ModelAttribute
 	private void userDetails(Model m, Principal p) {
-		if (p != null) {
+		if(p!= null) {
 			String email = p.getName();
 			User user = userRepo.findByEmail(email);
-			m.addAttribute("user", user);
+			
+			m.addAttribute("user", user);	
 		}
 	}
-
-	@GetMapping("/")
-	public String Home() {
-		return "index";
-	}
+	
+    @GetMapping("/")
+    public String Home(Model model) {
+    	List<Product> products = this.productService.fetchProducts();
+    	model.addAttribute("products", products);
+    	
+        return "index" ;
+    }
+    
 
 	@GetMapping("/it_home_dark")
 	public String Home_dark() {
@@ -262,5 +278,41 @@ public class PageController {
 			return "redirect:/resetPassword";
 		}
 	}
+
+    @GetMapping("/it_shop_detail")
+    public String getProductDetail(@RequestParam("id") int productId, Model model) {
+        Product product = productService.findProductById(productId);
+        model.addAttribute("product", product);
+        
+     // Lấy thông tin sản phẩm hiện tại
+        String description = product.getDescription(); // Lấy mô tả sản phẩm
+        String kind = product.getKind(); // Lấy loại sản phẩm
+
+        // Lấy danh sách sản phẩm liên quan dựa trên description và kind
+        List<Product> relatedProducts = productService.findRelatedProducts(description, kind, productId);
+
+        // Truyền dữ liệu vào model để hiển thị trong view
+        model.addAttribute("relatedProducts", relatedProducts);
+        
+        List<Review> reviews = reviewService.getReviewsByProductId(productId);
+        model.addAttribute("reviews", reviews);
+
+        return "it_shop_detail";  // Tên của view sẽ được render
+    }
+
+    @GetMapping("/search")
+    public String searchProducts(@RequestParam("query") String query, Model model) {
+        // Gửi yêu cầu tìm kiếm đến Service
+        List<Product> SearchProducts = productService.productSearch(query);
+
+        // Đưa danh sách sản phẩm tìm được vào Model để gửi tới it_shop.html
+        model.addAttribute("SearchProducts", SearchProducts);
+        model.addAttribute("query", query); // Để hiển thị lại từ khóa tìm kiếm trong ô input
+        
+        
+        return "it_shop"; // Trả về view it_shop.html
+    }
+
+    
 
 }

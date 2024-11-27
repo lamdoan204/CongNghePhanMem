@@ -12,13 +12,22 @@ public interface IUserService  {
 	
 	public boolean checkEmail(String email);
 	
+	User getUserById(int id);
+	
 	User getUserByEmail(String email);
 
 	boolean checkPassword(String rawPassword, String encodedPassword);
 	
 	public boolean verifyAccount(String code);
-	
+
 	public String login(UserRequest request);
 	
 	public List<User> getUserDtls();
+
+	public User getUserByUserId(int id);
+
+	public User getUserByPhone(String phone);
+
+	public User getUserCurentLogged();
+
 }
