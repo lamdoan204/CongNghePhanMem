@@ -81,6 +81,14 @@
 <div class="page-header text-center header-product-management">
     <h1><i class="fas fa-boxes me-2"></i>Quản lý sản phẩm</h1>
     <p class="lead">Quản lý và cập nhật thông tin các sản phẩm trong hệ thống</p>
+    <!-- Hiển thị tên thương hiệu -->
+	 <div class="brand-info" style="color: #007bff;  align-items: center">
+	    <strong>
+	        <i class="fas fa-cogs"></i> <!-- Thêm icon cogs từ Font Awesome -->
+	        Thương hiệu quản lý: 
+	    </strong>
+	    <span th:text="${brand}"></span>
+	</div>
 </div>
 
 <div class="container mt-5">
@@ -135,37 +143,41 @@
                         <th>Giá</th>
                         <th>Loại</th>
                         <th>Mô tả</th>
-						<th>Thương hiệu</th>
                         <th>Hành động</th>
                         <th>
                             <input type="checkbox" id="selectAll" onclick="toggleAll(this)"> Chọn
                         </th>
                     </tr>
                 </thead>
-                <tbody class="table-light" style="border: 1px solid #000;">
-                    <tr th:each="product, stat : ${products.content}">
-                        <td th:text="${stat.index + 1}"></td>
-                <td>
-    <!-- Hiển thị hình ảnh -->
-    <img th:src="@{/images/products/{image}(image=${product.image})}" alt="Hình sản phẩm" 
-         style="width: 100px; height: auto; border-radius: 5px;">
-</td>
+               <tbody class="table-light" style="border: 1px solid #000;">
+    <tr th:each="product, stat : ${products.content}" th:if="${product.brandId == managerBrandId}">
+        <!-- Kiểm tra xem sản phẩm có đúng thuộc thương hiệu mà manager quản lý không -->
+      
+            <td th:text="${stat.index + 1}"></td>
+            <td>
+                <!-- Hiển thị hình ảnh -->
+                <img th:if="${product.image != null}"
+                     th:src="@{'/image?fname=' + ${product.image}}" class="product-image"
+                     th:alt="${product.name}">
+                <img th:unless="${product.image != null}" th:src="@{'/image?fname=no-image.png'}"
+                     class="product-image" alt="No Image">
+            </td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.kind}"></td>
+            <td th:text="${product.description}"></td>
+            <td>
+                <a th:href="@{/manager/manage-products/detail/{id}(id=${product.productID})}" class="btn btn-sm btn-info">Xem chi tiết</a>
+                <a th:href="@{/manager/manage-products/edit/{id}(id=${product.productID})}" class="btn btn-sm btn-warning">Sửa</a>
+                <a href="#" th:href="@{/manager/manage-products/delete/{id}(id=${product.productID})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</a>
+            </td>
+            <td>
+                <input type="checkbox" name="selectedItems" th:value="${product.productID}">
+            </td>
+       
+    </tr>
+</tbody>
 
-                        <td th:text="${product.name}"></td>
-                        <td th:text="${product.price}"></td>
-                        <td th:text="${product.kind}"></td>
-                        <td th:text="${product.description}"></td>
-						<td th:text="${product.brandId}"></td>
-                        <td>
-                            <a th:href="@{/manager/manage-products/detail/{id}(id=${product.productID})}" class="btn btn-sm btn-info">Xem chi tiết</a>
-                            <a th:href="@{/manager/manage-products/edit/{id}(id=${product.productID})}" class="btn btn-sm btn-warning">Sửa</a>
-                            <a href="#" th:href="@{/manager/manage-products/delete/{id}(id=${product.productID})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</a>
-                        </td>
-                        <td>
-                            <input type="checkbox" name="selectedItems" th:value="${product.productID}">
-                        </td>
-                    </tr>
-                </tbody>
             </table>
         </div>
         </form>
@@ -202,7 +214,7 @@
 </div>
 
 <!-- Footer -->
-<div th:replace="manager/footer"></div>
+<div th:replace="~{manager/footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Bootstrap JS & Popper.js (để modal hoạt động) -->

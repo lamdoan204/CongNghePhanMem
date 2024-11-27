@@ -152,4 +152,12 @@ public class ProductService implements IProductService {
 	public void deleteProductsByIds(List<Integer> ids) {
 		productRepository.deleteAllById(ids);
 	}
+	
+	 @Override
+	    public Page<Product> searchProductsByBrand(int brandId , String keyword, Pageable pageable) {
+	        if (keyword != null && !keyword.isEmpty()) {
+	            return productRepository.findByBrandIdAndNameContaining(brandId, keyword, pageable);
+	        }
+	        return productRepository.findByBrandId(brandId, pageable);
+	    }
 }
