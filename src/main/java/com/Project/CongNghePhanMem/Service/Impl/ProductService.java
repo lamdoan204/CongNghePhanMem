@@ -29,6 +29,7 @@ public class ProductService implements IProductService {
 
 	private final UserService userService;
 
+	 
 	public ProductService(ProductRepository productRepository, CartRepository cartRepository,
 			CartDetailRepository cartDetailRepository, UserRepository userRepository, UserService userService) {
 		super();
@@ -160,4 +161,22 @@ public class ProductService implements IProductService {
 	        }
 	        return productRepository.findByBrandId(brandId, pageable);
 	    }
+
+	@Override
+	public List<Product> findRelatedProducts(String description, String kind, int productId) {
+		 return productRepository.findRelatedProductsByDescriptionAndKind(description, kind, productId);
+	}
+
+	@Override
+	 public List<Product> productSearch(String keyword) {
+	     if (keyword == null || keyword.trim().isEmpty()) {
+	         throw new IllegalArgumentException("Keyword cannot be null or empty");
+	     }
+
+	     // Gọi repository để tìm sản phẩm
+	     List<Product> products = productRepository.searchProducts(keyword);
+	     
+	     return products;  // Kiểm tra xem có sản phẩm nào được trả về không
+	 }
+	
 }

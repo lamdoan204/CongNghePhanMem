@@ -25,6 +25,7 @@ public class User {
     private String password;
     private String role;
     private boolean accounNonLocked;
+    private String image;
 
     @ManyToOne
     @JoinColumn(name = "department_id") // Tên cột khóa ngoại
@@ -115,7 +116,15 @@ public class User {
         this.role = role;
     }
 
-    public User(int userId, String email, String phone, String fullName, String address, String password) {
+    public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public User(int userId, String email, String phone, String fullName, String address, String password,String image) {
         super();
         this.userId = userId;
         this.email = email;
@@ -123,6 +132,7 @@ public class User {
         this.fullName = fullName;
         this.address = address;
         this.password = password;
+        this.image = image;
     }
 
     public User() {

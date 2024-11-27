@@ -23,5 +23,7 @@ public interface IProductService {
     public void deleteProductsByIds(List<Integer> ids);
 	Cart fetchByUser(User user);
 	void handleRemoveCartDetail(int cartDetailId, HttpSession session);
-
+	List<Product> findRelatedProducts(String description, String kind, int productId);
+	
+	List<Product> productSearch(String keyword);
 }

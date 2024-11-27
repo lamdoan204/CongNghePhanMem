@@ -11,14 +11,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Project.CongNghePhanMem.Entity.Cart;
 import com.Project.CongNghePhanMem.Entity.CartDetail;
+import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.IProductService;
 import com.Project.CongNghePhanMem.Service.IUserService;
+import com.Project.CongNghePhanMem.Service.Impl.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -31,7 +34,9 @@ public class ProductController {
 	
 	@Autowired
 	private UserRepository userRepository;
-
+	
+	@Autowired
+    private ProductService productService1;  // ProductService để xử lý các sản phẩm
 
 	public ProductController(IProductService productService, IUserService userService) {
 		super();
@@ -95,4 +100,13 @@ public class ProductController {
 	 * 
 	 * return "user/shoppingCart"; }
 	 */
+	
+	
+
+
+
+
+
+
+	 
 }
