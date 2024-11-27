@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Role: Quản lý</title>
+</head>
+
+<body>
+    <!-- header -->
+    <div th:replace="manager/header"></div>
+    <!-- content -->
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Overview Section -->
+        <div id="overview" class="mb-4">
+            <h3 class="mb-3">Tổng quan</h3>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">Sản phẩm</h5>
+                            <p class="card-text">120 sản phẩm</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-success">
+                        <div class="card-body">
+                            <h5 class="card-title">Nhân viên</h5>
+                            <p class="card-text">25 nhân viên</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-info">
+                        <div class="card-body">
+                            <h5 class="card-title">Khuyến mãi</h5>
+                            <p class="card-text">8 chương trình</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body">
+                            <h5 class="card-title">Doanh thu</h5>
+                            <p class="card-text">$15,000</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Products Section -->
+        <div id="manage-products" class="mb-4">
+            <h3 class="mb-3">Quản lý Sản phẩm</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Tồn kho</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Card đồ họa RTX 3060</td>
+                        <td>$400</td>
+                        <td>50</td>
+                        
+                    </tr>
+                    <!-- Thêm các dòng khác -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Manage Employees Section -->
+        <div id="manage-employees" class="mb-4">
+            <h3 class="mb-3">Quản lý Nhân viên</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên</th>
+                        <th>Email</th>
+                        <th>Vị trí</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Nguyễn Văn A</td>
+                        <td>a.nguyen@example.com</td>
+                        <td>Nhân viên bán hàng</td>
+                       
+                    </tr>
+                    <!-- Thêm các dòng khác -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Manage Promotions Section -->
+        <div id="manage-promotions" class="mb-4">
+            <h3 class="mb-3">Quản lý Khuyến mãi</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    Giảm 10% cho đơn hàng trên $500 (Từ 01/11 - 30/11)
+            
+                </li>
+                <!-- Thêm các khuyến mãi khác -->
+            </ul>
+        </div>
+
+        <!-- Revenue Section -->
+        <div id="revenue" class="mb-4">
+            <h3 class="mb-3">Doanh thu</h3>
+            <p>Biểu đồ và báo cáo doanh thu sẽ hiển thị tại đây.</p>
+            <!-- Có thể thêm biểu đồ bằng thư viện như Chart.js -->
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div th:replace="manager/footer"></div>
+
+</body>
+
+</html>

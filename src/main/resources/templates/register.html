@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Insert title here</title>
+</head>
+
+
+<body id="default_theme" class="it_service">
+	<section class="mt-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 offset-md-3">
+					<div class="card shadow-lg">
+						<!-- Header -->
+						<div class="card-header text-center text-white bg-primary fs-4">
+							<i class="fas fa-user-plus me-2"></i>Register Page
+						</div>
+						<th:block th:if="${msg}">
+							<p class="text-center fs-4 fw-bold"
+								th:class="${msg.contains('successful') ? 'text-success' : 'text-danger'}"
+								th:text="${msg}" style="display: flex; justify-content: center; align-items: center;">
+							</p>
+						</th:block>
+
+						<!-- Body -->
+						<div class="card-body">
+							<form action="createUser" method="post">
+								<!-- Full Name -->
+								<div class="mb-3">
+									<label for="fullName" class="form-label">Enter Full Name</label>
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-user"></i></span>
+										<input type="text" id="fullName" name="fullName" class="form-control"
+											placeholder="Enter your full name">
+									</div>
+								</div>
+
+								<!-- Email -->
+								<div class="mb-3">
+									<label for="email" class="form-label">Enter Email</label>
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-envelope"></i></span>
+										<input type="email" id="email" name="email" class="form-control"
+											placeholder="Enter your email">
+									</div>
+								</div>
+
+								<!-- Address -->
+								<div class="mb-3">
+									<label for="address" class="form-label">Enter Address</label>
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+										<input type="text" id="address" name="address" class="form-control"
+											placeholder="Enter your address">
+									</div>
+								</div>
+
+								<!-- Password -->
+								<div class="mb-3">
+									<label for="password" class="form-label">Enter Password</label>
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-lock"></i></span>
+										<input type="password" id="password" name="password" class="form-control"
+											placeholder="Enter your password">
+									</div>
+								</div>
+								<!-- Password -->
+								<div class="mb-3">
+									<label for="password1" class="form-label">Confirm Password</label>
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-lock"></i></span>
+										<input type="password" id="password1" name="password1" class="form-control"
+											placeholder="Enter your password">
+									</div>
+								</div>
+
+								<!-- Phone -->
+								<div class="mb-3">
+									<label for="phone" class="form-label">Enter Phone</label>
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-phone"></i></span>
+										<input type="text" id="phone" name="phone" class="form-control"
+											placeholder="Enter your phone">
+									</div>
+								</div>
+
+								<!-- Submit Button -->
+								<div class="d-grid">
+									<button type="submit" class="btn btn-primary">
+										<i class="fas fa-paper-plane"></i> Register
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<script>
+		document.querySelector("form").addEventListener("submit", function (event) {
+			const password = document.getElementById("password").value;
+			const confirmPassword = document.getElementById("password1").value;
+
+			if (password !== confirmPassword) {
+				event.preventDefault();
+				alert("Mật khẩu không khớp. Vui lòng thử lại!");
+			}
+		});
+	</script>
+</body>
+
+</html>
