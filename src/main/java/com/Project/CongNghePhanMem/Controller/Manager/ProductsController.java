@@ -95,7 +95,7 @@ public class ProductsController {
     	            existingProduct.setImage(product.getImage());
     	            existingProduct.setPrice(product.getPrice());
     	            existingProduct.setKind(product.getKind());  // Cập nhật loại sản phẩm
-    	            existingProduct.setBrandId(product.getBrandId());  // Cập nhật thương hiệu
+    	            existingProduct.getBrand().getBrandId(); // Lấy ID của thương hiệu  // Cập nhật thương hiệu
     	            existingProduct.setDescription(product.getDescription());  // Cập nhật mô tả
 
     	            // Lưu lại thông tin đã chỉnh sửa

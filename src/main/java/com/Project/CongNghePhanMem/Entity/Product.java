@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -33,9 +34,10 @@ public class Product implements Serializable
     private String image;
     private String kind;
     
-    @JoinColumn(name = "brandId")
-    private int brandId;
-    
+ // Ánh xạ mối quan hệ ManyToOne với bảng 'brands'
+    @ManyToOne
+    @JoinColumn(name = "brandId")  // Cột này là khóa ngoại tham chiếu đến bảng 'brands'
+    private Brand brand;  // Đối tượng Brand
     private String description;
 
     @ManyToMany(mappedBy = "applicableProducts")
@@ -120,13 +122,13 @@ public class Product implements Serializable
 
 	
 
-	public int getBrandId() {
-		return brandId;
-	}
+	 public Brand getBrand() {
+	        return brand;
+	    }
 
-	public void setBrandId(int brandId) {
-		this.brandId = brandId;
-	}
+	    public void setBrand(Brand brand) {
+	        this.brand = brand;
+	    }
 
 	public Product() {
 		super();
@@ -141,7 +143,7 @@ public class Product implements Serializable
 		this.price = price;
 		this.image = image;
 		this.kind = kind;
-		this.brandId = brandId;
+		this.brand = brand;
 		this.description = description;
 		this.promotions = promotions;
 		this.orderDetails = orderDetails;
@@ -150,7 +152,7 @@ public class Product implements Serializable
 	@Override
 	public String toString() {
 		return "Product [productID=" + productID + ", name=" + name + ", price=" + price + ", image=" + image
-				+ ", kind=" + kind + ", brandId=" + brandId + ", description=" + description + ", promotions="
+				+ ", kind=" + kind + ", brandId=" + brand + ", description=" + description + ", promotions="
 				+ promotions + ", orderDetails=" + orderDetails + "]";
 	}
 	
