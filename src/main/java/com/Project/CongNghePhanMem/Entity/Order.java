@@ -24,7 +24,10 @@ public class Order {
     public static final int CANCELLED = 4; // Đã hủy
     
     private float totalPrice;
-    
+
+    @Column(name = "status", columnDefinition = "INTEGER DEFAULT 0")
+    private int status;
+	
     @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetails;
     
