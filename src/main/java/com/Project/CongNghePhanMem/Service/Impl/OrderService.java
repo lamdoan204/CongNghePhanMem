@@ -68,6 +68,7 @@ public class OrderService implements IOrderService{
     @Override
 	public List<Order> getOrdersByUser(User user) {
         return orderRepository.findByUserOrderByOrderDateDesc(user);
+    }
 
     // Xác nhận đơn hàng
     public Order confirmOrder(int orderID) {
