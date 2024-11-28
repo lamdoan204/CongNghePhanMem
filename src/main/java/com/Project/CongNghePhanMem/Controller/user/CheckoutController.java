@@ -85,7 +85,7 @@ public class CheckoutController {
 			Order order = orderService.createOrder(currentUser, cart);
 
 			// Xóa giỏ hàng sau khi đặt hàng thành công
-			//cartService.clearCart(session);
+			// cartService.clearCart(session);
 
 			// Thông báo thành công
 			redirectAttributes.addFlashAttribute("successMessage",
@@ -132,10 +132,12 @@ public class CheckoutController {
 				// Xóa giỏ hàng
 				cartService.clearCart(session);
 
+				// Chuyển đến trang quản lý đơn hàng thay vì trang success
 				redirectAttributes.addFlashAttribute("successMessage",
 						"Thanh toán thành công! Mã đơn hàng của bạn là: " + order.getOrderID());
 
-				return "redirect:/order/success/" + order.getOrderID();
+				return "redirect:/orders"; // Chuyển đến trang quản lý đơn hàng
+
 			} else {
 				redirectAttributes.addFlashAttribute("errorMessage", "Thanh toán thất bại!");
 				return "redirect:/checkout";

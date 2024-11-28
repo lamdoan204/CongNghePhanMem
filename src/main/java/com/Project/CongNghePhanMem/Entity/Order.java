@@ -17,11 +17,11 @@ public class Order {
     
     private int status;
     
-    public static final int PENDING = 0; // Đang chờ xác nhận
-    public static final int CONFIRMED = 1; // Đã xác nhận
-    public static final int IN_DELIVERY = 2; // Đang giao
-    public static final int DELIVERED = 3; // Đã giao
-    public static final int CANCELLED = 4; // Đã hủy
+    public static final int PENDING = 1; // Đang chờ xác nhận
+    public static final int CONFIRMED = 2; // Đã xác nhận
+    public static final int IN_DELIVERY = 3; // Đang giao
+    public static final int DELIVERED = 4; // Đã giao
+    public static final int CANCELLED = 5; // Đã hủy
     
     private float totalPrice;
     
