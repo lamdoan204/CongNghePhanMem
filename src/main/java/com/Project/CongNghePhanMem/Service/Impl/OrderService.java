@@ -55,4 +55,17 @@ public class OrderService implements IOrderService{
         order.setOrderDetails(orderDetails);
         return orderRepository.save(order);
     }
+    
+    
+    @Override
+	public Order findById(int orderId) {
+        return orderRepository.findById(orderId)
+            .orElse(null);
+    }
+    
+ // Method để lấy danh sách đơn hàng của user
+    @Override
+	public List<Order> getOrdersByUser(User user) {
+        return orderRepository.findByUserOrderByOrderDateDesc(user);
+    }
 }

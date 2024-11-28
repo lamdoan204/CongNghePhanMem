@@ -48,7 +48,7 @@
 	<!-- end loader -->
 	<!-- header -->
 	<header id="default_header" class="header_style_1">
-		
+
 		<!-- header top -->
 		<div class="header_top">
 			<div class="container">
@@ -153,6 +153,41 @@
 										</ul>
 									</li>
 									<!-- Menu động dựa trên trạng thái người dùng -->
+									<!-- Thay thế phần menu user bằng -->
+									<!--<th:block th:if="${session.currentUser == null}">
+										<li><a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+										<li><a href="/register"><i class="fas fa-user-plus"></i> Register</a></li>
+									</th:block>
+									<th:block th:if="${session.currentUser != null}">
+										<li class="nav-item dropdown">
+											<a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
+												id="userDropdown" role="button" data-bs-toggle="dropdown"
+												aria-expanded="false">
+												<img src="images/it_service/5087592.png" alt="User Icon"
+													class="rounded-circle me-2" style="width: 30px; height: 30px;">
+												<span th:text="${session.currentUser.fullName}">User Name</span>
+											</a>
+											<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+												<li>
+													<a class="dropdown-item" href="/profile">
+														<i class="fas fa-user"></i> Profile
+													</a>
+												</li>
+												<li>
+													<a class="dropdown-item" href="/user/changePass">
+														<i class="fas fa-lock"></i> Change Password
+													</a>
+												</li>
+												<li>
+													<form action="/logout" method="post" th:csrf="true">
+														<button type="submit" class="dropdown-item">
+															<i class="fas fa-sign-out-alt"></i> Logout
+														</button>
+													</form>
+												</li>
+											</ul>
+										</li>
+									</th:block>-->
 									<th:block th:if="${user == null}">
 										<li><a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
 										<li><a href="/register"><i class="fas fa-user-plus"></i> Register</a></li>
@@ -333,6 +368,31 @@
 	<!-- google map js -->
 	<script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script>
+
+
+
+	<!-- Thêm vào cuối file, trước </body> -->
+	<!--<script th:inline="javascript">
+		// Kiểm tra session
+		console.log('Session user:', /*[[${session.currentUser}]]*/ null);
+
+		// Kiểm tra timeout
+		const checkSession = () => {
+			fetch('/api/check-session')
+				.then(response => response.json())
+				.then(data => {
+					console.log('Session status:', data);
+					if (!data.valid) {
+						window.location.href = '/login';
+					}
+				});
+		};
+
+		// Kiểm tra mỗi 5 phút
+		setInterval(checkSession, 300000);
+	</script>-->
+
+
 </body>
 
 </html>
