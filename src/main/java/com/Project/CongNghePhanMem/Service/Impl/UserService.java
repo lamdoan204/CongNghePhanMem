@@ -144,4 +144,9 @@ public class UserService implements IUserService {
 		return user;
 
     }
+
+    @Override
+    public void updateUser(User user) {
+        userRepo.save(user);
+    }
 }

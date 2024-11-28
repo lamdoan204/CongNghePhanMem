@@ -55,6 +55,21 @@ public class ManagerService implements com.Project.CongNghePhanMem.Service.IMana
 
         return brand.getBrand();
     }
+    
+    @Override
+    public int get_DepartmentBrandId(User manager) {
+
+        Department department = departmentRepository.findByManager(manager);
+        if (department == null) {
+            throw new RuntimeException("Không tìm thấy phòng ban cho quản lý này" + manager.getUserId());
+        }
+
+        int brandId = department.getBrandId();
+
+      
+
+        return brandId;
+    }
 
     @Override
     public List<User> getListEmployee(User manager) {

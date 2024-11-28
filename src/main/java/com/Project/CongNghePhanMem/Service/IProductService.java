@@ -16,6 +16,7 @@ public interface IProductService {
 	List<Product> fetchProducts();
 	Page<Product> findAllProducts(Pageable pageable);
     Page<Product> searchProducts(String keyword, Pageable pageable);
+    Page<Product> searchProductsByBrand(int brandId, String keyword, Pageable pageable);
     Product findProductById(int id);
     Product saveProduct(Product product);
     void deleteProduct(int id);

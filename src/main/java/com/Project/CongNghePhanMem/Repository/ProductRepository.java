@@ -15,6 +15,9 @@ import com.Project.CongNghePhanMem.Entity.Product;
 public interface ProductRepository extends JpaRepository<Product, Integer>{
 	// Tìm kiếm theo tên sản phẩm (hoặc các tiêu chí khác nếu cần)
     Page<Product> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
+    Page<Product> findByBrandId(int brandId, Pageable pageable);
+
+    Page<Product> findByBrandIdAndNameContaining(int brandId, String keyword, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE (p.description = :description OR p.kind = :kind) AND p.productID != :productId")
     List<Product> findRelatedProductsByDescriptionAndKind(@Param("description") String description, 
