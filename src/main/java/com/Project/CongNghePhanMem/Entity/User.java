@@ -1,5 +1,7 @@
 package com.Project.CongNghePhanMem.Entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,9 +15,11 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "Users")
-public class User {
+public class User implements Serializable{
 
-    @Id
+	private static final long serialVersionUID = 1L;
+	
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
     private String email;
