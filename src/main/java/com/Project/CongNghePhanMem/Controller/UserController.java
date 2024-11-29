@@ -27,6 +27,8 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/user/")
 public class UserController {
 
+	
+	
 	@Autowired
 	private UserRepository userRepo;
 	
@@ -136,6 +138,7 @@ public class UserController {
 	        return password.matches(regex);
 	    }
 	
-
+	 
+	 
 
 }
