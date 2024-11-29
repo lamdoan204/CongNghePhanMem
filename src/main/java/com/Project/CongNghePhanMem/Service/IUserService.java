@@ -4,6 +4,8 @@ package com.Project.CongNghePhanMem.Service;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.dto.UserRequest;
 
@@ -34,5 +36,11 @@ public interface IUserService  {
 	
 	public List<User> getUserByRole(String role);
 
+	@PreAuthorize("hasRole('ADMIN')")
+	public User CreateManager(User user);
+	
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	public boolean deleteManager(int mangerId);
 
 }

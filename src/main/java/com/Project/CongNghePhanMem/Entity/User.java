@@ -1,6 +1,7 @@
 package com.Project.CongNghePhanMem.Entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -34,6 +36,9 @@ public class User implements Serializable{
     @ManyToOne
     @JoinColumn(name = "department_id") // Tên cột khóa ngoại
     private Department department;
+    
+    @OneToMany(mappedBy = "manager") 
+    private List<Department> managedDepartments;
 
     @Column(nullable = false, columnDefinition = "bit default 0")
     private boolean enabled = false;
