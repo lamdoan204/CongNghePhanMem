@@ -590,8 +590,7 @@ function updateDashboard() {
 
     // Cập nhật tổng doanh thu và tăng trưởng
     const totalRevenue = data.reduce((acc, item) => acc + item.revenue, 0);
-    const previousRevenue = yearlyRevenue.filter(item => item.period === (parseInt(selectedYear) - 1).toString())[0]?.totalRevenue || 0;
-    const growthPercentage = previousRevenue ? ((totalRevenue - previousRevenue) / previousRevenue * 100).toFixed(2) : 0;
+    const growthPercentage = ((data[data.length - 1].revenue - data[0].revenue) / data[0].revenue * 100).toFixed(2);
 
     document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
     document.getElementById('revenueGrowth').textContent = `${growthPercentage}%`;
