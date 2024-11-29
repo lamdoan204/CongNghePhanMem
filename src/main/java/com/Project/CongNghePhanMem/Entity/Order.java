@@ -25,8 +25,7 @@ public class Order {
     
     private float totalPrice;
     
-    @OneToMany
-    @JoinColumn(name = "id")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
     
     @ManyToOne
