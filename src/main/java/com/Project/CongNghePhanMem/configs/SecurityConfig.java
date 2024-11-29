@@ -14,14 +14,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
 	@Autowired
 	public AuthenticationSuccessHandler customsuccessHandler;
-
 
 	@Bean
 	public JwtFilter jwtFilter() {

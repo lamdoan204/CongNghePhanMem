@@ -1,7 +1,6 @@
 package com.Project.CongNghePhanMem.Entity;
 
 import java.sql.Date;
-import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -25,18 +24,21 @@ public class Order {
     
     private float totalPrice;
     
-    @OneToMany(mappedBy = "order")
-    private List<OrderDetail> orderDetails;
+    @OneToOne
+    @JoinColumn(name = "id")
+    private OrderDetail orderDetails;
     
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     
     
-    public Order(int orderID, Date orderDate, float totalPrice, List<OrderDetail> orderDetails, User user) {
+
+	public Order(int orderID, Date orderDate, int status, float totalPrice, OrderDetail orderDetails, User user) {
 		super();
 		this.orderID = orderID;
 		this.orderDate = orderDate;
+		this.status = status;
 		this.totalPrice = totalPrice;
 		this.orderDetails = orderDetails;
 		this.user = user;
@@ -80,13 +82,6 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-	public List<OrderDetail> getOrderDetails() {
-		return orderDetails;
-	}
-
-	public void setOrderDetails(List<OrderDetail> orderDetails) {
-		this.orderDetails = orderDetails;
-	}
 
 	public User getUser() {
 		return user;
@@ -94,6 +89,16 @@ public class Order {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	
+
+	public OrderDetail getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(OrderDetail orderDetails) {
+		this.orderDetails = orderDetails;
 	}
 
 	@Override

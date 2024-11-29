@@ -190,4 +190,9 @@ public class UserService implements IUserService {
 		return user;
 
     }
+
+	@Override
+	public List<User> getUserByRole(String role) {
+		return userRepo.findByRole(role);
+	}
 }

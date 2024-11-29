@@ -26,7 +26,6 @@ public class ProductService implements IProductService {
 	private final CartRepository cartRepository;
 	private final CartDetailRepository cartDetailRepository;
 	private final UserRepository userRepository;
-
 	private final UserService userService;
 
 	 
@@ -40,16 +39,13 @@ public class ProductService implements IProductService {
 		this.userService = userService;
 	}
 
-	// logic luu product vao gio hang
 	@Override
 	public void handleAddProductToCart(String email, int id) {
-		// check user da co cart chua? neu chua -> tao moi
 		User user = this.userService.getUserById(id);
 		if (user != null) {
 			Cart cart = this.cartRepository.findByUser(user);
 
 			if (cart == null) {
-				// tao moi cart
 				Cart newCart = new Cart();
 				newCart.setSum(0);
 				newCart.setUser(user);

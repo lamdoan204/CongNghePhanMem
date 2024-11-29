@@ -2,7 +2,6 @@ package com.Project.CongNghePhanMem.Service.Impl;
 
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,6 +25,8 @@ public class ManagerService implements com.Project.CongNghePhanMem.Service.IMana
     BrandRepository brandRepository;
     @Autowired
     UserRepository userRepository;
+    
+   
 
     @Override
     public void add_Employee(User employee) {
@@ -46,11 +47,11 @@ public class ManagerService implements com.Project.CongNghePhanMem.Service.IMana
             throw new RuntimeException("Không tìm thấy phòng ban cho quản lý này" + manager.getUserId());
         }
 
-        int brandId = department.getBrandId();
+        Brand brand = department.getBrand();
 
-        Brand brand = brandRepository.findByBrandId(brandId);
-        if (brand == null) {
-            throw new RuntimeException("Không tìm thấy thương hiệu với ID: " + brandId);
+        Brand brand1 = brandRepository.findByBrandId(brand.getBrandId());
+        if (brand1 == null) {
+            throw new RuntimeException("Không tìm thấy thương hiệu với ID: " + brand.getBrandId());
         }
 
         return brand.getBrand();
@@ -64,11 +65,11 @@ public class ManagerService implements com.Project.CongNghePhanMem.Service.IMana
             throw new RuntimeException("Không tìm thấy phòng ban cho quản lý này" + manager.getUserId());
         }
 
-        int brandId = department.getBrandId();
+        Brand brand = department.getBrand();
 
       
 
-        return brandId;
+        return brand.getBrandId();
     }
 
     @Override

@@ -29,5 +29,7 @@ public interface IUserService  {
 	public User getUserByPhone(String phone);
 
 	public User getUserCurentLogged();
+	
+	public List<User> getUserByRole(String role);
 
 }
