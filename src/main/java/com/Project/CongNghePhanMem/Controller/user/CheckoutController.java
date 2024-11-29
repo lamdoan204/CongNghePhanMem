@@ -27,7 +27,7 @@ import com.Project.CongNghePhanMem.Service.Impl.CartService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/checkout")
+@RequestMapping("/user/checkout")
 public class CheckoutController {
 
 	@Autowired
@@ -47,7 +47,7 @@ public class CheckoutController {
 		// Lấy giỏ hàng hiện tại
 		Cart cart = cartService.getCurrentCart(session);
 		if (cart == null || cart.getCartDetails().isEmpty()) {
-			return "redirect:/cart";
+			return "redirect:/user/cart";
 		}
 
 		// Thêm thông tin vào model
