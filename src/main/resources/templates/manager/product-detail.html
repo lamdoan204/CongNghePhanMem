@@ -143,7 +143,7 @@
     <div class="product-image" 
          >
          <img th:if="${product.image != null}"
-                     th:src="@{'/image?fname=' + ${product.image}}" class="product-image" id="currentImage" 
+                     th:src="@{'/images?fname=' + ${product.image}}" class="product-image" id="currentImage" 
                      th:alt="${product.name}">
     </div>
 

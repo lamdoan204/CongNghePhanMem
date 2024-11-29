@@ -177,7 +177,7 @@ h4 a,
 h5 a,
 h6 a {
 	color: #212121;
-	text-decoration: none!important;
+	text-decoration: none !important;
 	opacity: 1
 }
 
@@ -595,6 +595,7 @@ a:focus {
 		-o-transform: rotate(0deg);
 		transform: rotate(0deg);
 	}
+
 	to {
 		-webkit-transform: rotate(360deg);
 		-moz-transform: rotate(360deg);
@@ -608,6 +609,7 @@ a:focus {
 	from {
 		-moz-transform: rotate(0deg);
 	}
+
 	to {
 		-moz-transform: rotate(360deg);
 	}
@@ -839,6 +841,7 @@ hr.dottad_border {
 		-o-transform: rotatey(0deg);
 		transform: rotatey(0deg);
 	}
+
 	to {
 		-webkit-transform: rotatey(360deg);
 		-moz-transform: rotatey(360deg);
@@ -852,6 +855,7 @@ hr.dottad_border {
 	from {
 		-moz-transform: rotatey(0deg);
 	}
+
 	to {
 		-moz-transform: rotatey(360deg);
 	}
@@ -4800,3 +4804,155 @@ footer ul.social_icons {
 	margin-top: 35px;
 }
 
+/* Tổng thể bảng */
+.shopping-cart-cart {
+	background-color: #f9f9f9;
+	/* Màu nền nhạt */
+	border-radius: 8px;
+	/* Bo góc */
+	padding: 20px;
+	/* Khoảng cách trong */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	/* Hiệu ứng đổ bóng */
+	font-family: 'Arial', sans-serif;
+	/* Font chữ hiện đại */
+}
+
+/* Dòng tiêu đề */
+.head-table {
+	background-color: #007bff;
+	/* Màu nền xanh */
+	color: #ffffff;
+	/* Màu chữ trắng */
+	font-weight: bold;
+	/* Chữ đậm */
+	padding: 10px;
+	/* Khoảng cách trong */
+	border-radius: 8px 8px 0 0;
+	/* Bo góc trên */
+}
+
+/* Tiêu đề của từng phần */
+.shopping-cart-cart h5,
+.shopping-cart-cart h4,
+.shopping-cart-cart h3 {
+	margin: 0;
+	/* Xóa khoảng cách mặc định */
+	padding: 5px 0;
+	/* Khoảng cách trên/dưới */
+}
+
+/* Phần văn bản */
+.shopping-cart-cart td {
+	padding: 10px;
+	/* Khoảng cách bên trong ô */
+	font-size: 16px;
+	/* Kích thước chữ */
+	color: #333;
+	/* Màu chữ */
+}
+
+/* Canh lề các ô */
+.shopping-cart-cart .text-right {
+	text-align: right;
+	/* Canh phải */
+}
+
+/* Nút bấm */
+.shopping-cart-cart .button {
+	background-color: #28a745;
+	/* Màu nền xanh lá */
+	color: #fff;
+	/* Màu chữ trắng */
+	padding: 10px 20px;
+	/* Khoảng cách trong */
+	border: none;
+	/* Xóa viền */
+	border-radius: 5px;
+	/* Bo góc */
+	font-size: 16px;
+	/* Kích thước chữ */
+	font-weight: bold;
+	/* Chữ đậm */
+	cursor: pointer;
+	/* Con trỏ dạng nhấn */
+	transition: all 0.3s ease;
+	/* Hiệu ứng khi hover */
+}
+
+.shopping-cart-cart .button:hover {
+	background-color: #218838;
+	/* Màu xanh đậm hơn khi hover */
+}
+
+/* Nút tiếp tục mua sắm */
+.shopping-cart-cart .button:first-of-type {
+	background-color: #17a2b8;
+	/* Màu nền xanh dương nhạt */
+}
+
+.shopping-cart-cart .button:first-of-type:hover {
+	background-color: #138496;
+	/* Xanh dương đậm hơn khi hover */
+}
+
+/* Áp dụng font chữ cho tiêu đề Price và Total */
+.table th.text-center {
+	font-family: inherit;
+	/* Kế thừa font chữ từ phần Cart Totals */
+	font-size: 1.25rem;
+	/* Giống với h4 */
+	font-weight: bold;
+	/* In đậm */
+	color: #333;
+	/* Màu chữ giống h4 */
+}
+
+/* Áp dụng font chữ cho nội dung cột Price và Total */
+.table .price_table,
+.table .total-price {
+	font-family: inherit;
+	/* Kế thừa font chữ từ phần Cart Totals */
+	font-size: 1.25rem;
+	/* Giống với h4 */
+	font-weight: normal;
+	/* Không cần in đậm */
+	color: #555;
+	/* Màu chữ giống với giá trị trong Cart Totals */
+}
+
+
+
+.quantity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity .btn {
+    width: 30px;
+    height: 30px;
+    line-height: 1.2;
+    font-size: 14px;
+    padding: 0;
+    text-align: center;
+}
+
+.quantity .cart-quantity {
+    text-align: center;
+    width: 50px;
+    margin: 0 5px;
+}
+
+.price_table, .total-price {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.btn-remove {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

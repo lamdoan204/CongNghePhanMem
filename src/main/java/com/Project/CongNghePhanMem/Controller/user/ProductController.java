@@ -2,6 +2,7 @@ package com.Project.CongNghePhanMem.Controller.user;
 
 import java.net.http.HttpRequest;
 import java.security.Principal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,92 +23,84 @@ import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.IProductService;
 import com.Project.CongNghePhanMem.Service.IUserService;
-import com.Project.CongNghePhanMem.Service.Impl.ProductService;
+import com.Project.CongNghePhanMem.Service.Impl.CartService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/user/")
 public class ProductController {
-	
-	private final IProductService productService;
-	private final IUserService userService;
-	
-	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
-    private ProductService productService1;  // ProductService để xử lý các sản phẩm
-
-	public ProductController(IProductService productService, IUserService userService) {
-		super();
-		this.productService = productService;
-		this.userService = userService;
-	}
-
-	@PostMapping("/add-product-to-cart/{id}")
-	public String handleAddProductToCart(@PathVariable int id, HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		String email = (String)session.getAttribute("email");
-		
-		int productId = id;
-		
-		this.productService.handleAddProductToCart(email, id);
-		
-		return "redirect:/";
-	}
-	
-	@GetMapping("/cart")
-	public String getCartPage(Model model, HttpServletRequest request) {
-		User currentUser = new User();//null
-		HttpSession session = request.getSession(false);
-		//int id = (int) session.getAttribute("id");
-		int id = 4;
-		
-		currentUser.setUserId(id);
-		
-		Cart cart = this.productService.fetchByUser(currentUser);
-		
-		List<CartDetail> cartDetails = cart == null ? new ArrayList<CartDetail>(): cart.getCartDetails();
-		
-		double totalPrice = 0;
-		for(CartDetail cd : cartDetails) {
-			totalPrice += cd.getPrice() * cd.getQuantity();
-		}
-		
-		model.addAttribute("cartDetails", cartDetails);
-		model.addAttribute("totalPrice", totalPrice);
-		
-		return "user/shoppingCart";
-		
-		
-	}
-	
-	@PostMapping("/delete-cart-product/{id}")
-    public String deleteCartDetail(@PathVariable int id, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        int cartDetailId = id;
-        this.productService.handleRemoveCartDetail(cartDetailId, session);
-        return "redirect:/cart";
+    
+    @Autowired
+    private IProductService productService;
+    
+    @Autowired
+    private IUserService userService;
+    
+    @Autowired
+    private CartService cartService;
+    
+    @PostMapping("/add-product-to-cart/{id}")
+    public String handleAddProductToCart(@PathVariable int id, HttpServletRequest request) {
+        HttpSession session = request.getSession(true);
+        
+        // Kiểm tra đăng nhập
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+        
+        // Lấy thông tin sản phẩm
+        Product product = productService.findProductById(id);
+        if (product == null) {
+            return "redirect:/";
+        }
+        
+        try {
+            // Lấy giỏ hàng hiện tại
+            Cart cart = cartService.getCurrentCart(session);
+            // Thêm sản phẩm vào giỏ với số lượng mặc định là 1
+            cartService.addProductToCart(cart, product, 1);
+            
+            return "redirect:/cart";
+        } catch (Exception e) {
+            // Log error
+            return "redirect:/";
+        }
     }
-	
-	/*
-	 * @GetMapping("/cart") public String shoppingCart(Model model, Principal
-	 * principal) { // Kiểm tra xem người dùng đã đăng nhập chưa if (principal !=
-	 * null) { String email = principal.getName(); User user =
-	 * userRepository.findByEmail(email); model.addAttribute("user", user); // Thêm
-	 * đối tượng user vào model } else { model.addAttribute("user", null); // Nếu
-	 * chưa đăng nhập, truyền user là null }
-	 * 
-	 * return "user/shoppingCart"; }
-	 */
-	
-	
-
-
-
-
-
-
-	 
+    
+    @GetMapping("/cart")
+    public String getCartPage(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return "redirect:/login";
+        }
+        
+        // Lấy giỏ hàng hiện tại
+        Cart cart = cartService.getCurrentCart(session);
+        if (cart != null) {
+            List<CartDetail> cartDetails = cart.getCartDetails();
+            float totalPrice = cartService.calculateTotalPrice(cart);
+            
+            model.addAttribute("cartDetails", cartDetails);
+            model.addAttribute("totalPrice", String.format("%.2f", totalPrice));
+        } else {
+            model.addAttribute("cartDetails", new ArrayList<CartDetail>());
+            model.addAttribute("totalPrice", "0.00");
+        }
+        
+        return "user/shoppingCart";
+    }
+    
+    @PostMapping("/delete-cart-product/{id}")
+    public String deleteCartDetail(@PathVariable int id, HttpServletRequest request) {
+        try {
+            cartService.removeCartDetail(id);
+            return "redirect:/cart";
+        } catch (Exception e) {
+            // Log error
+            return "redirect:/cart";
+        }
+    }
 }

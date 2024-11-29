@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.Project.CongNghePhanMem.Entity.Department;
 import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.BrandRepository;
@@ -80,7 +79,6 @@ public class ProductsController {
              User manager = userService.getUserCurentLogged();
          	// Gọi Service để lấy tên thương hiệu
              String brand = managerService.get_DepartmentName(manager);
-             int brandId = managerService.get_DepartmentBrandId(manager);
 
              // Gửi thông tin sản phẩm và thương hiệu đến giao diện
              model.addAttribute("product", product);
@@ -116,8 +114,7 @@ public class ProductsController {
         RedirectAttributes redirectAttributes) {
     	User manager = userService.getUserCurentLogged();
     	// Gọi Service để lấy tên thương hiệu
-        String brand = managerService.get_DepartmentName(manager);
-        int brandId = managerService.get_DepartmentBrandId(manager);
+       int brandId = managerService.get_DepartmentBrandId(manager);
 
     	try {
 	        if (imageFile != null && !imageFile.isEmpty()) {
@@ -169,7 +166,6 @@ public class ProductsController {
     	User manager = userService.getUserCurentLogged();
     	// Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
-        int brandId = managerService.get_DepartmentBrandId(manager);
         
     	Product product = productService.findProductById(productID);  // Sử dụng productID thay vì id
     	model.addAttribute("brand", brand);
@@ -238,7 +234,7 @@ public class ProductsController {
                     Files.deleteIfExists(imagePath);  // Xóa file ảnh
                 }
                 
-                // Xóa sản phẩm khỏi cơ sở dữ liệu
+
                 productService.deleteProduct(productID);
                 redirectAttributes.addFlashAttribute("message", "Xóa sản phẩm thành công!");
             }
