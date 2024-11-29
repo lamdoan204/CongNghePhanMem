@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Controller
-@RequestMapping("/image")
+@RequestMapping("/images")
 public class ImageController {
 	private final String IMAGE_DIR = "src/main/resources/static/images/products";
 
