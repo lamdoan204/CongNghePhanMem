@@ -28,8 +28,9 @@ public class Department {
 	@OneToMany
 	private List<User> employee; 
 	
+	@OneToOne
 	@JoinColumn(name = "brandId")
-	private int brandId;	
+	private Brand brand;	
 
 	public void addEmployee(User employe) {
         if (employee != null) {
@@ -41,9 +42,7 @@ public class Department {
 			employee.remove(employe);
 		}
 	}
-	public int getBrandId(){
-		return this.brandId;
-	}
+	
 	public List<User> getEmployee(){
 		return this.employee;
 	}
@@ -62,9 +61,13 @@ public class Department {
 	public void setEmployee(List<User> employee) {
 		this.employee = employee;
 	}
-	public void setBrandId(int brandId) {
-		this.brandId = brandId;
+	public Brand getBrand() {
+		return brand;
 	}
+	public void setBrand(Brand brand) {
+		this.brand = brand;
+	}
+	
 	
 	
 }

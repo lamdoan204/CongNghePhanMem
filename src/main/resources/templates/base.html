@@ -48,7 +48,7 @@
 	<!-- end loader -->
 	<!-- header -->
 	<header id="default_header" class="header_style_1">
-		
+
 		<!-- header top -->
 		<div class="header_top">
 			<div class="container">
@@ -153,11 +153,11 @@
 										</ul>
 									</li>
 									<!-- Menu động dựa trên trạng thái người dùng -->
-									<th:block th:if="${user == null}">
+									<th:block th:if="${user == null} or ${user.role == 'MANAGER'} or ${user.role == 'EMPLOYEE'} or ${user.role == 'ADMIN'}">
 										<li><a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
 										<li><a href="/register"><i class="fas fa-user-plus"></i> Register</a></li>
 									</th:block>
-									<th:block th:if="${user != null}">
+									<th:block th:if="${user != null} and ${user.role == 'USER'}">
 										<li class="nav-item dropdown">
 											<a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
 												id="userDropdown" role="button" data-bs-toggle="dropdown"

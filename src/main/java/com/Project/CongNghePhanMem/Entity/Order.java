@@ -25,7 +25,8 @@ public class Order {
     
     private float totalPrice;
     
-    @OneToMany(mappedBy = "order")
+    @OneToMany
+    @JoinColumn(name = "id")
     private List<OrderDetail> orderDetails;
     
     @ManyToOne
@@ -33,14 +34,8 @@ public class Order {
     private User user;
     
     
-    public Order(int orderID, Date orderDate, float totalPrice, List<OrderDetail> orderDetails, User user) {
-		super();
-		this.orderID = orderID;
-		this.orderDate = orderDate;
-		this.totalPrice = totalPrice;
-		this.orderDetails = orderDetails;
-		this.user = user;
-	}
+
+	
 
 	public Order() {
 		super();
@@ -80,13 +75,6 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-	public List<OrderDetail> getOrderDetails() {
-		return orderDetails;
-	}
-
-	public void setOrderDetails(List<OrderDetail> orderDetails) {
-		this.orderDetails = orderDetails;
-	}
 
 	public User getUser() {
 		return user;
@@ -95,11 +83,28 @@ public class Order {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	
 
-	@Override
-	public String toString() {
-		return "Order [orderID=" + orderID + ", orderDate=" + orderDate + ", status=" + status + ", totalPrice="
-				+ totalPrice + ", orderDetails=" + orderDetails + ", user=" + user + "]";
+
+	public List<OrderDetail> getOrderDetails() {
+		return orderDetails;
 	}
+
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
+	
+
+	public Order(int orderID, Date orderDate, int status, float totalPrice, List<OrderDetail> orderDetails, User user) {
+		super();
+		this.orderID = orderID;
+		this.orderDate = orderDate;
+		this.status = status;
+		this.totalPrice = totalPrice;
+		this.orderDetails = orderDetails;
+		this.user = user;
+	}
+
     
 }
