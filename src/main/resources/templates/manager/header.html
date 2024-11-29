@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .navbar {
-            background-color: #007BFF;
+            background-color: #023468;
             /* Xanh biển */
         }
 
@@ -33,10 +33,7 @@
             /* Nền đỏ */
             color: white !important;
             /* Văn bản trắng */
-            border-radius: 5px;
-            /* Bo góc cho đẹp */
-            padding: 2px 5px;
-            /* Thêm khoảng đệm cho nút */
+            
         }
     </style>
 </head>
@@ -46,8 +43,10 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <!-- Logo hoặc tên trang -->
-            <a class="navbar-brand" href="/manager/">THƯƠNG HIỆU QUẢN LÝ: [[${brand}]]</a>
-
+            <a class="navbar-brand" href="/manager/">THƯƠNG HIỆU: [[${brand}]]
+                <div> Quản lý:  </div>
+            </a>
+            
             <!-- Menu toggle cho màn hình nhỏ -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,19 +58,19 @@
                 <ul class="navbar-nav ms-auto">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/manager/manage-products">QUẢN LÝ SẢN PHẨM</a>
+                        <a class="nav-link" href="/manager/manage-products">SẢN PHẨM</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/manager/employeeManagement">QUẢN LÝ NHÂN VIÊN</a>
+                        <a class="nav-link" href="/manager/employeeManagement">NHÂN VIÊN</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#revenue">DOANH THU</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/manager/promotions">QUẢN LÝ CHƯƠNG TRÌNH KHUYẾN MÃI</a>
+                        <a class="nav-link" href="/manager/promotions">CHƯƠNG TRÌNH KHUYẾN MÃI</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/manager/blog">QUẢN LÝ BÀI VIẾT</a>
+                        <a class="nav-link" href="/manager/blog">BÀI VIẾT</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link logout-link" href="/logout">ĐĂNG XUẤT</a>

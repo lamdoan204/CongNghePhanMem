@@ -36,14 +36,23 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder passEncoder;
 
-    @ModelAttribute
-    private void userDetails(Model m, Principal p) {
+	@ModelAttribute
+    private void userDetails(Model m, Principal p, HttpSession session) {
         if (p != null) {
-            String email = p.getName();
-            User user = userRepo.findByEmail(email);
-            if (user != null) {
-                m.addAttribute("user", user);
+            // Kiểm tra user trong session
+            User currentUser = (User) session.getAttribute("currentUser");
+            
+            if (currentUser == null) {
+                // Nếu chưa có trong session, lấy từ database và lưu vào session
+                String email = p.getName();
+                currentUser = userRepo.findByEmail(email);
+                if (currentUser != null) {
+                    session.setAttribute("currentUser", currentUser);
+                }
             }
+            
+            // Thêm vào model để view có thể sử dụng
+            m.addAttribute("user", currentUser);
         }
     }
     @GetMapping("/profile")
@@ -59,29 +68,41 @@ public class UserController {
     }
 
 	@GetMapping("/")
-	public String home(Model model) {
+	public String home(Model model, HttpSession session) {
+		User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+		
+		
 		List<Product> products = this.productService.fetchProducts();
     	model.addAttribute("products", products);
 		return "user/home";
 	}
 
-    @PostMapping("/updatePassword")
-    public String UpdatePassword(Principal p, 
-                                 @RequestParam("oldPass") String oldPass, 
-                                 @RequestParam("newPass") String newPass, 
-                                 RedirectAttributes redirectAttributes) {
-
-        if (p == null) {
-            redirectAttributes.addFlashAttribute("msg", "Please log in first!");
+	@PostMapping("/updatePassword")
+    public String updatePassword(HttpSession session, Principal p, 
+            @RequestParam("oldPass") String oldPass,
+            @RequestParam("newPass") String newPass) {
+            
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
             return "redirect:/login";
         }
 
-        String email = p.getName();
-        User user = userRepo.findByEmail(email);
-
-        if (user == null) {
-            redirectAttributes.addFlashAttribute("msg", "User not found!");
-            return "redirect:/user/changePass";
+        boolean check = passEncoder.matches(oldPass, currentUser.getPassword());
+        if (check) {
+            currentUser.setPassword(passEncoder.encode(newPass));
+            User updatedUser = userRepo.save(currentUser);
+            if (updatedUser != null) {
+                // Cập nhật user trong session
+                session.setAttribute("currentUser", updatedUser);
+                session.setAttribute("msg", "Update Password successful!");
+            } else {
+                session.setAttribute("msg", "as went wrong!");
+            }
+        } else {
+            session.setAttribute("msg", "Old Password incorrect!");
         }
 
         if (passEncoder.matches(oldPass, user.getPassword())) {

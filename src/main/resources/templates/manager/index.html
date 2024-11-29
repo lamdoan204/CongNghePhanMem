@@ -2,47 +2,112 @@
 <html lang="vi">
 
 <head>
-    <meta charset="ISO-8859-1">
-    <title>Role: Quản lý</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-color: #121212;
+            font-family: 'Arial', sans-serif;
+            color: #e0e0e0;
+        }
+
+        .content {
+            margin: 30px;
+        }
+
+        .section-header {
+            margin-bottom: 1rem;
+            font-size: 1.6rem;
+            font-weight: bold;
+        }
+
+        .card {
+            background-color: #1c1c1c;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-custom {
+            background-color: #4e73df;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #2e59d9;
+        }
+
+        .list-group-item {
+            background-color: #212121;
+            border: 1px solid #444;
+            border-radius: 8px;
+        }
+
+        .table th {
+            background-color: #161616;
+            color: #e0e0e0;
+        }
+
+        .table td {
+            vertical-align: middle;
+            color: #e0e0e0;
+        }
+    </style>
 </head>
 
 <body>
-    <!-- header -->
+    <!-- Header -->
     <div th:replace="manager/header"></div>
-    <!-- content -->
 
     <!-- Main Content -->
     <div class="content">
         <!-- Overview Section -->
-        <div id="overview" class="mb-4">
-            <h3 class="mb-3">Tổng quan</h3>
+        <div id="overview" class="mb-4" data-aos="fade-up">
+            <h3 class="section-header">Tổng quan</h3>
             <div class="row">
+                <!-- Card: Sản phẩm -->
                 <div class="col-md-3">
-                    <div class="card text-white bg-primary">
+                    <div class="card bg-primary text-white" data-aos="zoom-in">
                         <div class="card-body">
                             <h5 class="card-title">Sản phẩm</h5>
                             <p class="card-text">120 sản phẩm</p>
                         </div>
                     </div>
                 </div>
+                <!-- Card: Nhân viên -->
                 <div class="col-md-3">
-                    <div class="card text-white bg-success">
+                    <div class="card bg-success text-white" data-aos="zoom-in">
                         <div class="card-body">
                             <h5 class="card-title">Nhân viên</h5>
                             <p class="card-text">25 nhân viên</p>
                         </div>
                     </div>
                 </div>
+                <!-- Card: Khuyến mãi -->
                 <div class="col-md-3">
-                    <div class="card text-white bg-info">
+                    <div class="card bg-info text-white" data-aos="zoom-in">
                         <div class="card-body">
                             <h5 class="card-title">Khuyến mãi</h5>
                             <p class="card-text">8 chương trình</p>
                         </div>
                     </div>
                 </div>
+                <!-- Card: Doanh thu -->
                 <div class="col-md-3">
-                    <div class="card text-white bg-warning">
+                    <div class="card bg-warning text-white" data-aos="zoom-in">
                         <div class="card-body">
                             <h5 class="card-title">Doanh thu</h5>
                             <p class="card-text">$15,000</p>
@@ -53,9 +118,9 @@
         </div>
 
         <!-- Manage Products Section -->
-        <div id="manage-products" class="mb-4">
-            <h3 class="mb-3">Quản lý Sản phẩm</h3>
-            <table class="table table-striped">
+        <div id="manage-products" class="mb-4" data-aos="fade-up">
+            <h3 class="section-header">Quản lý Sản phẩm</h3>
+            <table class="table table-striped" data-aos="fade-left">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -70,17 +135,15 @@
                         <td>Card đồ họa RTX 3060</td>
                         <td>$400</td>
                         <td>50</td>
-                        
                     </tr>
-                    <!-- Thêm các dòng khác -->
                 </tbody>
             </table>
         </div>
 
         <!-- Manage Employees Section -->
-        <div id="manage-employees" class="mb-4">
-            <h3 class="mb-3">Quản lý Nhân viên</h3>
-            <table class="table table-striped">
+        <div id="manage-employees" class="mb-4" data-aos="fade-up">
+            <h3 class="section-header">Quản lý Nhân viên</h3>
+            <table class="table table-striped" data-aos="fade-right">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -95,36 +158,41 @@
                         <td>Nguyễn Văn A</td>
                         <td>a.nguyen@example.com</td>
                         <td>Nhân viên bán hàng</td>
-                       
                     </tr>
-                    <!-- Thêm các dòng khác -->
                 </tbody>
             </table>
         </div>
 
         <!-- Manage Promotions Section -->
-        <div id="manage-promotions" class="mb-4">
-            <h3 class="mb-3">Quản lý Khuyến mãi</h3>
-            <ul class="list-group">
+        <div id="manage-promotions" class="mb-4" data-aos="fade-up">
+            <h3 class="section-header">Quản lý Khuyến mãi</h3>
+            <ul class="list-group" data-aos="fade-left">
                 <li class="list-group-item">
                     Giảm 10% cho đơn hàng trên $500 (Từ 01/11 - 30/11)
-            
                 </li>
-                <!-- Thêm các khuyến mãi khác -->
             </ul>
         </div>
 
         <!-- Revenue Section -->
-        <div id="revenue" class="mb-4">
-            <h3 class="mb-3">Doanh thu</h3>
+        <div id="revenue" class="mb-4" data-aos="fade-up">
+            <h3 class="section-header">Doanh thu</h3>
             <p>Biểu đồ và báo cáo doanh thu sẽ hiển thị tại đây.</p>
-            <!-- Có thể thêm biểu đồ bằng thư viện như Chart.js -->
         </div>
     </div>
 
-    <!-- footer -->
+    <!-- Footer -->
     <div th:replace="manager/footer"></div>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            easing: 'ease-in-out',
+            once: true
+        });
+    </script>
 </body>
 
 </html>

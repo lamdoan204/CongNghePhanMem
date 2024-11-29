@@ -12,4 +12,5 @@ import com.Project.CongNghePhanMem.Entity.Product;
 public interface CartDetailRepository extends JpaRepository<CartDetail, Integer> {
 	boolean existsByCartAndProduct(Cart cart, Product product);
 	CartDetail findByCartAndProduct(Cart cart, Product product);
+
 }

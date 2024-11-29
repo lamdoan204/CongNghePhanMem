@@ -195,4 +195,8 @@ public class UserService implements IUserService {
 	public List<User> getUserByRole(String role) {
 		return userRepo.findByRole(role);
 	}
+    @Override
+    public void updateUser(User user) {
+        userRepo.save(user);
+    }
 }

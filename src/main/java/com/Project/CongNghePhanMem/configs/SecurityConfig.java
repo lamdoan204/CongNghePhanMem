@@ -62,9 +62,23 @@ public class SecurityConfig {
 						.permitAll())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/signin")
 						.failureUrl("/login?error=true").successHandler(customsuccessHandler).permitAll())
+				.formLogin(form -> form
+		                .loginPage("/login")                     
+		                .loginProcessingUrl("/signin")
+		                .successHandler(customsuccessHandler)        
+		                .permitAll()                              
+		            )
+		            .logout(logout -> logout
+		                    .logoutUrl("/logout")
+		                    .logoutSuccessUrl("/login")
+		                    .deleteCookies("JSESSIONID")
+		                    .invalidateHttpSession(true)
+		                    .permitAll()
+		                )
 				.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
+
 
 }

@@ -3,6 +3,9 @@ package com.Project.CongNghePhanMem.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +39,6 @@ public class ManagerController {
     @Autowired
     IUserService userService = new UserService();
     @Autowired
-    BrandService brandService = new BrandService();
-    @Autowired
     DepartmentService departmentService = new DepartmentService();
 
     @GetMapping("/")
@@ -55,8 +56,41 @@ public class ManagerController {
         return "manager/index"; // Trả về view `manager/index`
     }
 
+    @PostMapping("/updateEmployee")
+    public String updateEmployee(@RequestParam("userId") int employeeId,
+            @RequestParam("fullName") String fullName,
+            @RequestParam("email") String email,
+            @RequestParam("phone") String phone,
+            @RequestParam("address") String address
+    ) {
+        User employee = userService.getUserById(employeeId);
+        employee.setFullName(fullName);
+        employee.setEmail(email);
+        employee.setAddress(address);
+        employee.setPhone(phone);
+        userService.updateUser(employee);
+        return "redirect:/manager/employeeManagement";
+    }
+
+    @GetMapping("/editEmployee/{id}")
+    public String editEployee(@PathVariable("id") int userId, Model model) {
+        User employee = userService.getUserById(userId);
+        model.addAttribute("employee", employee);
+        return "manager/edit-employee";
+    }
+
+    private Page<User> convertListToPage(List<User> allEmployees, int page, int size) {
+        int start = page * size;
+        int end = Math.min((start + size), allEmployees.size());
+
+        List<User> employeesForPage = allEmployees.subList(start, end);
+
+        return new PageImpl<>(employeesForPage, PageRequest.of(page, size), allEmployees.size());
+    }
+
     @GetMapping("/employeeManagement")
-    public String employee(Model model) {
+    public String employee(@RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size, Model model) {
 
         User manager = userService.getUserCurentLogged();
         if (manager == null) {
@@ -66,9 +100,14 @@ public class ManagerController {
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
         // lấy danh sách nhân viên
-        List<User> employee = managerService.getListEmployee(manager);
+        List<User> employe = managerService.getListEmployee(manager);
 
+        Page<User> employee = convertListToPage(employe, page, size);
         model.addAttribute("employees", employee);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", employee.getTotalPages());
+        model.addAttribute("totalItems", employee.getTotalElements());
+        model.addAttribute("pageSize", size);
 
         return "manager/employeemanagement";
     }
@@ -114,7 +153,6 @@ public class ManagerController {
         if (manager == null) {
             throw new RuntimeException("Không tìm thấy người dùng");
         }
-       
 
         Department department = departmentService.getDepartmentByManager(manager);
         user = userService.getUserByEmail(email);
@@ -140,17 +178,32 @@ public class ManagerController {
 
         return "redirect:/manager/";
     }
+    // Phía trên là phần của Lâm
 
-    
+
     // Thêm các mapping từ PromotionController
     @GetMapping("/promotions")
     public String showPromotionList(Model model) {
+        User manager = userService.getUserCurentLogged();
+        if (manager == null) {
+            throw new RuntimeException("Không tìm thấy người dùng");
+        }
+        // Gọi Service để lấy tên thương hiệu
+        String brand = managerService.get_DepartmentName(manager);
+        model.addAttribute("brand", brand);
         model.addAttribute("promotions", promotionService.getAllPromotions());
         return "manager/promotion-list"; // Cập nhật đường dẫn template
     }
 
     @GetMapping("/promotions/create")
     public String showCreateForm(Model model) {
+        User manager = userService.getUserCurentLogged();
+        if (manager == null) {
+            throw new RuntimeException("Không tìm thấy người dùng");
+        }
+        // Gọi Service để lấy tên thương hiệu
+        String brand = managerService.get_DepartmentName(manager);
+        model.addAttribute("brand", brand);
         model.addAttribute("promotion", new Promotion());
         return "manager/promotion_form"; // Cập nhật đường dẫn template
     }
@@ -166,22 +219,34 @@ public class ManagerController {
         promotionService.deletePromotionById(id);
         return "redirect:/manager/promotions";
     }
-    
+
     @Autowired
     private ArticleService articleService;
-    
- // Danh sách bài viết
+
+    // Danh sách bài viết
     @GetMapping("/blog")
     public String showBlogList(Model model) {
+        User manager = userService.getUserCurentLogged();
+        if (manager == null) {
+            throw new RuntimeException("Không tìm thấy người dùng");
+        }
+        // Gọi Service để lấy tên thương hiệu
+        String brand = managerService.get_DepartmentName(manager);
+        model.addAttribute("brand", brand);
         model.addAttribute("articles", articleService.getAllArticles());
-        return "manager/blog-list"; 
+        return "manager/blog-list";
     }
 
-    
-    
     // Tạo bài viết mới
     @GetMapping("/blog/create")
     public String showCreateBlogForm(Model model) {
+        User manager = userService.getUserCurentLogged();
+        if (manager == null) {
+            throw new RuntimeException("Không tìm thấy người dùng");
+        }
+        // Gọi Service để lấy tên thương hiệu
+        String brand = managerService.get_DepartmentName(manager);
+        model.addAttribute("brand", brand);
         model.addAttribute("blog", new Article());
         return "manager/blog-form";
     }
@@ -191,9 +256,6 @@ public class ManagerController {
         articleService.saveArticle(article);
         return "redirect:/manager/blog";
     }
-    
-    
-
     // Sửa bài viết
     @GetMapping("/blog/edit/{id}")
     public String showEditBlogForm(@PathVariable("id") int id, Model model) {
