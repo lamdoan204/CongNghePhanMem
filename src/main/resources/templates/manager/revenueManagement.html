@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống Kê Doanh Thu Chuyên Nghiệp</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-gradient@0.1.0/dist/chartjs-plugin-gradient.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --primary-color: #3B82F6;
+            --secondary-color: #10B981;
+            --background-light: #F3F4F6;
+            --card-background: #FFFFFF;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--background-light);
+            line-height: 1.6;
+        }
+        .dashboard-card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), #6366F1);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-icon {
+            font-size: 2.5rem;
+            opacity: 0.7;
+        }
+        .filter-container {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        .select2-container {
+            width: 100% !important;
+        }
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="~{manager/header}"></div> 
+    <div class="container-fluid p-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="text-center fw-bold" style="color: var(--primary-color);">
+                    Thống Kê Doanh Thu
+                </h1>
+            </div>
+        </div>
+        <!-- Ví dụ với Thymeleaf -->
+<div>
+    <h1>Doanh thu theo tuần</h1>
+    <table>
+        <tr>
+            <th>Tuần</th>
+            <th>Doanh thu</th>
+        </tr>
+        <th:block th:each="revenue : ${weeklyRevenue}">
+            <tr>
+                <td th:text="${revenue.period}"></td>
+                <td th:text="${revenue.totalRevenue}"></td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+
+<div>
+    <h1>Doanh thu theo tháng</h1>
+    <table>
+        <tr>
+            <th>Tháng</th>
+            <th>Doanh thu</th>
+        </tr>
+        <th:block th:each="revenue : ${monthlyRevenue}">
+            <tr>
+                <td th:text="${revenue.period}"></td>
+                <td th:text="${revenue.totalRevenue}"></td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+
+<div>
+    <h1>Doanh thu theo quý</h1>
+    <table>
+        <tr>
+            <th>Quý</th>
+            <th>Doanh thu</th>
+        </tr>
+        <th:block th:each="revenue : ${quarterlyRevenue}">
+            <tr>
+                <td th:text="${revenue.period}"></td>
+                <td th:text="${revenue.totalRevenue}"></td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+
+<div>
+    <h1>Doanh thu theo năm</h1>
+    <table>
+        <tr>
+            <th>Năm</th>
+            <th>Doanh thu</th>
+        </tr>
+        <th:block th:each="revenue : ${yearlyRevenue}">
+            <tr>
+                <td th:text="${revenue.period}"></td>
+                <td th:text="${revenue.totalRevenue}"></td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+        
+
+        <div class="row g-4">
+        
+            <!-- Filters -->
+            <div class="col-lg-4">
+                <div class="filter-container">
+                    <h3 class="mb-4 text-center">Bộ Lọc Thông Minh</h3>
+                    <div class="mb-3">
+                        <label class="form-label">Phân Loại Thời Gian</label>
+                        <select id="timeFilter" class="form-select">
+                            <option value="week">Theo Tuần</option>
+                            <option value="month">Theo Tháng</option>
+                            <option value="quarter">Theo Quý</option>
+                            <option value="year">Theo Năm</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ngày Bắt Đầu</label>
+                        <input type="date" id="startDate" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ngày Kết Thúc</label>
+                        <input type="date" id="endDate" class="form-control">
+                    </div>
+                    <button onclick="updateDashboard()" class="btn btn-primary w-100">
+                        Cập Nhật Thống Kê
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="col-lg-8">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="stat-card">
+                            <div>
+                                <h5 class="mb-2">Tổng Doanh Thu</h5>
+                                <h3 id="totalRevenue" class="mb-0">0 đ</h3>
+                            </div>
+                            <i class="stat-icon">💰</i>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #10B981, #34D399);">
+                            <div>
+                                <h5 class="mb-2">Tăng Trưởng</h5>
+                                <h3 id="revenueGrowth" class="mb-0">0%</h3>
+                            </div>
+                            <i class="stat-icon">📈</i>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="col-md-6">
+                        <div class="card dashboard-card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title text-center mb-4">Biểu Đồ Doanh Thu</h5>
+                                <div class="chart-container">
+                                    <canvas id="revenueChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card dashboard-card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title text-center mb-4">Phân Bổ Doanh Thu</h5>
+                                <div class="chart-container">
+                                    <canvas id="revenuePieChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script th:inline="javascript">
+    // Truyền dữ liệu từ Spring vào JavaScript qua Thymeleaf
+    const weeklyRevenue = /*[[${weeklyRevenue}]]*/[];
+    const monthlyRevenue = /*[[${monthlyRevenue}]]*/ [];
+    const quarterlyRevenue = /*[[${quarterlyRevenue}]]*/ [];
+    const yearlyRevenue = /*[[${yearlyRevenue}]]*/ [];
+
+    console.log(weeklyRevenue);  // Kiểm tra console để xem dữ liệu có đúng không
+</script>
+    <script>
+        // Hàm format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { 
+                style: 'currency', 
+                currency: 'VND' 
+            }).format(amount);
+        }
+
+        
+
+        const revenueData = {
+            week: weeklyRevenue.map(item => ({ period: `Tuần ${item.period}`, revenue: item.totalRevenue })),
+            month: monthlyRevenue.map(item => ({ period: `Tháng ${item.period}`, revenue: item.totalRevenue })),
+            quarter: quarterlyRevenue.map(item => ({ period: `Quý ${item.period}`, revenue: item.totalRevenue })),
+            year: yearlyRevenue.map(item => ({ period: `${item.period}`, revenue: item.totalRevenue }))
+        };
+
+        let revenueChart, revenuePieChart;
+
+        function updateDashboard() {
+            const timeFilter = document.getElementById('timeFilter').value;
+            const data = revenueData[timeFilter];
+
+            // Revenue Line Chart with Gradient
+            if (revenueChart) revenueChart.destroy();
+            revenueChart = new Chart(document.getElementById('revenueChart'), {
+                type: 'line',
+                data: {
+                    labels: data.map(item => item.period),
+                    datasets: [{
+                        label: 'Doanh Thu',
+                        data: data.map(item => item.revenue),
+                        borderColor: 'var(--primary-color)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Revenue Pie Chart with Improved Styling
+            if (revenuePieChart) revenuePieChart.destroy();
+            revenuePieChart = new Chart(document.getElementById('revenuePieChart'), {
+                type: 'pie',
+                data: {
+                    labels: data.map(item => item.period),
+                    datasets: [{
+                        data: data.map(item => item.revenue),
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)',   // Primary Blue
+                            'rgba(16, 185, 129, 0.8)',   // Green
+                            'rgba(245, 158, 11, 0.8)',   // Amber
+                            'rgba(139, 92, 246, 0.8)',   // Purple
+                            'rgba(255, 99, 132, 0.8)',   // Red
+                            'rgba(54, 162, 235, 0.8)',   // Blue
+                            'rgba(255, 206, 86, 0.8)',   // Yellow
+                            'rgba(75, 192, 192, 0.8)',   // Teal
+                            'rgba(153, 102, 255, 0.8)',  // Indigo
+                            'rgba(255, 159, 64, 0.8)'    // Orange
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 20,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Update Summary
+            const totalRevenue = data.reduce((sum, item) => sum + item.revenue, 0);
+            const growthPercentage = ((data[data.length - 1].revenue - data[0].revenue) / data[0].revenue * 100).toFixed(2);
+
+            document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
+            document.getElementById('revenueGrowth').textContent = `${growthPercentage}%`;
+        }
+
+        // Initialize dashboard on page load
+       window.onload = function() {
+    updateDashboard(); // Khởi tạo khi trang tải
+};
+
+        // Optionally, handle filter changes dynamically
+        document.getElementById('timeFilter').addEventListener('change', updateDashboard);
+    </script>
+    <!-- Footer -->
+    <div th:replace="~{manager/footer}"></div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+</body>
+</html>
