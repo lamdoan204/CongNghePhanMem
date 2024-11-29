@@ -58,7 +58,7 @@ public class SecurityConfig {
 						.requestMatchers("/admin/**").hasRole("ADMIN")
 						.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/", "/register",
 								"/notifyVerify", "/forgotPassword", "/verifyOTP", "/resetPassword", "/verify",
-								"/createUser")
+								"/createUser", "/user/**")
 						.permitAll())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/signin")
 						.failureUrl("/login?error=true").successHandler(customsuccessHandler).permitAll())
