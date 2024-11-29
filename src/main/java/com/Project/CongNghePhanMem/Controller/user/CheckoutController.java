@@ -1,8 +1,5 @@
 package com.Project.CongNghePhanMem.Controller.user;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,19 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Project.CongNghePhanMem.Entity.Cart;
-import com.Project.CongNghePhanMem.Entity.CartDetail;
 import com.Project.CongNghePhanMem.Entity.Order;
-import com.Project.CongNghePhanMem.Entity.OrderDetail;
 import com.Project.CongNghePhanMem.Entity.User;
-import com.Project.CongNghePhanMem.Repository.OrderDetailRepository;
-import com.Project.CongNghePhanMem.Repository.OrderRepository;
 import com.Project.CongNghePhanMem.Service.IOrderService;
 import com.Project.CongNghePhanMem.Service.Impl.CartService;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/checkout")
+@RequestMapping("/user/checkout")
 public class CheckoutController {
 
 	@Autowired
@@ -47,7 +40,7 @@ public class CheckoutController {
 		// Lấy giỏ hàng hiện tại
 		Cart cart = cartService.getCurrentCart(session);
 		if (cart == null || cart.getCartDetails().isEmpty()) {
-			return "redirect:/cart";
+			return "redirect:/user/cart";
 		}
 
 		// Thêm thông tin vào model

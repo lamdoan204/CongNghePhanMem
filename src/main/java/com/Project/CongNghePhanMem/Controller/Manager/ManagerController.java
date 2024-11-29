@@ -1,4 +1,4 @@
-package com.Project.CongNghePhanMem.Controller;
+package com.Project.CongNghePhanMem.Controller.Manager;
 
 import java.util.List;
 
@@ -48,12 +48,11 @@ public class ManagerController {
         if (manager == null) {
             throw new RuntimeException("Không tìm thấy người dùng");
         }
-        // Gọi Service để lấy tên thương hiệu
+
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
-        // lấy một số sản phẩm, nhân viên doanh thu và chương trình khuyến mãi
 
-        return "manager/index"; // Trả về view `manager/index`
+        return "manager/index"; 
     }
 
     @PostMapping("/updateEmployee")

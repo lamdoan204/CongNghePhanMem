@@ -127,7 +127,7 @@ public class ProductsController {
 	            String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
 	            
 	            // Sử dụng đường dẫn tuyệt đối
-	            String uploadDir = "src/main/Sresources/static/images/products";
+	            String uploadDir = "src/main/resources/static/images/products";
 	            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
 	            
 	            // Log để debug
