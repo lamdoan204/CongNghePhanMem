@@ -1,6 +1,7 @@
 package com.Project.CongNghePhanMem.Entity;
 
 import java.sql.Date;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -24,9 +25,9 @@ public class Order {
     
     private float totalPrice;
     
-    @OneToOne
+    @OneToMany
     @JoinColumn(name = "id")
-    private OrderDetail orderDetails;
+    private List<OrderDetail> orderDetails;
     
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -34,15 +35,7 @@ public class Order {
     
     
 
-	public Order(int orderID, Date orderDate, int status, float totalPrice, OrderDetail orderDetails, User user) {
-		super();
-		this.orderID = orderID;
-		this.orderDate = orderDate;
-		this.status = status;
-		this.totalPrice = totalPrice;
-		this.orderDetails = orderDetails;
-		this.user = user;
-	}
+	
 
 	public Order() {
 		super();
@@ -93,18 +86,25 @@ public class Order {
 	
 	
 
-	public OrderDetail getOrderDetails() {
+
+	public List<OrderDetail> getOrderDetails() {
 		return orderDetails;
 	}
 
-	public void setOrderDetails(OrderDetail orderDetails) {
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
 	}
+	
 
-	@Override
-	public String toString() {
-		return "Order [orderID=" + orderID + ", orderDate=" + orderDate + ", status=" + status + ", totalPrice="
-				+ totalPrice + ", orderDetails=" + orderDetails + ", user=" + user + "]";
+	public Order(int orderID, Date orderDate, int status, float totalPrice, List<OrderDetail> orderDetails, User user) {
+		super();
+		this.orderID = orderID;
+		this.orderDate = orderDate;
+		this.status = status;
+		this.totalPrice = totalPrice;
+		this.orderDetails = orderDetails;
+		this.user = user;
 	}
+
     
 }

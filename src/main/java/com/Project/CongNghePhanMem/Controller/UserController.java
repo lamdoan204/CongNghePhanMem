@@ -83,7 +83,7 @@ public class UserController {
 	@PostMapping("/updatePassword")
     public String updatePassword(HttpSession session, Principal p, 
             @RequestParam("oldPass") String oldPass,
-            @RequestParam("newPass") String newPass) {
+            @RequestParam("newPass") String newPass, RedirectAttributes redirectAttributes) {
             
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
@@ -105,14 +105,14 @@ public class UserController {
             session.setAttribute("msg", "Old Password incorrect!");
         }
 
-        if (passEncoder.matches(oldPass, user.getPassword())) {
+        if (passEncoder.matches(oldPass, currentUser.getPassword())) {
             if (!isValidPassword(newPass)) {
                 redirectAttributes.addFlashAttribute("msg", "Password must be at least 8 characters and contain special characters, digits, and uppercase letters!");
                 return "redirect:/user/changePass";
             }
 
-            user.setPassword(passEncoder.encode(newPass));
-            userRepo.save(user);
+            currentUser.setPassword(passEncoder.encode(newPass));
+            userRepo.save(currentUser);
             redirectAttributes.addFlashAttribute("msg", "Update Password successful!");
         } else {
             redirectAttributes.addFlashAttribute("msg", "Old Password incorrect!");
