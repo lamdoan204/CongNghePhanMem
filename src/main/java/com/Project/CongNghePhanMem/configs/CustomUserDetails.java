@@ -38,6 +38,10 @@ public class CustomUserDetails implements UserDetails {
         return user.getEmail();
     }
 
+    public Integer getUserId(){
+        return user.getUserId();
+    }
+
     @Override
     public boolean isAccountNonExpired() {
        
@@ -60,6 +64,10 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
        
         return user.isEnabled();
+    }
+    
+    public User getUser() {
+        return user;
     }
     
 }

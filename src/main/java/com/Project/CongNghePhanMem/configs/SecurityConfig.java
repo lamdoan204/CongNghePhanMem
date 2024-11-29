@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,50 +20,65 @@ public class SecurityConfig {
 
 	@Autowired
 	public AuthenticationSuccessHandler customsuccessHandler;
-	
-    @Bean
-    public UserDetailsService userDetailsServices() {
-        return new UserDetailsServiceImpl(); 
-    }
 
-    @Bean
-    public BCryptPasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public JwtFilter jwtFilter() {
+		return new JwtFilter();
+	}
 
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailsServices());
-        daoAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
-        return daoAuthenticationProvider;
-    }
+	@Bean
+	public UserDetailsService userDetailsServices() {
+		return new UserDetailsServiceImpl();
+	}
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager(); 
-    }
+	@Bean
+	public BCryptPasswordEncoder getPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/manager/**").hasRole("MANAGER") 
-                .requestMatchers("/user/**").hasRole("USER")  
-                .requestMatchers("/employee/**").hasRole("EMPLOYEE")  
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
-                .requestMatchers("/**").permitAll()           
-            )
-            .formLogin(form -> form
-                .loginPage("/login")                     
-                .loginProcessingUrl("/signin")
-                .successHandler(customsuccessHandler)        
-                .permitAll()                              
-            )
-           
-            
-            .csrf(csrf -> csrf.disable());                
-        return http.build();
-    }
+	@Bean
+	public DaoAuthenticationProvider daoAuthenticationProvider() {
+		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+		daoAuthenticationProvider.setUserDetailsService(userDetailsServices());
+		daoAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
+		return daoAuthenticationProvider;
+	}
+
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+		return authConfig.getAuthenticationManager();
+	}
+
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.csrf(csrf -> csrf.disable())
+
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/manager/**").hasRole("MANAGER")
+						.requestMatchers("/user/**").hasRole("USER").requestMatchers("/employee/**").hasRole("EMPLOYEE")
+						.requestMatchers("/admin/**").hasRole("ADMIN")
+						.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/", "/register",
+								"/notifyVerify", "/forgotPassword", "/verifyOTP", "/resetPassword", "/verify",
+								"/createUser", "/user/**")
+						.permitAll())
+				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/signin")
+						.failureUrl("/login?error=true").successHandler(customsuccessHandler).permitAll())
+				.formLogin(form -> form
+		                .loginPage("/login")                     
+		                .loginProcessingUrl("/signin")
+		                .successHandler(customsuccessHandler)        
+		                .permitAll()                              
+		            )
+		            .logout(logout -> logout
+		                    .logoutUrl("/logout")
+		                    .logoutSuccessUrl("/login")
+		                    .deleteCookies("JSESSIONID")
+		                    .invalidateHttpSession(true)
+		                    .permitAll()
+		                )
+				.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
+	}
+
 
 }

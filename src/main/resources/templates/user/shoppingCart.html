@@ -16,7 +16,8 @@
 	<!-- site icons -->
 	<link rel="icon" href="images/fevicon/fevicon.png" type="image/gif" />
 	<!-- bootstrap css -->
-	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
 	<!-- Site css -->
 	<link rel="stylesheet" href="css/style.css" />
 	<!-- responsive css -->
@@ -29,6 +30,7 @@
 	<link rel="stylesheet" href="css/animate.css" />
 	<!-- zoom effect -->
 	<link rel='stylesheet' href='css/hizoom.css'>
+
 	<!-- end zoom effect -->
 	<!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -77,96 +79,115 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+								<!-- Lặp qua danh sách cartDetails -->
+								<tr th:each="cartDetail : ${cartDetails}">
 									<td class="col-sm-8 col-md-6">
-										<div class="media"> <a class="thumbnail pull-left" href="#"> <img
-													class="media-object" src="images/it_service/1.jpg" alt="#"></a>
+										<div class="media">
+											<a class="thumbnail pull-left" href="#">
+												<img class="media-object"
+													th:src="@{'images/products/' + ${cartDetail.product.image}}"
+													alt="Product Image" width="110" height="110">
+											</a>
 											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Norton Internet Security</a></h4>
-												<span>Status: </span><span class="text-success">In Stock</span>
-											</div>
-										</div>
-									</td>
-									<td class="col-sm-1 col-md-1" style="text-align: center"><input class="form-control"
-											value="3" type="email">
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1"><button type="button" class="bt_main"><i
-												class="fa fa-trash"></i> Remove</button></td>
-								</tr>
-								<tr>
-									<td class="col-md-6">
-										<div class="media"> <a class="thumbnail pull-left" href="#"> <img
-													class="media-object" src="images/it_service/2.jpg" alt="#"></a>
-											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Kaspersky Internet Security</a>
+												<h4 class="media-heading">
+													<a href="#" th:text="${cartDetail.product.name}"></a>
 												</h4>
-												<span>Status: </span><span class="text-danger">Out Stock</span>
-											</div>
-										</div>
-									</td>
-									<td class="col-md-1" style="text-align: center"><input class="form-control"
-											value="2" type="email">
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-md-1"><button type="button" class="bt_main"><i
-												class="fa fa-trash"></i> Remove</button></td>
-								</tr>
-								<tr>
-									<td class="col-sm-8 col-md-6">
-										<div class="media"> <a class="thumbnail pull-left" href="#"> <img
-													class="media-object" src="images/it_service/3.jpg" alt="#"></a>
-											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Mcafee Livesafe Antivirus</a></h4>
 												<span>Status: </span><span class="text-success">In Stock</span>
 											</div>
 										</div>
 									</td>
-									<td class="col-sm-1 col-md-1" style="text-align: center"><input class="form-control"
-											value="3" type="email">
-									</td>
 									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
-									</td>
-									<td class="col-sm-1 col-md-1"><button type="button" class="bt_main"><i
-												class="fa fa-trash"></i> Remove</button></td>
-								</tr>
-								<tr>
-									<td class="col-md-6">
-										<div class="media"> <a class="thumbnail pull-left" href="#"> <img
-													class="media-object" src="images/it_service/4.jpg" alt="#"></a>
-											<div class="media-body">
-												<h4 class="media-heading"><a href="#">Norton Internet Security</a></h4>
-												<span>Status: </span><span class="text-danger">Out Stock</span>
-											</div>
+										<div class="input-group quantity">
+											<!-- Nút giảm -->
+											<form method="post"
+												th:action="@{/update-cart/remove/{id}(id=${cartDetail.id})}"
+												style="display: inline;">
+												<input type="hidden" name="${_csrf.parameterName}"
+													value="${_csrf.token}" />
+												<button type="submit" class="btn btn-sm btn-minus">-</button>
+											</form>
+											<!-- Ô nhập số lượng -->
+											<input class="form-control text-center cart-quantity" type="number" min="1"
+												th:value="${cartDetail.quantity}" th:data-cart-id="${cartDetail.id}"
+												th:data-cart-price="${cartDetail.price}" style="width: 50px;">
+											<!-- Nút tăng -->
+											<form method="post"
+												th:action="@{/update-cart/add/{id}(id=${cartDetail.id})}"
+												style="display: inline;">
+												<input type="hidden" name="${_csrf.parameterName}"
+													value="${_csrf.token}" />
+												<button type="submit" class="btn btn-sm btn-plus">+</button>
+											</form>
 										</div>
 									</td>
-									<td class="col-md-1" style="text-align: center"><input class="form-control"
-											value="2" type="email">
+									<!--<td class="col-sm-1 col-md-1 text-center">
+
+
+										<div class="input-group quantity">
+											Nút giảm
+											<form method="post"
+												th:action="@{/update-cart/remove/{id}(id=${cartDetail.id})}"
+												style="display: inline;">
+												<input type="hidden" name="${_csrf.parameterName}"
+													value="${_csrf.token}" />
+												<button type="submit" class="btn btn-sm btn-minus">
+													<i class="fa fa-minus"></i>
+												</button>
+											</form>
+											Ô nhập số lượng
+											<input class="form-control text-center cart-quantity" type="number" min="1"
+												th:value="${cartDetail.quantity}" th:data-cart-id="${cartDetail.id}"
+												th:data-cart-price="${cartDetail.price}">
+											Nút tăng
+											<form method="post"
+												th:action="@{/update-cart/add/{id}(id=${cartDetail.id})}"
+												style="display: inline;">
+												<input type="hidden" name="${_csrf.parameterName}"
+													value="${_csrf.token}" />
+												<button type="submit" class="btn btn-sm btn-plus">
+													<i class="fa fa-plus"></i>
+												</button>
+											</form>
+										</div>
+									</td>-->
+
+									<td class="col-sm-1 col-md-1 text-center">
+										<p class="price_table" th:text="'$' + ${cartDetail.price}"></p>
 									</td>
 									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
+										<!-- Giá tổng cho từng sản phẩm -->
+										<p class="total-price" th:data-cart-id="${cartDetail.id}"
+											th:text="'$' + ${cartDetail.price * cartDetail.quantity}"></p>
 									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table">$25.00</p>
+									<td class="col-sm-1 col-md-1">
+										<form method="post"
+											th:action="@{/delete-cart-product/{id}(id=${cartDetail.id})}">
+											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+											<button class="btn btn-md bg-light border"
+												style="width: 40px; height: 40px;">
+												<i class="fa fa-times text-danger"></i>
+											</button>
+										</form>
 									</td>
-									<td class="col-md-1"><button type="button" class="bt_main"><i
-												class="fa fa-trash"></i> Remove</button></td>
+									<!--<td class="col-sm-1 col-md-1">
+										<button type="button" class="btn btn-remove" th:data-cart-id="${cartDetail.id}">
+											<i class="fa fa-trash"></i> Remove
+										</button>
+
+										<form method="post"
+											th:action="@{/delete-cart-product/{id}(id=${cartDetail.id})}">
+											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+											<button class="btn btn-md rounded-circle bg-light border mt-4">
+												<i class="fa fa-times text-danger"></i>
+											</button>
+										</form>
+
+									</td>-->
 								</tr>
 							</tbody>
+
+
+
 						</table>
 						<table class="table">
 							<tbody>
@@ -199,7 +220,7 @@
 										<h4>Subtotal</h4>
 									</td>
 									<td class="text-right">
-										<h4>$50.00</h4>
+										<h4 id="subtotal-price" th:text="'$' + ${totalPrice}"></h4>
 									</td>
 								</tr>
 								<tr>
@@ -207,7 +228,7 @@
 										<h5>Estimated shipping</h5>
 									</td>
 									<td class="text-right">
-										<h4>$5.00</h4>
+										<h4>$0.00</h4>
 									</td>
 								</tr>
 								<tr>
@@ -215,12 +236,14 @@
 										<h3>Total</h3>
 									</td>
 									<td class="text-right">
-										<h4>$55.00</h4>
+										<h4 id="total-price" th:text="'$' + ${totalPrice}"></h4>
 									</td>
 								</tr>
 								<tr>
 									<td><button type="button" class="button">Continue Shopping</button></td>
-									<td><button class="button">Checkout</button></td>
+									<td>
+										<a href="/user/checkout" class="button">Checkout</a>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -229,237 +252,10 @@
 			</div>
 		</div>
 	</div>
-	<!-- section -->
-	<div class="section padding_layout_1 testmonial_section white_fonts">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="full">
-						<div class="main_heading text_align_left">
-							<h2 style="text-transform: none;">What Clients Say?</h2>
-							<p class="large">Here are testimonials from clients..</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-sm-7">
-					<div class="full">
-						<div id="testimonial_slider" class="carousel slide" data-ride="carousel">
-							<!-- Indicators -->
-							<ul class="carousel-indicators">
-								<li data-target="#testimonial_slider" data-slide-to="0" class="active"></li>
-								<li data-target="#testimonial_slider" data-slide-to="1"></li>
-								<li data-target="#testimonial_slider" data-slide-to="2"></li>
-							</ul>
-							<!-- The slideshow -->
-							<div class="carousel-inner">
-								<div class="carousel-item active">
-									<div class="testimonial-container">
-										<div class="testimonial-content"> You guys rock! Thank you for making it
-											painless, pleasant and most of all hassle free! I wish I would have thought
-											of it first.
-											I am really satisfied with my first laptop service. </div>
-										<div class="testimonial-photo"> <img src="images/it_service/client1.jpg"
-												class="img-responsive" alt="#" width="150" height="150"> </div>
-										<div class="testimonial-meta">
-											<h4>Maria Anderson</h4>
-											<span class="testimonial-position">CFO, Tech NY</span>
-										</div>
-									</div>
-								</div>
-								<div class="carousel-item">
-									<div class="testimonial-container">
-										<div class="testimonial-content"> You guys rock! Thank you for making it
-											painless, pleasant and most of all hassle free! I wish I would have thought
-											of it first.
-											I am really satisfied with my first laptop service. </div>
-										<div class="testimonial-photo"> <img src="images/it_service/client2.jpg"
-												class="img-responsive" alt="#" width="150" height="150"> </div>
-										<div class="testimonial-meta">
-											<h4>Maria Anderson</h4>
-											<span class="testimonial-position">CFO, Tech NY</span>
-										</div>
-									</div>
-								</div>
-								<div class="carousel-item">
-									<div class="testimonial-container">
-										<div class="testimonial-content"> You guys rock! Thank you for making it
-											painless, pleasant and most of all hassle free! I wish I would have thought
-											of it first.
-											I am really satisfied with my first laptop service. </div>
-										<div class="testimonial-photo"> <img src="images/it_service/client3.jpg"
-												class="img-responsive" alt="#" width="150" height="150"> </div>
-										<div class="testimonial-meta">
-											<h4>Maria Anderson</h4>
-											<span class="testimonial-position">CFO, Tech NY</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-5">
-					<div class="full"> </div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end section -->
-	<!-- section -->
-	<div class="section">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="full">
-						<div class="contact_us_section">
-							<div class="call_icon"> <img src="images/it_service/phone_icon.png" alt="#" /> </div>
-							<div class="inner_cont">
-								<h2>REQUEST A FREE QUOTE</h2>
-								<p>Get answers and advice from people you want it from.</p>
-							</div>
-							<div class="button_Section_cont"> <a class="btn dark_gray_bt" href="it_contact.html">Contact
-									us</a> </div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end section -->
-	<!-- section -->
-	<div class="section padding_layout_1" style="padding: 50px 0;">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="full">
-						<ul class="brand_list">
-							<li><img src="images/it_service/brand_icon1.png" alt="#" /></li>
-							<li><img src="images/it_service/brand_icon2.png" alt="#" /></li>
-							<li><img src="images/it_service/brand_icon3.png" alt="#" /></li>
-							<li><img src="images/it_service/brand_icon4.png" alt="#" /></li>
-							<li><img src="images/it_service/brand_icon5.png" alt="#" /></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end section -->
-	<!-- Modal -->
-	<div class="modal fade" id="search_bar" role="dialog">
-		<div class="modal-dialog">
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div
-							class="col-lg-8 col-md-8 col-sm-8 offset-lg-2 offset-md-2 offset-sm-2 col-xs-10 col-xs-offset-1">
-							<div class="navbar-search">
-								<form action="#" method="get" id="search-global-form" class="search-global">
-									<input type="text" placeholder="Type to search" autocomplete="off" name="s"
-										id="search" value="" class="search-global__input">
-									<button class="search-global__btn"><i class="fa fa-search"></i></button>
-									<div class="search-global__note">Begin typing your search above and press return to
-										search.</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- End Model search bar -->
-	<!-- footer -->
-	<footer class="footer_style_2">
-		<div class="container-fuild">
-			<div class="row">
-				<div class="map_section">
-					<div id="map"></div>
-				</div>
-				<div class="footer_blog">
-					<div class="row">
-						<div class="col-md-6">
-							<div class="main-heading left_text">
-								<h2>It Next Theme</h2>
-							</div>
-							<p>Tincidunt elit magnis nulla facilisis. Dolor sagittis maecenas. Sapien nunc amet
-								ultrices, dolores sit ipsum velit purus aliquet, massa fringilla leo orci.</p>
-							<ul class="social_icons">
-								<li class="social-icon fb"><a href="#"><i class="fa fa-facebook"
-											aria-hidden="true"></i></a></li>
-								<li class="social-icon tw"><a href="#"><i class="fa fa-twitter"
-											aria-hidden="true"></i></a></li>
-								<li class="social-icon gp"><a href="#"><i class="fa fa-google-plus"
-											aria-hidden="true"></i></a></li>
-							</ul>
-						</div>
-						<div class="col-md-6">
-							<div class="main-heading left_text">
-								<h2>Additional links</h2>
-							</div>
-							<ul class="footer-menu">
-								<li><a href="it_about.html"><i class="fa fa-angle-right"></i> About us</a></li>
-								<li><a href="it_term_condition.html"><i class="fa fa-angle-right"></i> Terms and
-										conditions</a></li>
-								<li><a href="it_privacy_policy.html"><i class="fa fa-angle-right"></i> Privacy
-										policy</a></li>
-								<li><a href="it_news.html"><i class="fa fa-angle-right"></i> News</a></li>
-								<li><a href="it_contact.html"><i class="fa fa-angle-right"></i> Contact us</a></li>
-							</ul>
-						</div>
-						<div class="col-md-6">
-							<div class="main-heading left_text">
-								<h2>Services</h2>
-							</div>
-							<ul class="footer-menu">
-								<li><a href="it_data_recovery.html"><i class="fa fa-angle-right"></i> Data recovery</a>
-								</li>
-								<li><a href="it_computer_repair.html"><i class="fa fa-angle-right"></i> Computer
-										repair</a></li>
-								<li><a href="it_mobile_service.html"><i class="fa fa-angle-right"></i> Mobile
-										service</a></li>
-								<li><a href="it_network_solution.html"><i class="fa fa-angle-right"></i> Network
-										solutions</a></li>
-								<li><a href="it_techn_support.html"><i class="fa fa-angle-right"></i> Technical
-										support</a></li>
-							</ul>
-						</div>
-						<div class="col-md-6">
-							<div class="main-heading left_text">
-								<h2>Contact us</h2>
-							</div>
-							<p>123 Second Street Fifth Avenue,<br>
-								Manhattan, New York<br>
-								<span style="font-size:18px;"><a href="tel:+9876543210">+987 654 3210</a></span>
-							</p>
-							<div class="footer_mail-section">
-								<form>
-									<fieldset>
-										<div class="field">
-											<input placeholder="Email" type="text">
-											<button class="button_custom"><i class="fa fa-envelope"
-													aria-hidden="true"></i></button>
-										</div>
-									</fieldset>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="cprt">
-					<p>ItNext © Copyrights 2019 Design by html.design</p>
-				</div>
-			</div>
-		</div>
-	</footer>
-	<!-- end footer -->
+
 	<!-- js section -->
+	<script src="/js/main.js"></script>
+
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<!-- menu js -->
@@ -589,6 +385,36 @@
 			width: 400,
 			position: 'right'
 		});
+	</script>
+
+	<script>
+		$(document).ready(function () {
+			// Xử lý nút tăng số lượng
+			$(".btn-plus").click(function (e) {
+				e.preventDefault(); // Ngăn chặn hành động mặc định của form
+				const form = $(this).closest("form");
+				const cartId = form.closest(".quantity").find(".cart-quantity").data("cart-id");
+
+				// Gửi yêu cầu AJAX đến URL từ form
+				$.post(form.attr("action"), form.serialize(), function () {
+					location.reload(); // Refresh trang sau khi cập nhật thành công
+				});
+			});
+
+			// Xử lý nút giảm số lượng
+			$(".btn-minus").click(function (e) {
+				e.preventDefault(); // Ngăn chặn hành động mặc định của form
+				const form = $(this).closest("form");
+				const cartId = form.closest(".quantity").find(".cart-quantity").data("cart-id");
+
+				// Gửi yêu cầu AJAX đến URL từ form
+				$.post(form.attr("action"), form.serialize(), function () {
+					location.reload(); // Refresh trang sau khi cập nhật thành công
+				});
+			});
+		});
+
+
 	</script>
 </body>
 

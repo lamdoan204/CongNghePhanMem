@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
@@ -33,45 +36,88 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder passEncoder;
 
-    @ModelAttribute
-    private void userDetails(Model m, Principal p) {
+	@ModelAttribute
+    private void userDetails(Model m, Principal p, HttpSession session) {
         if (p != null) {
-            String email = p.getName();
+            // Kiểm tra user trong session
+            User currentUser = (User) session.getAttribute("currentUser");
+            
+            if (currentUser == null) {
+                // Nếu chưa có trong session, lấy từ database và lưu vào session
+                String email = p.getName();
+                currentUser = userRepo.findByEmail(email);
+                if (currentUser != null) {
+                    session.setAttribute("currentUser", currentUser);
+                }
+            }
+            
+            // Thêm vào model để view có thể sử dụng
+            m.addAttribute("user", currentUser);
+        }
+    }
+    @GetMapping("/profile")
+    public ResponseEntity<User> getUserInfo(Principal principal) {
+        if (principal != null) {
+            String email = principal.getName();
             User user = userRepo.findByEmail(email);
             if (user != null) {
-                m.addAttribute("user", user);
+                return ResponseEntity.ok(user);
             }
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 	@GetMapping("/")
-	public String home(Model model) {
+	public String home(Model model, HttpSession session) {
+		User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+		
+		
 		List<Product> products = this.productService.fetchProducts();
     	model.addAttribute("products", products);
 		return "user/home";
 	}
 
-    @PostMapping("/updatePassword")
-    public String UpdatePassword(HttpSession session, Principal p, @RequestParam("oldPass") String oldPass,
-            @RequestParam("newPass") String newPass) {
-        String email = p.getName();
+	@PostMapping("/updatePassword")
+    public String updatePassword(HttpSession session, Principal p, 
+            @RequestParam("oldPass") String oldPass,
+            @RequestParam("newPass") String newPass, RedirectAttributes redirectAttributes) {
+            
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
 
-        User user = userRepo.findByEmail(email);
-
-        boolean check = passEncoder.matches(oldPass, user.getPassword());
-
+        boolean check = passEncoder.matches(oldPass, currentUser.getPassword());
         if (check) {
-            user.setPassword(passEncoder.encode(newPass));
-            User u = userRepo.save(user);
-
-            if (u != null) {
+            currentUser.setPassword(passEncoder.encode(newPass));
+            User updatedUser = userRepo.save(currentUser);
+            if (updatedUser != null) {
+                // Cập nhật user trong session
+                session.setAttribute("currentUser", updatedUser);
                 session.setAttribute("msg", "Update Password successful!");
             } else {
-                session.setAttribute("msg", "Something went wrong!");
+                session.setAttribute("msg", "as went wrong!");
             }
         } else {
             session.setAttribute("msg", "Old Password incorrect!");
         }
+
+        if (passEncoder.matches(oldPass, currentUser.getPassword())) {
+            if (!isValidPassword(newPass)) {
+                redirectAttributes.addFlashAttribute("msg", "Password must be at least 8 characters and contain special characters, digits, and uppercase letters!");
+                return "redirect:/user/changePass";
+            }
+
+            currentUser.setPassword(passEncoder.encode(newPass));
+            userRepo.save(currentUser);
+            redirectAttributes.addFlashAttribute("msg", "Update Password successful!");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Old Password incorrect!");
+        }
+
         return "redirect:/user/changePass";
     }
 
@@ -84,6 +130,11 @@ public class UserController {
 		}
 		return "user/changePassword";
 	}
+	
+	 private boolean isValidPassword(String password) {
+	        String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+	        return password.matches(regex);
+	    }
 	
 
 
