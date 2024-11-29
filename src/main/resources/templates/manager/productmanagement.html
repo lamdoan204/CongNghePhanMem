@@ -158,7 +158,7 @@
                 <!-- Hiển thị hình ảnh -->
                 <img th:if="${product.image != null}"
                      th:src="@{'/image?fname=' + ${product.image}}" class="product-image"
-                     th:alt="${product.name}">
+                     th:alt="${product.image}">
                 <img th:unless="${product.image != null}" th:src="@{'/image?fname=no-image.png'}"
                      class="product-image" alt="No Image">
             </td>
