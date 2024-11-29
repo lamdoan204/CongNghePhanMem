@@ -295,10 +295,10 @@ public class ManagerController {
          // Ví dụ: Lấy brandId của manager từ session hoặc authentication
          int managerBrandId = managerService.get_DepartmentBrandId(manager);; // Thay bằng cách lấy thực tế
 
-         List<RevenueStatistic> weeklyRevenue = statisticService.getRevenueByWeek(managerBrandId);
-         List<RevenueStatistic> monthlyRevenue = statisticService.getRevenueByMonth(managerBrandId);
-         List<RevenueStatistic> quarterlyRevenue = statisticService.getRevenueByQuarter(managerBrandId);
-         List<RevenueStatistic> yearlyRevenue = statisticService.getRevenueByYear(managerBrandId);
+         List<RevenueStatistic> weeklyRevenue = statisticService.getRevenueByWeekAndKind(managerBrandId);
+         List<RevenueStatistic> monthlyRevenue = statisticService.getRevenueByMonthAndKind(managerBrandId);
+         List<RevenueStatistic> quarterlyRevenue = statisticService.getRevenueByQuarterAndKind(managerBrandId);
+         List<RevenueStatistic> yearlyRevenue = statisticService.getRevenueByYearAndKind(managerBrandId);
          
          model.addAttribute("brand", brand);
 
@@ -309,12 +309,6 @@ public class ManagerController {
 
          return "manager/revenueManagement"; // Đảm bảo tên này khớp với file template
     }
-    @Autowired
-    IStatisticService revenueService =new StatisticService();
+   
 
-    @GetMapping("/test-revenue")
-    public String testRevenue(@RequestParam int brandId) {
-        revenueService.testRevenueQueries(brandId);
-        return "Check the console for revenue data!";
-    }
 }

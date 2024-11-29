@@ -17,65 +17,56 @@ public class StatisticService implements IStatisticService {
     private OrderDetailRepository orderDetailRepository;
 
     @Override
-    public List<RevenueStatistic> getRevenueByWeek(int brandId) {
-        List<Object[]> results = orderDetailRepository.findRevenueByWeek(brandId);
+    public List<RevenueStatistic> getRevenueByWeekAndKind(int brandId) {
+        List<Object[]> results = orderDetailRepository.findRevenueByWeekAndKind(brandId);
         return results.stream()
                 .map(result -> new RevenueStatistic(
                         ((Number) result[0]).intValue(), // weekNumber
                         ((Number) result[1]).intValue(),
-                        ((Number) result[2]).doubleValue() // totalRevenue
+                        (String) result[2],//kind
+                        ((Number) result[3]).doubleValue() // totalRevenue
                 ))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<RevenueStatistic> getRevenueByMonth(int brandId) {
-        List<Object[]> results = orderDetailRepository.findRevenueByMonth(brandId);
+    public List<RevenueStatistic> getRevenueByMonthAndKind(int brandId) {
+        List<Object[]> results = orderDetailRepository.findRevenueByMonthAndKind(brandId);
         return results.stream()
                 .map(result -> new RevenueStatistic(
                         ((Number) result[0]).intValue(), // month
-                        ((Number) result[1]).intValue(),
-                        ((Number) result[2]).doubleValue() // totalRevenue
+                        ((Number) result[1]).intValue(), // year
+                        (String) result[2],             // kind
+                        ((Number) result[3]).doubleValue() // totalRevenue
                 ))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<RevenueStatistic> getRevenueByQuarter(int brandId) {
-        List<Object[]> results = orderDetailRepository.findRevenueByQuarter(brandId);
+    public List<RevenueStatistic> getRevenueByQuarterAndKind(int brandId) {
+        List<Object[]> results = orderDetailRepository.findRevenueByQuarterAndKind(brandId);
         return results.stream()
                 .map(result -> new RevenueStatistic(
                         ((Number) result[0]).intValue(), // quarter
-                        ((Number) result[1]).intValue(),
+                        ((Number) result[1]).intValue(), // year
+                        (String) result[2],             // kind
+                        ((Number) result[3]).doubleValue() // totalRevenue
+                ))
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<RevenueStatistic> getRevenueByYearAndKind(int brandId) {
+        List<Object[]> results = orderDetailRepository.findRevenueByYearAndKind(brandId);
+        return results.stream()
+                .map(result -> new RevenueStatistic(
+                        ((Number) result[0]).intValue(), // year
+                        ((Number) result[0]).intValue(),                           // period is not applicable for yearly stats
+                        (String) result[1],             // kind
                         ((Number) result[2]).doubleValue() // totalRevenue
                 ))
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<RevenueStatistic> getRevenueByYear(int brandId) {
-        List<Object[]> results = orderDetailRepository.findRevenueByYear(brandId);
-        return results.stream()
-                .map(result -> new RevenueStatistic(
-                        ((Number) result[0]).intValue(), // year
-                        ((Number) result[0]).intValue(),
-                        ((Number) result[1]).doubleValue() // totalRevenue
-                ))
-                .collect(Collectors.toList());
-    }
-  
-
-    public void testRevenueQueries(int brandId) {
-        // Test doanh thu theo quý
-        List<Object[]> quarterlyRevenue = orderDetailRepository.findRevenueByQuarter(brandId);
-        for (Object[] result : quarterlyRevenue) {
-            System.out.println("Quarter: " + result[0] + ", Year: " + result[1] + ", Revenue: " + result[2]);
-        }
-
-        // Test doanh thu theo năm
-        List<Object[]> yearlyRevenue = orderDetailRepository.findRevenueByYear(brandId);
-        for (Object[] result : yearlyRevenue) {
-            System.out.println("Year: " + result[0] + ", Revenue: " + result[1]);
-        }
-    }
 }

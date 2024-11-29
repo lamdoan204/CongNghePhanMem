@@ -5,10 +5,10 @@ import java.util.List;
 import com.Project.CongNghePhanMem.Entity.RevenueStatistic;
 
 public interface IStatisticService {
-	List<RevenueStatistic> getRevenueByWeek(int brandId);
-    List<RevenueStatistic> getRevenueByMonth(int brandId);
-    List<RevenueStatistic> getRevenueByQuarter(int brandId);
-    List<RevenueStatistic> getRevenueByYear(int brandId);
-    void testRevenueQueries(int brandId);
+	List<RevenueStatistic> getRevenueByWeekAndKind(int brandId);
+    List<RevenueStatistic> getRevenueByMonthAndKind(int brandId);
+    List<RevenueStatistic> getRevenueByQuarterAndKind(int brandId);
+    List<RevenueStatistic> getRevenueByYearAndKind(int brandId);
+    
 
 }
