@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
@@ -52,6 +55,17 @@ public class UserController {
             m.addAttribute("user", currentUser);
         }
     }
+    @GetMapping("/profile")
+    public ResponseEntity<User> getUserInfo(Principal principal) {
+        if (principal != null) {
+            String email = principal.getName();
+            User user = userRepo.findByEmail(email);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 
 	@GetMapping("/")
 	public String home(Model model, HttpSession session) {
@@ -69,7 +83,7 @@ public class UserController {
 	@PostMapping("/updatePassword")
     public String updatePassword(HttpSession session, Principal p, 
             @RequestParam("oldPass") String oldPass,
-            @RequestParam("newPass") String newPass) {
+            @RequestParam("newPass") String newPass, RedirectAttributes redirectAttributes) {
             
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
@@ -85,11 +99,25 @@ public class UserController {
                 session.setAttribute("currentUser", updatedUser);
                 session.setAttribute("msg", "Update Password successful!");
             } else {
-                session.setAttribute("msg", "Something went wrong!");
+                session.setAttribute("msg", "as went wrong!");
             }
         } else {
             session.setAttribute("msg", "Old Password incorrect!");
         }
+
+        if (passEncoder.matches(oldPass, currentUser.getPassword())) {
+            if (!isValidPassword(newPass)) {
+                redirectAttributes.addFlashAttribute("msg", "Password must be at least 8 characters and contain special characters, digits, and uppercase letters!");
+                return "redirect:/user/changePass";
+            }
+
+            currentUser.setPassword(passEncoder.encode(newPass));
+            userRepo.save(currentUser);
+            redirectAttributes.addFlashAttribute("msg", "Update Password successful!");
+        } else {
+            redirectAttributes.addFlashAttribute("msg", "Old Password incorrect!");
+        }
+
         return "redirect:/user/changePass";
     }
 
@@ -102,6 +130,11 @@ public class UserController {
 		}
 		return "user/changePassword";
 	}
+	
+	 private boolean isValidPassword(String password) {
+	        String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+	        return password.matches(regex);
+	    }
 	
 
 

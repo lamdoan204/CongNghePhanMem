@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
-
 <head>
 	<meta charset="ISO-8859-1">
-	<title>Insert title here</title>
+	<title>Register Page</title>
 </head>
-
 
 <body id="default_theme" class="it_service">
 	<section class="mt-5">
@@ -26,7 +24,7 @@
 
 						<!-- Body -->
 						<div class="card-body">
-							<form action="createUser" method="post">
+							<form id="registerForm" action="createUser" method="post">
 								<!-- Full Name -->
 								<div class="mb-3">
 									<label for="fullName" class="form-label">Enter Full Name</label>
@@ -43,7 +41,7 @@
 									<div class="input-group">
 										<span class="input-group-text"><i class="fas fa-envelope"></i></span>
 										<input type="email" id="email" name="email" class="form-control"
-											placeholder="Enter your email">
+											placeholder="Enter your email" required>
 									</div>
 								</div>
 
@@ -53,7 +51,7 @@
 									<div class="input-group">
 										<span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
 										<input type="text" id="address" name="address" class="form-control"
-											placeholder="Enter your address">
+											placeholder="Enter your address" required>
 									</div>
 								</div>
 
@@ -63,7 +61,7 @@
 									<div class="input-group">
 										<span class="input-group-text"><i class="fas fa-lock"></i></span>
 										<input type="password" id="password" name="password" class="form-control"
-											placeholder="Enter your password">
+											placeholder="Enter your password" required>
 									</div>
 								</div>
 								<!-- Password -->
@@ -72,7 +70,7 @@
 									<div class="input-group">
 										<span class="input-group-text"><i class="fas fa-lock"></i></span>
 										<input type="password" id="password1" name="password1" class="form-control"
-											placeholder="Enter your password">
+											placeholder="Confirm your password" >
 									</div>
 								</div>
 
@@ -82,7 +80,7 @@
 									<div class="input-group">
 										<span class="input-group-text"><i class="fas fa-phone"></i></span>
 										<input type="text" id="phone" name="phone" class="form-control"
-											placeholder="Enter your phone">
+											placeholder="Enter your phone" pattern="^\d{10}$" required title="Số điện thoại phải gồm đúng 10 chữ số">
 									</div>
 								</div>
 
@@ -100,16 +98,37 @@
 		</div>
 	</section>
 	<script>
-		document.querySelector("form").addEventListener("submit", function (event) {
-			const password = document.getElementById("password").value;
-			const confirmPassword = document.getElementById("password1").value;
+		document.querySelector("#registerForm").addEventListener("submit", function (event) {
+			// Lấy giá trị các trường
+			const fullName = document.getElementById("fullName").value.trim();
+			const email = document.getElementById("email").value.trim();
+			const address = document.getElementById("address").value.trim();
+			const password = document.getElementById("password").value.trim();
+			const confirmPassword = document.getElementById("password1").value.trim();
+			const phone = document.getElementById("phone").value.trim();
 
+			// Kiểm tra các trường không được để trống
+			if (!fullName || !email || !address || !password || !confirmPassword || !phone) {
+				event.preventDefault();
+				alert("Vui lòng điền đầy đủ tất cả các trường!");
+				return;
+			}
+
+			// Kiểm tra mật khẩu khớp
 			if (password !== confirmPassword) {
 				event.preventDefault();
 				alert("Mật khẩu không khớp. Vui lòng thử lại!");
+				return;
+			}
+
+			// Kiểm tra số điện thoại
+			const phonePattern = /^\d{10}$/;
+			if (!phonePattern.test(phone)) {
+				event.preventDefault();
+				alert("Số điện thoại phải gồm đúng 10 chữ số. Vui lòng kiểm tra lại!");
+				return;
 			}
 		});
 	</script>
 </body>
-
 </html>

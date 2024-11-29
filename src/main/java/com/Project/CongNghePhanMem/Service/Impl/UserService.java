@@ -1,11 +1,18 @@
 package com.Project.CongNghePhanMem.Service.Impl;
 
 import java.security.SecureRandom;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,13 +20,20 @@ import org.springframework.stereotype.Service;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.IUserService;
+import com.Project.CongNghePhanMem.Service.JwtService;
+import com.Project.CongNghePhanMem.dto.UserRequest;
 import com.Project.CongNghePhanMem.configs.CustomUserDetails;
 
 import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class UserService implements IUserService {
+	@Autowired
+	private JwtService jwtService;
 
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
 	@Autowired
 	private UserRepository userRepo;
 
@@ -120,6 +134,38 @@ public class UserService implements IUserService {
 		}
 		return false;
 	}
+	@Override
+	public String login(UserRequest request) {
+	    try {
+	        Authentication authenticate = authenticationManager
+	                .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+	        if (authenticate.isAuthenticated()) {
+	            System.out.println("Authentication successful for email: " + request.getEmail());
+	            return jwtService.generateToken(request.getEmail());
+	        }
+	    } catch (BadCredentialsException e) {
+	        System.out.println("Bad credentials for email: " + request.getEmail());
+	        throw new RuntimeException("Đăng nhập thất bại: Sai thông tin tài khoản hoặc mật khẩu");
+	    } catch (UsernameNotFoundException e) {
+	        System.out.println("User not found: " + request.getEmail());
+	        throw new RuntimeException("Đăng nhập thất bại: Người dùng không tồn tại");
+	    } catch (Exception e) {
+	        System.out.println("Unexpected error during login: " + e.getMessage());
+	        throw new RuntimeException("Đăng nhập thất bại: " + e.getMessage());
+	    }
+
+	    throw new RuntimeException("Xác thực thất bại");
+	}
+
+
+
+	
+	@Override
+	public List<User> getUserDtls() {
+		return userRepo.findAll();
+
+	}
 
     @Override
     public User getUserByUserId(int id) {
@@ -145,6 +191,10 @@ public class UserService implements IUserService {
 
     }
 
+	@Override
+	public List<User> getUserByRole(String role) {
+		return userRepo.findByRole(role);
+	}
     @Override
     public void updateUser(User user) {
         userRepo.save(user);
