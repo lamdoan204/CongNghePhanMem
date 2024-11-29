@@ -1,4 +1,4 @@
-package com.Project.CongNghePhanMem.Controller;
+package com.Project.CongNghePhanMem.Controller.Manager;
 
 import java.util.List;
 

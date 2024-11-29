@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,12 +24,12 @@ import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.IProductService;
 import com.Project.CongNghePhanMem.Service.IUserService;
 import com.Project.CongNghePhanMem.Service.Impl.CartService;
-import com.Project.CongNghePhanMem.Service.Impl.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/user/")
 public class ProductController {
     
     @Autowired
