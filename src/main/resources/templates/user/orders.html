@@ -2,6 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="user/layout/header :: layout(~{::body})">
 
 <body id="default_theme" class="it_serv_shopping_cart shopping-cart">
+
+	<!-- Thêm vào đầu trang -->
+	<div th:if="${param.cancelSuccess}" class="alert alert-success">
+		Hủy đơn hàng thành công
+	</div>
+	<div th:if="${param.cancelError}" class="alert alert-danger">
+		<span th:text="${param.cancelError}"></span>
+	</div>
+
 	<!-- inner page banner -->
 	<div id="inner_banner" class="section inner_banner_section">
 		<div class="container">
@@ -31,22 +40,40 @@
 					<div class="order-menu">
 						<ul class="nav flex-column">
 							<li class="nav-item">
-								<a class="nav-link active" href="/user/orders">Tất cả đơn hàng</a>
+								<a class="nav-link" th:href="@{/user/orders}"
+									th:classappend="${currentPage == 'all'} ? 'active' : ''">
+									Tất cả đơn hàng
+								</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="/user/orders/pending">Chờ xác nhận</a>
+								<a class="nav-link" th:href="@{/user/orders/pending}"
+									th:classappend="${currentPage == 'pending'} ? 'active' : ''">
+									Chờ xác nhận
+								</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="/user/orders/confirmed">Đã xác nhận</a>
+								<a class="nav-link" th:href="@{/user/orders/confirmed}"
+									th:classappend="${currentPage == 'confirmed'} ? 'active' : ''">
+									Đã xác nhận
+								</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="/user/orders/shipping">Đang giao</a>
+								<a class="nav-link" th:href="@{/user/orders/shipping}"
+									th:classappend="${currentPage == 'shipping'} ? 'active' : ''">
+									Đang giao
+								</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="/user/orders/delivered">Đã giao</a>
+								<a class="nav-link" th:href="@{/user/orders/delivered}"
+									th:classappend="${currentPage == 'delivered'} ? 'active' : ''">
+									Đã giao
+								</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="/user/orders/cancelled">Đã hủy</a>
+								<a class="nav-link" th:href="@{/user/orders/cancelled}"
+									th:classappend="${currentPage == 'cancelled'} ? 'active' : ''">
+									Đã hủy
+								</a>
 							</li>
 						</ul>
 					</div>
@@ -93,10 +120,53 @@
 												</span>
 											</td>
 											<td>
-												<button class="btn btn-primary" data-bs-toggle="collapse"
+												<!-- Nút Chi tiết -->
+												<button class="btn btn-primary mb-1" data-bs-toggle="collapse"
 													th:data-bs-target="'#order-' + ${order.orderID}">
 													Chi tiết
 												</button>
+
+												<!-- Nút Hủy đơn - chỉ hiện khi trạng thái phù hợp -->
+												<button th:if="${order.status == 1 || order.status == 2}"
+													class="btn btn-danger mb-1 ms-2" data-bs-toggle="modal"
+													th:data-bs-target="'#cancelModal-' + ${order.orderID}">
+													Hủy đơn
+												</button>
+
+												<!-- Modal xác nhận hủy đơn -->
+												<div class="modal fade" th:id="'cancelModal-' + ${order.orderID}"
+													tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title">Xác nhận hủy đơn hàng</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal"></button>
+															</div>
+															<div class="modal-body">
+																<p>Bạn có chắc chắn muốn hủy đơn hàng
+																	#[[${order.orderID}]]?</p>
+																<form
+																	th:action="@{/user/orders/cancel/{id}(id=${order.orderID})}"
+																	method="post">
+																	<div class="mb-3">
+																		<label for="cancelReason" class="form-label">Lý
+																			do hủy:</label>
+																		<textarea class="form-control"
+																			name="cancelReason" rows="3"
+																			required></textarea>
+																	</div>
+																	<div class="text-end">
+																		<button type="button" class="btn btn-secondary"
+																			data-bs-dismiss="modal">Đóng</button>
+																		<button type="submit" class="btn btn-danger">Xác
+																			nhận hủy</button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												</div>
 											</td>
 										</tr>
 										<!-- Dòng chi tiết đơn hàng (collapse) -->
@@ -136,6 +206,7 @@
 													</div>
 												</div>
 											</td>
+
 										</tr>
 									</th:block>
 								</tbody>
@@ -159,6 +230,13 @@
 			color: #333;
 			padding: 10px 15px;
 			border-radius: 4px;
+			transition: all 0.3s ease;
+			/* Thêm hiệu ứng chuyển đổi mượt */
+		}
+
+		/* Thêm hover effect */
+		.order-menu .nav-link:hover:not(.active) {
+			background: #f0f0f0;
 		}
 
 		.order-menu .nav-link.active {
@@ -206,6 +284,10 @@
 			});
 		});
 	</script>
+
+
+	<!-- Footer -->
+	<div th:replace="user/layout/footer"></div>
 </body>
 
 </html>

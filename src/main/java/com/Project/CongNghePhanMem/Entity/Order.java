@@ -1,6 +1,7 @@
 package com.Project.CongNghePhanMem.Entity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -22,6 +23,12 @@ public class Order {
     public static final int IN_DELIVERY = 3; // Đang giao
     public static final int DELIVERED = 4; // Đã giao
     public static final int CANCELLED = 5; // Đã hủy
+    
+    @Column
+    private String cancelReason;
+    
+    @Column
+    private LocalDateTime cancelDate;
     
     private float totalPrice;
     
@@ -84,7 +91,26 @@ public class Order {
 	}
 	
 	
+	
+	
 
+
+	public String getCancelReason() {
+		return cancelReason;
+	}
+
+	public void setCancelReason(String cancelReason) {
+		this.cancelReason = cancelReason;
+	}
+
+	
+	public LocalDateTime getCancelDate() {
+		return cancelDate;
+	}
+
+	public void setCancelDate(LocalDateTime cancelDate) {
+		this.cancelDate = cancelDate;
+	}
 
 	public List<OrderDetail> getOrderDetails() {
 		return orderDetails;

@@ -118,7 +118,7 @@
                                     <td class="col-sm-1 col-md-1 text-center">
                                         <div class="input-group quantity">
                                             <form method="post" 
-                                                  th:action="@{/update-cart/remove/{id}(id=${cartDetail.id})}"
+                                                  th:action="@{/user/update-cart/remove/{id}(id=${cartDetail.id})}"
                                                   style="display: inline;">
                                                 <button type="submit" class="btn btn-sm btn-minus">-</button>
                                             </form>
@@ -130,7 +130,7 @@
                                                    th:data-cart-price="${cartDetail.price}">
                                             
                                             <form method="post"
-                                                  th:action="@{/update-cart/add/{id}(id=${cartDetail.id})}"
+                                                  th:action="@{/user/update-cart/add/{id}(id=${cartDetail.id})}"
                                                   style="display: inline;">
                                                 <button type="submit" class="btn btn-sm btn-plus">+</button>
                                             </form>
@@ -149,7 +149,7 @@
                                     <!-- Remove Button -->
                                     <td class="col-sm-1 col-md-1">
                                         <form method="post"
-                                              th:action="@{/delete-cart-product/{id}(id=${cartDetail.id})}">
+                                              th:action="@{/user/delete-cart-product/{id}(id=${cartDetail.id})}">
                                             <button class="btn btn-md bg-light border"
                                                     style="width: 40px; height: 40px;">
                                                 <i class="fas fa-times text-danger"></i>

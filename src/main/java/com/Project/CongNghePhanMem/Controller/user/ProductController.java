@@ -100,7 +100,7 @@ public class ProductController {
             return "redirect:/cart";
         } catch (Exception e) {
             // Log error
-            return "redirect:/cart";
+            return "redirect:/user/cart";
         }
     }
 }
