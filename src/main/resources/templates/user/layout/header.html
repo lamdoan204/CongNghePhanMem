@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(body)">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Header Example</title>
-    <!-- FontAwesome CDN -->
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <title>Shop PC Components</title>
+    
+    <!-- Common CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Navbar styles -->
     <style>
         .navbar {
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -20,9 +23,7 @@
 
         .nav-link {
             font-weight: 700;
-            /* Làm chữ đậm hơn */
             font-size: 18px;
-            /* Làm chữ to hơn */
             color: #343a40;
             margin: 0 15px;
             transition: all 0.3s ease;
@@ -43,7 +44,6 @@
             width: 300px;
             transition: width 0.3s ease;
             font-size: 16px;
-            /* Tăng kích thước chữ trong hộp tìm kiếm */
         }
 
         .search-box input:focus {
@@ -64,7 +64,6 @@
             position: relative;
             margin-left: 20px;
             font-size: 22px;
-            /* Tăng kích thước chữ các biểu tượng */
             color: #343a40;
             transition: transform 0.3s ease;
         }
@@ -91,11 +90,12 @@
 </head>
 
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <!-- Logo -->
-            <a class="navbar-brand" href="#">
-                <img src="/images/logos/logo.png" alt="Logo">
+            <a class="navbar-brand" th:href="@{/user/}">
+                <img th:src="@{/images/logos/logo.png}" alt="Logo">
             </a>
             <!-- Contact -->
             <span class="navbar-text me-3 text-muted" style="font-size: 18px; font-weight: 700;">
@@ -124,24 +124,19 @@
                 <input type="text" class="form-control" placeholder="Tìm kiếm laptop và phụ kiện">
                 <i class="fas fa-search"></i>
             </div>
-            <!-- Icons Section (Message, Cart, User) -->
+            <!-- Icons Section -->
             <div class="d-flex align-items-center">
-                <!-- Icon Message -->
                 <a href="#" class="icon-btn mx-2">
                     <i class="fas fa-comment"></i>
                 </a>
-                <!-- Icon Cart -->
-                <a href="/user/cart" class="icon-btn mx-2">
+                <a th:href="@{/user/cart}" class="icon-btn mx-2">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="badge">0</span>
                 </a>
-
                 <a href="#" class="icon-btn mx-2">
-                    <img src="/images/logos/icon_notif.png" alt="Icon Notif" style="width: 24px; height: 24px;">
+                    <img th:src="@{/images/logos/icon_notif.png}" alt="Icon Notif" style="width: 24px; height: 24px;">
                     <span class="badge">0</span>
                 </a>
-
-                <!-- User Icon with Dropdown -->
                 <div class="dropdown">
                     <a href="#" class="icon-btn dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -150,15 +145,21 @@
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="#">Xin chào, User</a></li>
                         <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
-                        <li><a class="dropdown-item" href="#">Lịch sử đơn hàng</a></li>
-                        <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                        <li><a class="dropdown-item" th:href="@{/user/orders}">Lịch sử đơn hàng</a></li>
+                        <li><a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a></li>
                     </ul>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
-</body>
+    <!-- Content from child pages -->
+    <div th:replace="${body}">
+        <!-- Content will be replaced here -->
+    </div>
 
+    <!-- Common JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

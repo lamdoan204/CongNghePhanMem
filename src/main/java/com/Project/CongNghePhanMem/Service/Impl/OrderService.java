@@ -1,6 +1,7 @@
 package com.Project.CongNghePhanMem.Service.Impl;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import com.Project.CongNghePhanMem.Entity.Order;
 import com.Project.CongNghePhanMem.Repository.OrderRepository;
@@ -103,7 +104,26 @@ public class OrderService implements IOrderService{
     }
 
     // Lấy danh sách đơn hàng theo trạng thái
-    public List<Order> getOrdersByStatus(int status) {
+    @Override
+	public List<Order> getOrdersByStatus(int status) {
         return orderRepository.findByStatus(status);
+    }
+    
+
+    @Override
+	public List<Order> getOrdersByUserAndStatus(User user, int status) {
+        return orderRepository.findByUserAndStatusOrderByOrderDateDesc(user, status);
+    }
+    
+    @Override
+	public void cancelOrder(Integer orderId, String cancelReason) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+            
+        order.setStatus(Order.CANCELLED);
+        order.setCancelReason(cancelReason);
+        order.setCancelDate(LocalDateTime.now());
+        
+        orderRepository.save(order);
     }
 }

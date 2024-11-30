@@ -66,7 +66,7 @@ public class CheckoutController {
 			Cart cart = cartService.getCurrentCart(session);
 
 			if (currentUser == null || cart == null || cart.getCartDetails().isEmpty()) {
-				return "redirect:/cart";
+				return "redirect:/user/cart";
 			}
 
 			// Cập nhật thông tin user nếu cần
@@ -78,17 +78,17 @@ public class CheckoutController {
 			Order order = orderService.createOrder(currentUser, cart);
 
 			// Xóa giỏ hàng sau khi đặt hàng thành công
-			//cartService.clearCart(session);
+			// cartService.clearCart(session);
 
 			// Thông báo thành công
 			redirectAttributes.addFlashAttribute("successMessage",
 					"Đặt hàng thành công! Mã đơn hàng của bạn là: " + order.getOrderID());
 
-			return "redirect:/order/success/" + order.getOrderID();
+			return "redirect:/user/checkout/order/success/" + order.getOrderID();
 
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi đặt hàng: " + e.getMessage());
-			return "redirect:/checkout";
+			return "redirect:/user/checkout";
 		}
 	}
 
@@ -97,9 +97,10 @@ public class CheckoutController {
 		Order order = orderService.findById(orderId);
 		if (order != null) {
 			model.addAttribute("order", order);
-			return "user/orderSuccess";
+			//return "user/orderSuccess";
+			return "/user/orders";
 		}
-		return "redirect:/";
+		return "redirect:/user";
 	}
 
 	@PostMapping("/process-payment")
@@ -112,7 +113,7 @@ public class CheckoutController {
 			Cart cart = cartService.getCurrentCart(session);
 
 			if (currentUser == null || cart == null) {
-				return "redirect:/cart";
+				return "redirect:/user/cart";
 			}
 
 			// Giả lập xử lý thanh toán
@@ -125,19 +126,21 @@ public class CheckoutController {
 				// Xóa giỏ hàng
 				cartService.clearCart(session);
 
+				// Chuyển đến trang quản lý đơn hàng thay vì trang success
 				redirectAttributes.addFlashAttribute("successMessage",
 						"Thanh toán thành công! Mã đơn hàng của bạn là: " + order.getOrderID());
 
-				return "redirect:/order/success/" + order.getOrderID();
+				return "redirect:/user/orders"; // Chuyển đến trang quản lý đơn hàng
+
 			} else {
 				redirectAttributes.addFlashAttribute("errorMessage", "Thanh toán thất bại!");
-				return "redirect:/checkout";
+				return "redirect:/user/checkout";
 			}
 
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("errorMessage",
 					"Có lỗi xảy ra trong quá trình thanh toán: " + e.getMessage());
-			return "redirect:/checkout";
+			return "redirect:/user/checkout";
 		}
 	}
 
