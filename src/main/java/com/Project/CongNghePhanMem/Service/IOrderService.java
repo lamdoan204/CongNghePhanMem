@@ -21,4 +21,6 @@ public interface IOrderService {
 
 	List<Order> getOrdersByStatus(int status);
 
+	void cancelOrder(Integer orderId, String cancelReason);
+
 }
