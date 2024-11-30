@@ -18,19 +18,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.Project.CongNghePhanMem.Entity.Article;
 import com.Project.CongNghePhanMem.Entity.Department;
 import com.Project.CongNghePhanMem.Entity.Promotion;
+import com.Project.CongNghePhanMem.Entity.RevenueStatistic;
 import com.Project.CongNghePhanMem.Entity.User;
-import com.Project.CongNghePhanMem.Service.BrandService;
 import com.Project.CongNghePhanMem.Service.IManagerService;
 import com.Project.CongNghePhanMem.Service.IUserService;
 import com.Project.CongNghePhanMem.Service.Impl.ArticleService;
 import com.Project.CongNghePhanMem.Service.Impl.DepartmentService;
 import com.Project.CongNghePhanMem.Service.Impl.ManagerService;
 import com.Project.CongNghePhanMem.Service.Impl.PromotionService;
+import com.Project.CongNghePhanMem.Service.Impl.StatisticService;
+import com.Project.CongNghePhanMem.Service.IStatisticService;
 import com.Project.CongNghePhanMem.Service.Impl.UserService;
 
 @Controller
 @RequestMapping("/manager")
 public class ManagerController {
+	@Autowired
+	private StatisticService statisticService;
 
     @Autowired
     private PromotionService promotionService;
@@ -278,4 +282,32 @@ public class ManagerController {
         articleService.deleteArticleById(id);
         return "redirect:/manager/blog";
     }
+    @GetMapping("/revenue")
+    public String showRevenueManagementPage(Model model) {
+    	 User manager = userService.getUserCurentLogged();
+         if (manager == null) {
+             throw new RuntimeException("Không tìm thấy người dùng");
+         }
+         // Gọi Service để lấy tên thương hiệu
+         String brand = managerService.get_DepartmentName(manager);
+        
+         // Ví dụ: Lấy brandId của manager từ session hoặc authentication
+         int managerBrandId = managerService.get_DepartmentBrandId(manager);; // Thay bằng cách lấy thực tế
+
+         List<RevenueStatistic> weeklyRevenue = statisticService.getRevenueByWeekAndKind(managerBrandId);
+         List<RevenueStatistic> monthlyRevenue = statisticService.getRevenueByMonthAndKind(managerBrandId);
+         List<RevenueStatistic> quarterlyRevenue = statisticService.getRevenueByQuarterAndKind(managerBrandId);
+         List<RevenueStatistic> yearlyRevenue = statisticService.getRevenueByYearAndKind(managerBrandId);
+         
+         model.addAttribute("brand", brand);
+
+         model.addAttribute("weeklyRevenue", weeklyRevenue);
+         model.addAttribute("monthlyRevenue", monthlyRevenue);
+         model.addAttribute("quarterlyRevenue", quarterlyRevenue);
+         model.addAttribute("yearlyRevenue", yearlyRevenue);
+
+         return "manager/revenueManagement"; // Đảm bảo tên này khớp với file template
+    }
+   
+
 }

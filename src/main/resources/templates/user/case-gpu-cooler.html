@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Điều kiện kiểm tra</title>
+    <style>
+        /* Styles for the button */
+        .btn-dropdown {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-dropdown:hover {
+            background-color: #0056b3;
+        }
+
+        /* Styles for the dropdown menu */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            width: 250px;
+            margin-top: 10px;
+            padding: 10px;
+            list-style: none;
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu li {
+            padding: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .dropdown-menu li:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dropdown container -->
+    <div class="dropdown">
+        <!-- Button to trigger dropdown -->
+        <button class="btn-dropdown">Chọn hãng linh kiện</button>
+
+        <!-- Dropdown menu -->
+        <ul class="dropdown-menu">
+            <li onclick="alert('Bạn đã chọn Samsung')">Samsung</li>
+            <li onclick="alert('Bạn đã chọn LG')">LG</li>
+            <li onclick="alert('Bạn đã chọn Sony')">Sony</li>
+            <li onclick="alert('Bạn đã chọn Panasonic')">Panasonic</li>
+        </ul>
+    </div>
+
+</body>
+</html>

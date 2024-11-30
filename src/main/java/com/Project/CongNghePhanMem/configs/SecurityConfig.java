@@ -50,35 +50,45 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf(csrf -> csrf.disable())
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                // Các URL public không cần authentication
+                .requestMatchers(
+                    "/css/**", "/js/**", "/images/**", "/fonts/**",
+                    "/", "/login", "/register", "/notifyVerify",
+                    "/forgotPassword", "/verifyOTP", "/resetPassword",
+                    "/verify", "/createUser", "/it_shop_detail", "/search"
+                ).permitAll()
+                // Các URL cần role cụ thể
+                .requestMatchers("/manager/**").hasRole("MANAGER")
+                .requestMatchers("/user/**").hasRole("USER") 
+                .requestMatchers("/employee/**").hasRole("EMPLOYEE")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                // Các request khác cần authentication
+                .anyRequest().authenticated()
+            )
+            // Cấu hình form login
+            .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/signin")
+                .failureUrl("/login?error=true")
+                .successHandler(customsuccessHandler)
+                .permitAll()
+            )
+            // Cấu hình logout
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true)
+                .permitAll()
+            )
+            // Thêm JWT filter
+            .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/manager/**").hasRole("MANAGER")
-						.requestMatchers("/user/**").hasRole("USER").requestMatchers("/employee/**").hasRole("EMPLOYEE")
-						.requestMatchers("/admin/**").hasRole("ADMIN")
-						.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/", "/register",
-								"/notifyVerify", "/forgotPassword", "/verifyOTP", "/resetPassword", "/verify",
-								"/createUser", "/user/**", "/it_shop_detail", "/search")
-						.permitAll())
-				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/signin")
-						.failureUrl("/login?error=true").successHandler(customsuccessHandler).permitAll())
-				.formLogin(form -> form
-		                .loginPage("/login")                     
-		                .loginProcessingUrl("/signin")
-		                .successHandler(customsuccessHandler)        
-		                .permitAll()                              
-		            )
-		            .logout(logout -> logout
-		                    .logoutUrl("/logout")
-		                    .logoutSuccessUrl("/login")
-		                    .deleteCookies("JSESSIONID")
-		                    .invalidateHttpSession(true)
-		                    .permitAll()
-		                )
-				.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
-
-		return http.build();
-	}
+        return http.build();
+    }
 
 
 }
