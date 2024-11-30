@@ -59,7 +59,9 @@ public class CartService {
     }
     
     public float calculateTotalPrice(Cart cart) {
-
+        if (cart == null || cart.getCartDetails().isEmpty()) {
+            return 0;
+        }
         
         float total = 0;
         for (CartDetail detail : cart.getCartDetails()) {
