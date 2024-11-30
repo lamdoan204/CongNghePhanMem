@@ -1,421 +1,226 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{user/layout/header :: layout(~{::body})}">
-
-<head>
-	<!-- basic -->
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<!-- mobile metas -->
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
-	<!-- site metas -->
-	<title>It.Next - IT Service Responsive Html Theme</title>
-	<meta name="keywords" content="">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<!-- site icons -->
-	<link rel="icon" href="images/fevicon/fevicon.png" type="image/gif" />
-	<!-- bootstrap css -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-
-	<!-- Site css -->
-	<link rel="stylesheet" href="css/style.css" />
-	<!-- responsive css -->
-	<link rel="stylesheet" href="css/responsive.css" />
-	<!-- colors css -->
-	<link rel="stylesheet" href="css/colors1.css" />
-	<!-- custom css -->
-	<link rel="stylesheet" href="css/custom.css" />
-	<!-- wow Animation css -->
-	<link rel="stylesheet" href="css/animate.css" />
-	<!-- zoom effect -->
-	<link rel='stylesheet' href='css/hizoom.css'>
-
-	<!-- end zoom effect -->
-	<!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]-->
-</head>
-
+<html xmlns:th="http://www.thymeleaf.org" 
+      th:replace="~{user/layout/header :: layout(~{::body})}">
 <body id="default_theme" class="it_serv_shopping_cart shopping-cart">
-	<!-- loader -->
-	<div class="bg_load"> <img class="loader_animation" src="images/loaders/loader_1.png" alt="#" /> </div>
-	<!-- end loader -->
-	<!-- inner page banner -->
-	<div id="inner_banner" class="section inner_banner_section">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="full">
-						<div class="title-holder">
-							<div class="title-holder-cell text-left">
-								<h1 class="page-title">Shopping Cart</h1>
-								<ol class="breadcrumb">
-									<li><a href="index.html">Home</a></li>
-									<li class="active">Shopping Cart</li>
-								</ol>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end inner page banner -->
-	<div class="section padding_layout_1 Shopping_cart_section">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12 col-md-12">
-					<div class="product-table">
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Product</th>
-									<th>Quantity</th>
-									<th class="text-center">Price</th>
-									<th class="text-center">Total</th>
-									<th> </th>
-								</tr>
-							</thead>
-							<tbody>
-								<!-- Lặp qua danh sách cartDetails -->
-								<tr th:each="cartDetail : ${cartDetails}">
-									<td class="col-sm-8 col-md-6">
-										<div class="media">
-											<a class="thumbnail pull-left" href="#">
-												<img class="media-object"
-													th:src="@{'images/products/' + ${cartDetail.product.image}}"
-													alt="Product Image" width="110" height="110">
-											</a>
-											<div class="media-body">
-												<h4 class="media-heading">
-													<a href="#" th:text="${cartDetail.product.name}"></a>
-												</h4>
-												<span>Status: </span><span class="text-success">In Stock</span>
-											</div>
-										</div>
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<div class="input-group quantity">
-											<!-- Nút giảm -->
-											<form method="post"
-												th:action="@{/update-cart/remove/{id}(id=${cartDetail.id})}"
-												style="display: inline;">
-												<input type="hidden" name="${_csrf.parameterName}"
-													value="${_csrf.token}" />
-												<button type="submit" class="btn btn-sm btn-minus">-</button>
-											</form>
-											<!-- Ô nhập số lượng -->
-											<input class="form-control text-center cart-quantity" type="number" min="1"
-												th:value="${cartDetail.quantity}" th:data-cart-id="${cartDetail.id}"
-												th:data-cart-price="${cartDetail.price}" style="width: 50px;">
-											<!-- Nút tăng -->
-											<form method="post"
-												th:action="@{/update-cart/add/{id}(id=${cartDetail.id})}"
-												style="display: inline;">
-												<input type="hidden" name="${_csrf.parameterName}"
-													value="${_csrf.token}" />
-												<button type="submit" class="btn btn-sm btn-plus">+</button>
-											</form>
-										</div>
-									</td>
-									<!--<td class="col-sm-1 col-md-1 text-center">
+    <!-- Page specific styles -->
+    <style>
+        .product-table {
+            margin-top: 20px;
+        }
+        
+        .quantity {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-minus, .btn-plus {
+            padding: 5px 10px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        
+        .cart-quantity {
+            width: 50px !important;
+            text-align: center;
+            margin: 0 5px;
+        }
+        
+        .media {
+            display: flex;
+            align-items: center;
+        }
+        
+        .media-body {
+            padding-left: 15px;
+        }
+        
+        .shopping-cart-cart {
+            margin-top: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        
+        .button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .button:hover {
+            background: #0056b3;
+        }
+    </style>
 
+    <!-- Banner -->
+    <div id="inner_banner" class="section inner_banner_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="full">
+                        <div class="title-holder">
+                            <div class="title-holder-cell text-left">
+                                <h1 class="page-title">Giỏ Hàng</h1>
+                                <ol class="breadcrumb">
+                                    <li><a th:href="@{/}">Trang chủ</a></li>
+                                    <li class="active">Giỏ hàng</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-										<div class="input-group quantity">
-											Nút giảm
-											<form method="post"
-												th:action="@{/update-cart/remove/{id}(id=${cartDetail.id})}"
-												style="display: inline;">
-												<input type="hidden" name="${_csrf.parameterName}"
-													value="${_csrf.token}" />
-												<button type="submit" class="btn btn-sm btn-minus">
-													<i class="fa fa-minus"></i>
-												</button>
-											</form>
-											Ô nhập số lượng
-											<input class="form-control text-center cart-quantity" type="number" min="1"
-												th:value="${cartDetail.quantity}" th:data-cart-id="${cartDetail.id}"
-												th:data-cart-price="${cartDetail.price}">
-											Nút tăng
-											<form method="post"
-												th:action="@{/update-cart/add/{id}(id=${cartDetail.id})}"
-												style="display: inline;">
-												<input type="hidden" name="${_csrf.parameterName}"
-													value="${_csrf.token}" />
-												<button type="submit" class="btn btn-sm btn-plus">
-													<i class="fa fa-plus"></i>
-												</button>
-											</form>
-										</div>
-									</td>-->
+    <!-- Cart Content -->
+    <div class="section padding_layout_1 Shopping_cart_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <!-- Product Table -->
+                    <div class="product-table">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Số lượng</th>
+                                    <th class="text-center">Đơn giá</th>
+                                    <th class="text-center">Thành tiền</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="cartDetail : ${cartDetails}">
+                                    <!-- Product Info -->
+                                    <td class="col-sm-8 col-md-6">
+                                        <div class="media">
+                                            <a class="thumbnail pull-left" href="#">
+                                                <img class="media-object" 
+                                                     th:src="@{'/images/products/' + ${cartDetail.product.image}}"
+                                                     alt="Product Image" width="110" height="110">
+                                            </a>
+                                            <div class="media-body">
+                                                <h4 class="media-heading">
+                                                    <a href="#" th:text="${cartDetail.product.name}"></a>
+                                                </h4>
+                                                <span>Trạng thái: </span>
+                                                <span class="text-success">Còn hàng</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <!-- Quantity Controls -->
+                                    <td class="col-sm-1 col-md-1 text-center">
+                                        <div class="input-group quantity">
+                                            <form method="post" 
+                                                  th:action="@{/update-cart/remove/{id}(id=${cartDetail.id})}"
+                                                  style="display: inline;">
+                                                <button type="submit" class="btn btn-sm btn-minus">-</button>
+                                            </form>
+                                            
+                                            <input class="form-control text-center cart-quantity" 
+                                                   type="number" min="1"
+                                                   th:value="${cartDetail.quantity}" 
+                                                   th:data-cart-id="${cartDetail.id}"
+                                                   th:data-cart-price="${cartDetail.price}">
+                                            
+                                            <form method="post"
+                                                  th:action="@{/update-cart/add/{id}(id=${cartDetail.id})}"
+                                                  style="display: inline;">
+                                                <button type="submit" class="btn btn-sm btn-plus">+</button>
+                                            </form>
+                                        </div>
+                                    </td>
 
-									<td class="col-sm-1 col-md-1 text-center">
-										<p class="price_table" th:text="'$' + ${cartDetail.price}"></p>
-									</td>
-									<td class="col-sm-1 col-md-1 text-center">
-										<!-- Giá tổng cho từng sản phẩm -->
-										<p class="total-price" th:data-cart-id="${cartDetail.id}"
-											th:text="'$' + ${cartDetail.price * cartDetail.quantity}"></p>
-									</td>
-									<td class="col-sm-1 col-md-1">
-										<form method="post"
-											th:action="@{/delete-cart-product/{id}(id=${cartDetail.id})}">
-											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-											<button class="btn btn-md bg-light border"
-												style="width: 40px; height: 40px;">
-												<i class="fa fa-times text-danger"></i>
-											</button>
-										</form>
-									</td>
-									<!--<td class="col-sm-1 col-md-1">
-										<button type="button" class="btn btn-remove" th:data-cart-id="${cartDetail.id}">
-											<i class="fa fa-trash"></i> Remove
-										</button>
+                                    <!-- Prices -->
+                                    <td class="col-sm-1 col-md-1 text-center">
+                                        <p class="price_table" th:text="${#numbers.formatDecimal(cartDetail.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></p>
+                                    </td>
+                                    <td class="col-sm-1 col-md-1 text-center">
+                                        <p class="total-price" th:data-cart-id="${cartDetail.id}"
+                                           th:text="${#numbers.formatDecimal(cartDetail.price * cartDetail.quantity, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></p>
+                                    </td>
 
-										<form method="post"
-											th:action="@{/delete-cart-product/{id}(id=${cartDetail.id})}">
-											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-											<button class="btn btn-md rounded-circle bg-light border mt-4">
-												<i class="fa fa-times text-danger"></i>
-											</button>
-										</form>
+                                    <!-- Remove Button -->
+                                    <td class="col-sm-1 col-md-1">
+                                        <form method="post"
+                                              th:action="@{/delete-cart-product/{id}(id=${cartDetail.id})}">
+                                            <button class="btn btn-md bg-light border"
+                                                    style="width: 40px; height: 40px;">
+                                                <i class="fas fa-times text-danger"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-									</td>-->
-								</tr>
-							</tbody>
+                        <!-- Cart Summary -->
+                        <div class="shopping-cart-cart">
+                            <table class="w-100">
+                                <tbody>
+                                    <tr class="head-table">
+                                        <td><h5>Tổng tiền giỏ hàng</h5></td>
+                                        <td class="text-right"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><h4>Tạm tính</h4></td>
+                                        <td class="text-right">
+                                            <h4 id="subtotal-price" 
+                                                th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">
+                                            </h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><h5>Phí vận chuyển</h5></td>
+                                        <td class="text-right"><h4>0 VNĐ</h4></td>
+                                    </tr>
+                                    <tr>
+                                        <td><h3>Tổng cộng</h3></td>
+                                        <td class="text-right">
+                                            <h4 id="total-price" 
+                                                th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">
+                                            </h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a th:href="@{/}" class="button">Tiếp tục mua sắm</a>
+                                        </td>
+                                        <td class="text-right">
+                                            <a th:href="@{/user/checkout}" class="button">Thanh toán</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-
-
-						</table>
-						<table class="table">
-							<tbody>
-								<tr class="cart-form">
-									<td class="actions">
-										<div class="coupon">
-											<input name="coupon_code" class="input-text" id="coupon_code"
-												placeholder="Coupon code" type="text">
-											<input class="button" name="apply_coupon" value="Apply coupon"
-												type="submit">
-										</div>
-										<input class="button" name="update_cart" value="Update cart" disabled=""
-											type="submit">
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="shopping-cart-cart">
-						<table>
-							<tbody>
-								<tr class="head-table">
-									<td>
-										<h5>Cart Totals</h5>
-									</td>
-									<td class="text-right"></td>
-								</tr>
-								<tr>
-									<td>
-										<h4>Subtotal</h4>
-									</td>
-									<td class="text-right">
-										<h4 id="subtotal-price" th:text="'$' + ${totalPrice}"></h4>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<h5>Estimated shipping</h5>
-									</td>
-									<td class="text-right">
-										<h4>$0.00</h4>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<h3>Total</h3>
-									</td>
-									<td class="text-right">
-										<h4 id="total-price" th:text="'$' + ${totalPrice}"></h4>
-									</td>
-								</tr>
-								<tr>
-									<td><button type="button" class="button">Continue Shopping</button></td>
-									<td>
-										<a href="/user/checkout" class="button">Checkout</a>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- js section -->
-	<script src="/js/main.js"></script>
-
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<!-- menu js -->
-	<script src="js/menumaker.js"></script>
-	<!-- wow animation -->
-	<script src="js/wow.js"></script>
-	<!-- custom js -->
-	<script src="js/custom.js"></script>
-	<script>
-
-		// This example adds a marker to indicate the position of Bondi Beach in Sydney,
-		// Australia.
-		function initMap() {
-			var map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 11,
-				center: {lat: 40.645037, lng: -73.880224},
-				styles: [
-					{
-						elementType: 'geometry',
-						stylers: [{color: '#fefefe'}]
-					},
-					{
-						elementType: 'labels.icon',
-						stylers: [{visibility: 'off'}]
-					},
-					{
-						elementType: 'labels.text.fill',
-						stylers: [{color: '#616161'}]
-					},
-					{
-						elementType: 'labels.text.stroke',
-						stylers: [{color: '#f5f5f5'}]
-					},
-					{
-						featureType: 'administrative.land_parcel',
-						elementType: 'labels.text.fill',
-						stylers: [{color: '#bdbdbd'}]
-					},
-					{
-						featureType: 'poi',
-						elementType: 'geometry',
-						stylers: [{color: '#eeeeee'}]
-					},
-					{
-						featureType: 'poi',
-						elementType: 'labels.text.fill',
-						stylers: [{color: '#757575'}]
-					},
-					{
-						featureType: 'poi.park',
-						elementType: 'geometry',
-						stylers: [{color: '#e5e5e5'}]
-					},
-					{
-						featureType: 'poi.park',
-						elementType: 'labels.text.fill',
-						stylers: [{color: '#9e9e9e'}]
-					},
-					{
-						featureType: 'road',
-						elementType: 'geometry',
-						stylers: [{color: '#eee'}]
-					},
-					{
-						featureType: 'road.arterial',
-						elementType: 'labels.text.fill',
-						stylers: [{color: '#3d3523'}]
-					},
-					{
-						featureType: 'road.highway',
-						elementType: 'geometry',
-						stylers: [{color: '#eee'}]
-					},
-					{
-						featureType: 'road.highway',
-						elementType: 'labels.text.fill',
-						stylers: [{color: '#616161'}]
-					},
-					{
-						featureType: 'road.local',
-						elementType: 'labels.text.fill',
-						stylers: [{color: '#9e9e9e'}]
-					},
-					{
-						featureType: 'transit.line',
-						elementType: 'geometry',
-						stylers: [{color: '#e5e5e5'}]
-					},
-					{
-						featureType: 'transit.station',
-						elementType: 'geometry',
-						stylers: [{color: '#000'}]
-					},
-					{
-						featureType: 'water',
-						elementType: 'geometry',
-						stylers: [{color: '#c8d7d4'}]
-					},
-					{
-						featureType: 'water',
-						elementType: 'labels.text.fill',
-						stylers: [{color: '#b1a481'}]
-					}
-				]
-			});
-
-			var image = 'images/it_service/location_icon_map_cont.png';
-			var beachMarker = new google.maps.Marker({
-				position: {lat: 40.645037, lng: -73.880224},
-				map: map,
-				icon: image
-			});
-		}
-	</script>
-	<!-- google map js -->
-	<script
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script>
-	<!-- end google map js -->
-	<!-- zoom effect -->
-	<script src='js/hizoom.js'></script>
-	<script>
-		$('.hi1').hiZoom({
-			width: 300,
-			position: 'right'
-		});
-		$('.hi2').hiZoom({
-			width: 400,
-			position: 'right'
-		});
-	</script>
-
-	<script>
-		$(document).ready(function () {
-			// Xử lý nút tăng số lượng
-			$(".btn-plus").click(function (e) {
-				e.preventDefault(); // Ngăn chặn hành động mặc định của form
-				const form = $(this).closest("form");
-				const cartId = form.closest(".quantity").find(".cart-quantity").data("cart-id");
-
-				// Gửi yêu cầu AJAX đến URL từ form
-				$.post(form.attr("action"), form.serialize(), function () {
-					location.reload(); // Refresh trang sau khi cập nhật thành công
-				});
-			});
-
-			// Xử lý nút giảm số lượng
-			$(".btn-minus").click(function (e) {
-				e.preventDefault(); // Ngăn chặn hành động mặc định của form
-				const form = $(this).closest("form");
-				const cartId = form.closest(".quantity").find(".cart-quantity").data("cart-id");
-
-				// Gửi yêu cầu AJAX đến URL từ form
-				$.post(form.attr("action"), form.serialize(), function () {
-					location.reload(); // Refresh trang sau khi cập nhật thành công
-				});
-			});
-		});
-
-
-	</script>
+    <!-- Cart specific scripts -->
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            // Quantity update handlers
+            $(".btn-plus, .btn-minus").click(function (e) {
+                e.preventDefault();
+                const form = $(this).closest("form");
+                $.post(form.attr("action"), form.serialize(), function () {
+                    location.reload();
+                });
+            });
+        });
+    </script>
+    
+    
+    <!-- Footer -->
+    <div th:replace="user/layout/footer"></div>
 </body>
-
 </html>
