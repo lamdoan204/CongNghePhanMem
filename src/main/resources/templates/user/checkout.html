@@ -266,7 +266,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form id="payment-form" th:action="@{/checkout/process-payment}" method="post">
+					<form id="payment-form" th:action="@{/user/checkout/process-payment}" method="post">
 						<div class="mb-3">
 							<label for="cardName" class="form-label">Tên chủ thẻ *</label>
 							<input type="text" class="form-control" id="cardName" name="cardName" required>

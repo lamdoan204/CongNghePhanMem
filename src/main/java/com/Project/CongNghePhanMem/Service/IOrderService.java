@@ -17,4 +17,8 @@ public interface IOrderService {
 
 	Order findById(int orderId);
 
+	List<Order> getOrdersByUserAndStatus(User user, int status);
+
+	List<Order> getOrdersByStatus(int status);
+
 }
