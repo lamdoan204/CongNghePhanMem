@@ -136,7 +136,7 @@ public class CheckoutController {
 				redirectAttributes.addFlashAttribute("successMessage",
 						"Thanh toán thành công! Mã đơn hàng của bạn là: " + order.getOrderID());
 
-				return "redirect:/orders"; // Chuyển đến trang quản lý đơn hàng
+				return "redirect:/user/orders"; // Chuyển đến trang quản lý đơn hàng
 
 			} else {
 				redirectAttributes.addFlashAttribute("errorMessage", "Thanh toán thất bại!");

@@ -16,7 +16,7 @@ import com.Project.CongNghePhanMem.Service.IOrderService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/orders")
+@RequestMapping("/user/orders")
 public class OrderUserController {
 	@Autowired
 	private IOrderService orderService;
