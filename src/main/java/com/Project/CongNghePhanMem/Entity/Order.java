@@ -61,8 +61,6 @@ public class Order {
         this.orderDate = orderDate;
     }
     
-    
-    
     public int getStatus() {
 		return status;
 	}

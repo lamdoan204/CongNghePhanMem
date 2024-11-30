@@ -66,7 +66,7 @@ public class CheckoutController {
 			Cart cart = cartService.getCurrentCart(session);
 
 			if (currentUser == null || cart == null || cart.getCartDetails().isEmpty()) {
-				return "redirect:/cart";
+				return "redirect:/user/cart";
 			}
 
 			// Cập nhật thông tin user nếu cần
@@ -84,11 +84,11 @@ public class CheckoutController {
 			redirectAttributes.addFlashAttribute("successMessage",
 					"Đặt hàng thành công! Mã đơn hàng của bạn là: " + order.getOrderID());
 
-			return "redirect:/order/success/" + order.getOrderID();
+			return "redirect:/user/order/success/" + order.getOrderID();
 
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi đặt hàng: " + e.getMessage());
-			return "redirect:/user/checkout";
+			return "redirect:/user/user/checkout";
 		}
 	}
 

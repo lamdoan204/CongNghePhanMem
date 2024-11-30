@@ -1,86 +1,351 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-      th:replace="~{user/layout/header :: layout(~{::body})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{user/layout/header :: layout(~{::body})}">
+
 <body>
-    <!-- Page specific styles -->
-    <style>
-        .product-card {
-            margin-bottom: 30px;
-        }
 
-        .card {
-            border: none;
-            transition: transform 0.3s ease;
-        }
+	<!-- Page specific styles -->
+	<style>
+		.product-card {
+			margin-bottom: 30px;
+		}
 
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-        }
+		.card {
+			position: relative;
+			border: none;
+			border-radius: 8px;
+			overflow: hidden;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+			transition: all 0.3s ease;
+		}
 
-        .card-img-top {
-            transition: transform 0.3s ease;
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-        }
+		.card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+		}
 
-        .card:hover .card-img-top {
-            transform: scale(1.1);
-        }
+		.card-img-top {
+			width: 100%;
+			height: 250px;
+			object-fit: cover;
+			transition: transform 0.3s ease;
+		}
 
-        .bg-primary-animated {
-            background: linear-gradient(-45deg, #1e90ff, #00bcd4, #ff4081, #ff9800);
-            background-size: 400% 400%;
-            animation: gradient-animation 8s ease infinite;
-        }
+		.card:hover .card-img-top {
+			transform: scale(1.1);
+		}
 
-        @keyframes gradient-animation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+		.card-overlay {
+			position: absolute;
+			bottom: -50px;
+			left: 0;
+			right: 0;
+			background: rgba(0, 0, 0, 0.7);
+			padding: 10px;
+			transition: all 0.3s ease;
+			opacity: 0;
+		}
 
-        .header-content {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-    </style>
+		.card:hover .card-overlay {
+			bottom: 0;
+			opacity: 1;
+		}
 
-    <!-- Banner -->
-    <div class="bg-primary-animated text-white py-3">
-        <div class="container">
-            <p class="text-center header-content">Tất cả những gì bạn cần cho một bộ PC hoàn hảo!</p>
-        </div>
-    </div>
+		.bg-primary-animated {
+			background: linear-gradient(-45deg, #1e90ff, #00bcd4, #ff4081, #ff9800);
+			background-size: 400% 400%;
+			animation: gradient-animation 8s ease infinite;
+		}
 
-    <!-- Products -->
-    <div class="container py-5">
-        <h2 class="text-center mb-4">Sản phẩm Nổi bật</h2>
-        <div class="row row-cols-1 row-cols-md-5 g-4">
-            <!-- Product Card -->
-            <div class="col product-card">
-                <div class="card shadow-sm">
-                    <img th:src="@{/images/products/Intel Core i9-13900K.jpg}" class="card-img-top"
-                        alt="Sản phẩm 1">
-                    <div class="card-body">
-                        <h5 class="card-title">Card đồ họa RTX 4090</h5>
-                        <p class="card-text text-danger fw-bold">49,990,000 VNĐ</p>
-                        <div class="mb-2">
-                            <span class="text-warning">5.0</span>
-                            <i class="fas fa-star text-warning"></i>
-                            <span class="text-muted">(1 đánh giá)</span>
-                        </div>
-                        <a href="#" class="btn btn-success w-100 mb-2">Chi tiết sản phẩm</a>
-                        <a href="#" class="btn btn-primary w-100">Thêm vào giỏ hàng</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Repeat product cards as needed -->
-        </div>
-    </div>
+		@keyframes gradient-animation {
+			0% {
+				background-position: 0% 50%;
+			}
 
-    <!-- Footer -->
-    <div th:replace="user/layout/footer"></div>
+			50% {
+				background-position: 100% 50%;
+			}
+
+			100% {
+				background-position: 0% 50%;
+			}
+		}
+
+		.header-content {
+			font-size: 1.25rem;
+			font-weight: bold;
+		}
+
+		.price {
+			font-size: 18px;
+			font-weight: bold;
+			color: #e31e24;
+		}
+
+		.rating-stars .fas {
+			color: #ffd700;
+		}
+
+		.rating-count {
+			font-size: 12px;
+			color: #666;
+		}
+
+		.alert {
+			position: fixed;
+			top: 20px;
+			right: 20px;
+			z-index: 1050;
+			min-width: 300px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		.alert-success {
+			background-color: #d4edda;
+			border-color: #c3e6cb;
+			color: #155724;
+		}
+
+		.alert-danger {
+			background-color: #f8d7da;
+			border-color: #f5c6cb;
+			color: #721c24;
+		}
+	</style>
+
+	<!-- Đặt ở đầu trang -->
+	<div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+		<span th:text="${success}"></span>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+	<div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+		<span th:text="${error}"></span>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+	<!-- Banner -->
+	<div class="bg-primary-animated text-white py-3">
+		<div class="container">
+			<p class="text-center header-content">Tất cả những gì bạn cần cho một bộ PC hoàn hảo!</p>
+		</div>
+	</div>
+
+	<!-- Sản phẩm -->
+	<div class="container py-5">
+		<h2 class="text-center mb-4">Sản phẩm nổi bật</h2>
+		<div class="row row-cols-1 row-cols-md-5 g-4">
+			<!-- Thẻ sản phẩm -->
+			<div class="col sản phẩm-thẻ">
+				<div class="thẻ bóng-sm">
+					<img th:src="@{/images/products/Intel Core i9-13900K.jpg}" class="card-img-top" alt="Sản phẩm 1">
+					<div class="card-body">
+						<h5 class="card-title">Đồ họa card RTX 4090</h5>
+						<p class="card-text text-danger fw-bold">49.990.000 VNĐ</p>
+						<div class="mb-2">
+							<span class="text-warning">5.0</span>
+							<i class="fas fa-star text-warning"></i>
+							<span class="text-muted">(1 đánh giá)</span>
+						</div>
+						<a href="#" class="btn btn-success w-100 mb-2">Chi tiết sản phẩm</a>
+						<a href="#" class="btn btn-primary w-100">Thêm vào giỏ hàng</a>
+					</div>
+				</div>
+			</div>
+			<!-- Lặp lại thẻ sản phẩm nếu cần -->
+		</div>
+	</div>
+
+	<!-- Section Divider -->
+	<div class="section-divider"></div>
+
+	<!-- All Products -->
+	<div class="container py-5">
+		<h2 class="text-center mb-4">Danh sách sản phẩm</h2>
+		<div class="row row-cols-1 row-cols-md-5 g-4">
+			<!-- Product Card -->
+			<div class="col product-card" th:each="product : ${products}">
+				<div class="card">
+					<!-- Product Image -->
+					<img th:src="@{'/images/products/' + ${product.image}}" class="card-img-top"
+						th:alt="${product.name}">
+
+					<!-- Product Details -->
+					<div class="card-body">
+						<h5 class="card-title" th:text="${product.name}">Card đồ họa RTX 4090</h5>
+
+						<!-- Price -->
+						<p class="price mb-2"
+							th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">
+						</p>
+
+						<!-- Rating -->
+						<div class="mb-3">
+							<div class="rating-stars">
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star-half-alt"></i>
+								<span class="rating-count ms-2">(120 đánh giá)</span>
+							</div>
+						</div>
+
+						<!-- Action Buttons -->
+						<div class="d-grid gap-2">
+							<a th:href="@{/product/{id}(id=${product.productID})}" class="btn btn-success w-100 mb-2">
+								Chi tiết sản phẩm
+							</a>
+							<form th:action="@{/user/add-product-to-cart/{id}(id=${product.productID})}" method="post">
+								<input type="hidden" name="quantity" value="1">
+								<button type="submit" class="btn btn-primary w-100">
+									<i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Pagination -->
+	<nav aria-label="Product pagination" class="mt-5">
+		<ul class="pagination justify-content-center">
+
+			<!-- Previous -->
+			<li class="page-item" th:classappend="${currentPage <= 0 ? 'disabled' : ''}">
+				<a class="page-link" th:href="@{/user/(page=${currentPage - 1})}">Previous</a>
+			</li>
+
+			<!-- Page numbers -->
+			<li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+				th:classappend="${currentPage == i ? 'active' : ''}">
+				<a class="page-link" th:href="@{/user/(page=${i})}" th:text="${i + 1}"></a>
+			</li>
+
+			<!-- Next -->
+			<li class="page-item" th:classappend="${currentPage >= totalPages - 1 ? 'disabled' : ''}">
+				<a class="page-link" th:href="@{/user/(page=${currentPage + 1})}">Next</a>
+			</li>
+		</ul>
+	</nav>
+	</div>
+
+	<!-- Add some CSS for the divider -->
+	<style>
+		.section-divider {
+			height: 2px;
+			background: linear-gradient(to right, transparent, #dee2e6, transparent);
+			margin: 2rem auto;
+			max-width: 80%;
+		}
+	</style>
+
+	<!-- Footer -->
+	<div th:replace="user/layout/footer"></div>
+
+	<!-- Remove userStyle tag as it's not needed -->
+
+
+	<!-- Add CSS for pagination -->
+	<style>
+		.pagination {
+			margin: 20px 0;
+		}
+
+		.pagination .page-link {
+			color: #007bff;
+			border: none;
+			padding: 0.5rem 1rem;
+			margin: 0 3px;
+			border-radius: 4px;
+			transition: all 0.3s ease;
+		}
+
+		.pagination .page-item.active .page-link {
+			background-color: #007bff;
+			color: white;
+		}
+
+		.pagination .page-link:hover {
+			background-color: #e9ecef;
+			color: #0056b3;
+			transform: translateY(-2px);
+		}
+
+		.pagination .page-item.disabled .page-link {
+			color: #6c757d;
+			pointer-events: none;
+			background-color: transparent;
+		}
+
+		/* Add loading animation */
+		.loading .row {
+			opacity: 0.5;
+		}
+
+		.loading-spinner {
+			display: none;
+		}
+
+		.loading .loading-spinner {
+			display: block;
+			text-align: center;
+			padding: 20px;
+		}
+
+		.card {
+			position: relative;
+		}
+
+		.card-overlay {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			padding: 10px;
+			opacity: 0;
+			transition: all 0.3s ease;
+			width: 80%;
+			z-index: 10;
+		}
+
+		.card-overlay button:hover {
+			background-color: #0056b3;
+			transform: scale(1.05);
+		}
+
+		.card:hover .card-img-top {
+			transform: scale(1.1);
+		}
+
+		.card:hover .card-overlay {
+			opacity: 1;
+		}
+	</style>
+
+	<!-- Optional: Add JavaScript for smooth page transition -->
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const pagination = document.querySelector('.pagination');
+			const productContainer = document.querySelector('.row');
+
+			if (pagination) {
+				pagination.addEventListener('click', function (e) {
+					if (e.target.classList.contains('page-link')) {
+						productContainer.classList.add('loading');
+					}
+				});
+			}
+		});
+
+		// Auto hide alerts after 3 seconds
+		setTimeout(function () {
+			const alerts = document.querySelectorAll('.alert');
+			alerts.forEach(function (alert) {
+				new bootstrap.Alert(alert).close();
+			});
+		}, 3000);
+	</script>
 </body>
+
 </html>

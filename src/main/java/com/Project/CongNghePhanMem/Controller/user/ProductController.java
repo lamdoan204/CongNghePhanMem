@@ -1,8 +1,5 @@
 package com.Project.CongNghePhanMem.Controller.user;
 
-import java.net.http.HttpRequest;
-import java.security.Principal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Project.CongNghePhanMem.Entity.Cart;
 import com.Project.CongNghePhanMem.Entity.CartDetail;
 import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
-import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.IProductService;
-import com.Project.CongNghePhanMem.Service.IUserService;
 import com.Project.CongNghePhanMem.Service.Impl.CartService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,13 +30,10 @@ public class ProductController {
     private IProductService productService;
     
     @Autowired
-    private IUserService userService;
-    
-    @Autowired
     private CartService cartService;
     
     @PostMapping("/add-product-to-cart/{id}")
-    public String handleAddProductToCart(@PathVariable int id, HttpServletRequest request) {
+    public String handleAddProductToCart(@PathVariable int id, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         HttpSession session = request.getSession(true);
         
         // Kiểm tra đăng nhập
@@ -54,7 +45,7 @@ public class ProductController {
         // Lấy thông tin sản phẩm
         Product product = productService.findProductById(id);
         if (product == null) {
-            return "redirect:/";
+            return "redirect:/user/";
         }
         
         try {
@@ -63,10 +54,12 @@ public class ProductController {
             // Thêm sản phẩm vào giỏ với số lượng mặc định là 1
             cartService.addProductToCart(cart, product, 1);
             
-            return "redirect:/cart";
+            redirectAttributes.addFlashAttribute("success", "Đã thêm sản phẩm vào giỏ hàng!");
+            
+            return "redirect:/user/";
         } catch (Exception e) {
             // Log error
-            return "redirect:/";
+            return "redirect:/user/";
         }
     }
     
@@ -74,7 +67,7 @@ public class ProductController {
     public String getCartPage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
         
         // Lấy giỏ hàng hiện tại
@@ -97,7 +90,7 @@ public class ProductController {
     public String deleteCartDetail(@PathVariable int id, HttpServletRequest request) {
         try {
             cartService.removeCartDetail(id);
-            return "redirect:/cart";
+            return "redirect:/user/cart";
         } catch (Exception e) {
             // Log error
             return "redirect:/user/cart";
