@@ -306,6 +306,7 @@
             <table>
                 <tr>
                     <th>Năm</th>
+                     <th>Năm</th>
                     <th>Loại Sản Phẩm</th>
                     <th>Doanh Thu</th>
                 </tr>
@@ -313,6 +314,7 @@
                <th:block th:each="revenue : ${yearlyRevenue}">
 	            <tr>
 	                
+	                <td th:text="${revenue.period}"></td>
 	                <td th:text="${revenue.year}"></td>
 	                <td th:text="${revenue.kind}"></td>
 	                <td th:text="${revenue.totalRevenue}"></td>
