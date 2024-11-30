@@ -30,6 +30,7 @@ public class Order {
     @Column
     private LocalDateTime cancelDate;
     
+    
     private float totalPrice;
     
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -38,10 +39,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    
-    
 
-	
 
 	public Order() {
 		super();
