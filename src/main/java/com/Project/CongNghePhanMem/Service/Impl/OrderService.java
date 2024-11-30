@@ -103,7 +103,14 @@ public class OrderService implements IOrderService{
     }
 
     // Lấy danh sách đơn hàng theo trạng thái
-    public List<Order> getOrdersByStatus(int status) {
+    @Override
+	public List<Order> getOrdersByStatus(int status) {
         return orderRepository.findByStatus(status);
+    }
+    
+
+    @Override
+	public List<Order> getOrdersByUserAndStatus(User user, int status) {
+        return orderRepository.findByUserAndStatusOrderByOrderDateDesc(user, status);
     }
 }
