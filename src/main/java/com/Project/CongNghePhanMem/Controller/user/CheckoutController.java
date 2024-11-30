@@ -84,11 +84,11 @@ public class CheckoutController {
 			redirectAttributes.addFlashAttribute("successMessage",
 					"Đặt hàng thành công! Mã đơn hàng của bạn là: " + order.getOrderID());
 
-			return "redirect:/user/order/success/" + order.getOrderID();
+			return "redirect:/user/checkout/order/success/" + order.getOrderID();
 
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi đặt hàng: " + e.getMessage());
-			return "redirect:/user/user/checkout";
+			return "redirect:/user/checkout";
 		}
 	}
 
@@ -97,7 +97,8 @@ public class CheckoutController {
 		Order order = orderService.findById(orderId);
 		if (order != null) {
 			model.addAttribute("order", order);
-			return "user/orderSuccess";
+			//return "user/orderSuccess";
+			return "/user/orders";
 		}
 		return "redirect:/user";
 	}
