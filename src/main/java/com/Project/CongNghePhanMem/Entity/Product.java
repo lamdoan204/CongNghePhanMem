@@ -28,7 +28,6 @@ public class Product implements Serializable {
     private float price;
     private String image;
     private String kind;
-
     @Column(name = "brandId")
     private int brandId;
     
