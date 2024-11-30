@@ -1,226 +1,289 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-      th:replace="~{user/layout/header :: layout(~{::body})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{user/layout/header :: layout(~{::body})}">
+
 <body id="default_theme" class="it_serv_shopping_cart shopping-cart">
-    <!-- Page specific styles -->
-    <style>
-        .product-table {
-            margin-top: 20px;
-        }
-        
-        .quantity {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .btn-minus, .btn-plus {
-            padding: 5px 10px;
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-        }
-        
-        .cart-quantity {
-            width: 50px !important;
-            text-align: center;
-            margin: 0 5px;
-        }
-        
-        .media {
-            display: flex;
-            align-items: center;
-        }
-        
-        .media-body {
-            padding-left: 15px;
-        }
-        
-        .shopping-cart-cart {
-            margin-top: 30px;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 5px;
-        }
-        
-        .button {
-            background: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        
-        .button:hover {
-            background: #0056b3;
-        }
-    </style>
+	<!-- Page specific styles -->
+	<style>
+		.product-table {
+			margin-top: 20px;
+		}
 
-    <!-- Banner -->
-    <div id="inner_banner" class="section inner_banner_section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="full">
-                        <div class="title-holder">
-                            <div class="title-holder-cell text-left">
-                                <h1 class="page-title">Giỏ Hàng</h1>
-                                <ol class="breadcrumb">
-                                    <li><a th:href="@{/}">Trang chủ</a></li>
-                                    <li class="active">Giỏ hàng</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+		.quantity {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 
-    <!-- Cart Content -->
-    <div class="section padding_layout_1 Shopping_cart_section">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12 col-md-12">
-                    <!-- Product Table -->
-                    <div class="product-table">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Sản phẩm</th>
-                                    <th>Số lượng</th>
-                                    <th class="text-center">Đơn giá</th>
-                                    <th class="text-center">Thành tiền</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="cartDetail : ${cartDetails}">
-                                    <!-- Product Info -->
-                                    <td class="col-sm-8 col-md-6">
-                                        <div class="media">
-                                            <a class="thumbnail pull-left" href="#">
-                                                <img class="media-object" 
-                                                     th:src="@{'/images/products/' + ${cartDetail.product.image}}"
-                                                     alt="Product Image" width="110" height="110">
-                                            </a>
-                                            <div class="media-body">
-                                                <h4 class="media-heading">
-                                                    <a href="#" th:text="${cartDetail.product.name}"></a>
-                                                </h4>
-                                                <span>Trạng thái: </span>
-                                                <span class="text-success">Còn hàng</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    
-                                    <!-- Quantity Controls -->
-                                    <td class="col-sm-1 col-md-1 text-center">
-                                        <div class="input-group quantity">
-                                            <form method="post" 
-                                                  th:action="@{/update-cart/remove/{id}(id=${cartDetail.id})}"
-                                                  style="display: inline;">
-                                                <button type="submit" class="btn btn-sm btn-minus">-</button>
-                                            </form>
-                                            
-                                            <input class="form-control text-center cart-quantity" 
-                                                   type="number" min="1"
-                                                   th:value="${cartDetail.quantity}" 
-                                                   th:data-cart-id="${cartDetail.id}"
-                                                   th:data-cart-price="${cartDetail.price}">
-                                            
-                                            <form method="post"
-                                                  th:action="@{/update-cart/add/{id}(id=${cartDetail.id})}"
-                                                  style="display: inline;">
-                                                <button type="submit" class="btn btn-sm btn-plus">+</button>
-                                            </form>
-                                        </div>
-                                    </td>
+		.btn-minus,
+		.btn-plus {
+			padding: 5px 10px;
+			background: #f8f9fa;
+			border: 1px solid #dee2e6;
+		}
 
-                                    <!-- Prices -->
-                                    <td class="col-sm-1 col-md-1 text-center">
-                                        <p class="price_table" th:text="${#numbers.formatDecimal(cartDetail.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></p>
-                                    </td>
-                                    <td class="col-sm-1 col-md-1 text-center">
-                                        <p class="total-price" th:data-cart-id="${cartDetail.id}"
-                                           th:text="${#numbers.formatDecimal(cartDetail.price * cartDetail.quantity, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></p>
-                                    </td>
+		.cart-quantity {
+			width: 50px !important;
+			text-align: center;
+			margin: 0 5px;
+		}
 
-                                    <!-- Remove Button -->
-                                    <td class="col-sm-1 col-md-1">
-                                        <form method="post"
-                                              th:action="@{/delete-cart-product/{id}(id=${cartDetail.id})}">
-                                            <button class="btn btn-md bg-light border"
-                                                    style="width: 40px; height: 40px;">
-                                                <i class="fas fa-times text-danger"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+		.media {
+			display: flex;
+			align-items: center;
+		}
 
-                        <!-- Cart Summary -->
-                        <div class="shopping-cart-cart">
-                            <table class="w-100">
-                                <tbody>
-                                    <tr class="head-table">
-                                        <td><h5>Tổng tiền giỏ hàng</h5></td>
-                                        <td class="text-right"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><h4>Tạm tính</h4></td>
-                                        <td class="text-right">
-                                            <h4 id="subtotal-price" 
-                                                th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">
-                                            </h4>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><h5>Phí vận chuyển</h5></td>
-                                        <td class="text-right"><h4>0 VNĐ</h4></td>
-                                    </tr>
-                                    <tr>
-                                        <td><h3>Tổng cộng</h3></td>
-                                        <td class="text-right">
-                                            <h4 id="total-price" 
-                                                th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">
-                                            </h4>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <a th:href="@{/}" class="button">Tiếp tục mua sắm</a>
-                                        </td>
-                                        <td class="text-right">
-                                            <a th:href="@{/user/checkout}" class="button">Thanh toán</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+		.media-body {
+			padding-left: 15px;
+		}
 
-    <!-- Cart specific scripts -->
-    <script th:inline="javascript">
-        $(document).ready(function () {
-            // Quantity update handlers
-            $(".btn-plus, .btn-minus").click(function (e) {
-                e.preventDefault();
-                const form = $(this).closest("form");
-                $.post(form.attr("action"), form.serialize(), function () {
-                    location.reload();
-                });
-            });
-        });
-    </script>
-    
-    
-    <!-- Footer -->
-    <div th:replace="user/layout/footer"></div>
+		.shopping-cart-cart {
+			margin-top: 30px;
+			background: #f8f9fa;
+			padding: 20px;
+			border-radius: 5px;
+		}
+
+		.button {
+			background: #007bff;
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		.button:hover {
+			background: #0056b3;
+		}
+	</style>
+
+	<!-- Banner -->
+	<div id="inner_banner" class="section inner_banner_section">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="full">
+						<div class="title-holder">
+							<div class="title-holder-cell text-left">
+								<h1 class="page-title">Giỏ Hàng</h1>
+								<ol class="breadcrumb">
+									<li><a th:href="@{/user/}">Trang chủ</a></li>
+									<li class="active">Giỏ hàng</li>
+								</ol>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Cart Content -->
+	<div class="section padding_layout_1 Shopping_cart_section">
+		<div class="container">
+			<!-- Empty Cart Message -->
+			<div th:if="${cartDetails.empty}" class="text-center py-5">
+				<i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+				<h3>Giỏ hàng trống</h3>
+				<p>Bạn chưa có sản phẩm nào trong giỏ hàng.</p>
+				<a th:href="@{/user/}" class="btn btn-primary mt-3">
+					<i class="fas fa-shopping-bag"></i> Tiếp tục mua sắm
+				</a>
+			</div>
+
+			<!-- Cart Items -->
+			<div th:if="${!cartDetails.empty}" class="row">
+				<!-- Cart Table -->
+				<div class="col-lg-8">
+					<div class="card shadow-sm">
+						<div class="card-body">
+							<table class="table table-hover">
+								<thead class="bg-light">
+									<tr>
+										<th scope="col" width="40%">Sản phẩm</th>
+										<th scope="col" class="text-center">Số lượng</th>
+										<th scope="col" class="text-end">Đơn giá</th>
+										<th scope="col" class="text-end">Thành tiền</th>
+										<th scope="col"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="cartDetail : ${cartDetails}">
+										<!-- Product Info -->
+										<td>
+											<div class="d-flex align-items-center">
+												<img th:src="@{'/images/products/' + ${cartDetail.product.image}}"
+													alt="Product" width="80" height="80" class="rounded me-3">
+												<div>
+													<h6 class="mb-1" th:text="${cartDetail.product.name}"></h6>
+													<span class="badge bg-success">Còn hàng</span>
+												</div>
+											</div>
+										</td>
+
+										<!-- Quantity -->
+										<td>
+											<div class="d-flex justify-content-center align-items-center">
+												<button class="btn btn-sm btn-outline-secondary me-2"
+													th:onclick="'updateQuantity(' + ${cartDetail.id} + ', -1)'">
+													<i class="fas fa-minus"></i>
+												</button>
+
+												<input type="number" class="form-control text-center"
+													style="width: 60px" min="1" th:value="${cartDetail.quantity}"
+													th:onchange="'updateQuantityInput(' + ${cartDetail.id} + ', this.value)'">
+
+												<button class="btn btn-sm btn-outline-secondary ms-2"
+													th:onclick="'updateQuantity(' + ${cartDetail.id} + ', 1)'">
+													<i class="fas fa-plus"></i>
+												</button>
+											</div>
+										</td>
+
+										<!-- Prices -->
+										<td class="text-end fw-bold"
+											th:text="${#numbers.formatDecimal(cartDetail.price, 0, 'COMMA', 0, 'POINT') + 'đ'}">
+										</td>
+										<td class="text-end fw-bold"
+											th:text="${#numbers.formatDecimal(cartDetail.price * cartDetail.quantity, 0, 'COMMA', 0, 'POINT') + 'đ'}">
+										</td>
+
+										<!-- Remove Button -->
+										<td>
+											<button class="btn btn-link text-danger"
+												th:onclick="'removeItem(' + ${cartDetail.id} + ')'">
+												<i class="fas fa-trash"></i>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<!-- Cart Summary -->
+				<div class="col-lg-4">
+					<div class="card shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title mb-4">Tổng giỏ hàng</h5>
+							<div class="d-flex justify-content-between mb-3">
+								<span>Tạm tính</span>
+								<strong
+									th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+							</div>
+							<div class="d-flex justify-content-between mb-3">
+								<span>Phí vận chuyển</span>
+								<strong>0đ</strong>
+							</div>
+							<hr>
+							<div class="d-flex justify-content-between mb-4">
+								<span class="h5">Tổng cộng</span>
+								<span class="h5 text-primary"
+									th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + 'đ'}">
+								</span>
+							</div>
+							<a th:href="@{/user/checkout}" class="btn btn-primary w-100 mb-3">
+								Tiến hành thanh toán
+							</a>
+							<a th:href="@{/user/}" class="btn btn-outline-primary w-100">
+								Tiếp tục mua sắm
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<style>
+		.Shopping_cart_section {
+			background-color: #f8f9fa;
+			min-height: 80vh;
+			padding: 40px 0;
+		}
+
+		.table th {
+			font-weight: 600;
+			color: #666;
+		}
+
+		.quantity input::-webkit-outer-spin-button,
+		.quantity input::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		.btn-outline-secondary {
+			border-color: #dee2e6;
+		}
+
+		.btn-outline-secondary:hover {
+			background-color: #f8f9fa;
+			border-color: #dee2e6;
+		}
+
+		.card {
+			border: none;
+			border-radius: 10px;
+		}
+
+		.shadow-sm {
+			box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+		}
+	</style>
+
+	<script>
+		function updateQuantity(cartDetailId, change) {
+			const url = change > 0 ?
+				`/user/update-cart/add/${cartDetailId}` :
+				`/user/update-cart/remove/${cartDetailId}`;
+
+			fetch(url, {method: 'POST'})
+				.then(response => {
+					if (response.ok) {
+						location.reload();
+					}
+				});
+		}
+
+		function removeItem(cartDetailId) {
+			if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+				fetch(`/user/delete-cart-product/${cartDetailId}`, {method: 'POST'})
+					.then(response => {
+						if (response.ok) {
+							location.reload();
+						}
+					});
+			}
+		}
+
+		function updateQuantityInput(cartDetailId, value) {
+			if (value < 1) {
+				value = 1;
+				return;
+			}
+			// Implement quantity update via input
+		}
+	</script>
+
+	<!-- Cart specific scripts -->
+	<script th:inline="javascript">
+		$(document).ready(function () {
+			// Quantity update handlers
+			$(".btn-plus, .btn-minus").click(function (e) {
+				e.preventDefault();
+				const form = $(this).closest("form");
+				$.post(form.attr("action"), form.serialize(), function () {
+					location.reload();
+				});
+			});
+		});
+	</script>
+
+
+	<!-- Footer -->
+	<div th:replace="user/layout/footer"></div>
 </body>
+
 </html>
