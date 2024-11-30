@@ -1,0 +1,199 @@
+@charset "UTF-8";
+
+    
+  /* Thanh tìm kiếm tổng */
+.search-bar {
+    display: flex;
+    align-items: center;
+    margin-top: -60px; /* Đẩy toàn bộ thanh lên trên (giảm giá trị nếu cần đẩy lên cao hơn) */
+    margin-left: -70px; /* Đẩy toàn bộ thanh lên trên (giảm giá trị nếu cần đẩy lên cao hơn) */
+    gap: 5px; /* Khoảng cách giữa các phần tử */
+    background-color: #f8f9fa; /* Màu nền thanh tìm kiếm */
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300%; /* Tăng chiều rộng của thanh tìm kiếm */
+}
+
+/* Thanh tìm kiếm tổng */
+.search-form {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa; /* Màu nền thanh tìm kiếm */
+    padding: 10px 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto; /* Căn giữa thanh tìm kiếm */
+    width: 90%; /* Tăng chiều rộng thanh tìm kiếm */
+    max-width: 1200px; /* Giới hạn chiều rộng tối đa nếu cần */
+}
+
+/* Icon danh mục */
+.category-dropdown {
+    position: relative;
+}
+
+.category-icon {
+    font-size: 20px;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.category-icon:hover {
+    color: #007bff;
+}
+
+/* Trang mini danh mục */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 200px;
+    border-radius: 5px;
+}
+
+.dropdown-content ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-content ul li {
+    margin: 5px 0;
+}
+
+.dropdown-content ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    display: block;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.dropdown-content ul li a:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.category-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+/* Khung input có biểu tượng tìm kiếm */
+.input-with-icon {
+    position: relative;
+    width: 100%;
+}
+
+.search-form .form-control {
+    width: 100%; /* Input chiếm hết chiều rộng */
+    padding: 10px 40px 10px 10px; /* Thêm khoảng trống cho biểu tượng */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px; /* Thêm font-size nếu cần */
+}
+
+/* Biểu tượng tìm kiếm */
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px; /* Điều chỉnh biểu tượng sang phải */
+    transform: translateY(-50%); /* Căn giữa biểu tượng theo chiều dọc */
+    font-size: 18px;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.search-icon:hover {
+    color: #0056b3;
+}
+ /* Notification Dropdown Styles */
+        .notification-container {
+            position: relative;
+        }
+
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 300px;
+            max-height: 400px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            z-index: 1000;
+            margin-top: 10px;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-item {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            margin-right: 10px;
+            color: #007bff;
+            font-size: 1.2em;
+            width: 30px;
+            text-align: center;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+        }
+
+        .notification-message {
+            font-size: 0.9em;
+        }
+
+        .notification-time {
+            font-size: 0.7em;
+            color: #888;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .no-notifications {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7em;
+        }

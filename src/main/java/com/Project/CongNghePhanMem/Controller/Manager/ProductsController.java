@@ -11,7 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -122,7 +127,7 @@ public class ProductsController {
 	            String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
 	            
 	            // Sử dụng đường dẫn tuyệt đối
-	            String uploadDir = "src/mainresources/static/images/products";
+	            String uploadDir = "src/main/resources/static/images/products";
 	            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
 	            
 	            // Log để debug
