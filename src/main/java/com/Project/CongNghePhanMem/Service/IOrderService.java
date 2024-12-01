@@ -16,5 +16,8 @@ public interface IOrderService {
 	List<Order> getOrdersByUser(User user);
 
 	Order findById(int orderId);
+	
+	 // Cập nhật trạng thái đơn hàng và đồng bộ với notifications
+    void updateOrderStatus(int orderId, int newStatus);
 
 }
