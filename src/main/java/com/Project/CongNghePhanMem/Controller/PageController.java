@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.Project.CongNghePhanMem.Entity.Notification;
 import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.Review;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
+import com.Project.CongNghePhanMem.Service.INotificationService;
 import com.Project.CongNghePhanMem.Service.IProductService;
 import com.Project.CongNghePhanMem.Service.IUserService;
 import com.Project.CongNghePhanMem.Service.JwtService;
@@ -65,6 +67,9 @@ public class PageController {
 	
 	@Autowired
     private ReviewService reviewService;
+	
+	@Autowired
+	private  INotificationService notificationService;
 	
 	@ModelAttribute
 	private void userDetails(Model m, Principal p) {
@@ -280,10 +285,11 @@ public class PageController {
 	}
 
     @GetMapping("/it_shop_detail")
-    public String getProductDetail(@RequestParam("id") int productId, Model model) {
+    public String getProductDetail(@RequestParam("id") int productId, Model model,HttpSession session) {
         Product product = productService.findProductById(productId);
         model.addAttribute("product", product);
         
+        User currentUser = (User) session.getAttribute("currentUser");
      // Lấy thông tin sản phẩm hiện tại
         String description = product.getDescription(); // Lấy mô tả sản phẩm
         String kind = product.getKind(); // Lấy loại sản phẩm
@@ -297,21 +303,34 @@ public class PageController {
         List<Review> reviews = reviewService.getReviewsByProductId(productId);
         model.addAttribute("reviews", reviews);
 
+     // Lấy danh sách thông báo của người dùng theo userId
+        List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
+        model.addAttribute("notifications", notifications);
+        
         return "it_shop_detail";  // Tên của view sẽ được render
     }
 
     @GetMapping("/search")
     public String searchProducts(@RequestParam("query") String query, Model model) {
+    	
+    	
         // Gửi yêu cầu tìm kiếm đến Service
         List<Product> SearchProducts = productService.productSearch(query);
 
-        // Đưa danh sách sản phẩm tìm được vào Model để gửi tới it_shop.html
-        model.addAttribute("SearchProducts", SearchProducts);
-        model.addAttribute("query", query); // Để hiển thị lại từ khóa tìm kiếm trong ô input
-        
-        
+        if (SearchProducts.isEmpty()) {
+            // Thêm thông báo lỗi vào model
+            model.addAttribute("errorMessage", "Không tìm thấy sản phẩm nào với từ khóa: " + query);
+        } else {
+            // Nếu tìm thấy sản phẩm, thêm danh sách sản phẩm vào model
+            model.addAttribute("SearchProducts", SearchProducts);
+        }
+
+        // Luôn thêm query vào model để hiển thị lại từ khóa trong ô input
+        model.addAttribute("query", query);
+
         return "it_shop"; // Trả về view it_shop.html
     }
+
 
     
 

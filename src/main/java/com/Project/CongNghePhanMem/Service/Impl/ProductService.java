@@ -22,71 +22,73 @@ import jakarta.servlet.http.HttpSession;
 @Service
 public class ProductService implements IProductService {
 
-	private final ProductRepository productRepository;
-	private final CartRepository cartRepository;
-	private final CartDetailRepository cartDetailRepository;
-	private final UserRepository userRepository;
-	private final UserService userService;
+    private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
+    private final CartDetailRepository cartDetailRepository;
+    private final UserRepository userRepository;
 
-	 
-	public ProductService(ProductRepository productRepository, CartRepository cartRepository,
-			CartDetailRepository cartDetailRepository, UserRepository userRepository, UserService userService) {
-		super();
-		this.productRepository = productRepository;
-		this.cartRepository = cartRepository;
-		this.cartDetailRepository = cartDetailRepository;
-		this.userRepository = userRepository;
-		this.userService = userService;
-	}
+    private final UserService userService;
 
-	@Override
-	public void handleAddProductToCart(String email, int id) {
-		User user = this.userService.getUserById(id);
-		if (user != null) {
-			Cart cart = this.cartRepository.findByUser(user);
+    public ProductService(ProductRepository productRepository, CartRepository cartRepository,
+            CartDetailRepository cartDetailRepository, UserRepository userRepository, UserService userService) {
+        super();
+        this.productRepository = productRepository;
+        this.cartRepository = cartRepository;
+        this.cartDetailRepository = cartDetailRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
+    }
 
-			if (cart == null) {
-				Cart newCart = new Cart();
-				newCart.setSum(0);
-				newCart.setUser(user);
-				cart = this.cartRepository.save(newCart);
-			}
+    // logic luu product vao gio hang
+    @Override
+    public void handleAddProductToCart(String email, int id) {
+        // check user da co cart chua? neu chua -> tao moi
+        User user = this.userService.getUserById(id);
+        if (user != null) {
+            Cart cart = this.cartRepository.findByUser(user);
 
-			// save cart detail
-			// tim product
-			Optional<Product> p = this.productRepository.findById(id);
+            if (cart == null) {
+                // tao moi cart
+                Cart newCart = new Cart();
+                newCart.setSum(0);
+                newCart.setUser(user);
+                cart = this.cartRepository.save(newCart);
+            }
 
-			if (p.isPresent()) {
-				Product realProduct = p.get();
-				CartDetail oldDetail = this.cartDetailRepository.findByCartAndProduct(cart, realProduct);
+            // save cart detail
+            // tim product
+            Optional<Product> p = this.productRepository.findById(id);
 
-				if (oldDetail == null) {
-					CartDetail cartDetail = new CartDetail();
+            if (p.isPresent()) {
+                Product realProduct = p.get();
+                CartDetail oldDetail = this.cartDetailRepository.findByCartAndProduct(cart, realProduct);
 
-					cartDetail.setCart(cart);
-					cartDetail.setProduct(realProduct);
-					cartDetail.setPrice(realProduct.getPrice());
-					cartDetail.setQuantity(1);
+                if (oldDetail == null) {
+                    CartDetail cartDetail = new CartDetail();
 
-					this.cartDetailRepository.save(cartDetail);
-					
-					cart.setSum(cart.getSum() + 1);
-					this.cartRepository.save(cart);
-				} else {
-					oldDetail.setQuantity(oldDetail.getQuantity() + 1);
-					this.cartDetailRepository.save(oldDetail);
-				}
+                    cartDetail.setCart(cart);
+                    cartDetail.setProduct(realProduct);
+                    cartDetail.setPrice(realProduct.getPrice());
+                    cartDetail.setQuantity(1);
 
-			}
-			
+                    this.cartDetailRepository.save(cartDetail);
 
-		} else {
-			throw new RuntimeException("User not found");
-		}
-	}
-	
-	@Override
-	public void handleRemoveCartDetail(int cartDetailId, HttpSession session) {
+                    cart.setSum(cart.getSum() + 1);
+                    this.cartRepository.save(cart);
+                } else {
+                    oldDetail.setQuantity(oldDetail.getQuantity() + 1);
+                    this.cartDetailRepository.save(oldDetail);
+                }
+
+            }
+
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
+    @Override
+    public void handleRemoveCartDetail(int cartDetailId, HttpSession session) {
         Optional<CartDetail> cartDetailOptional = this.cartDetailRepository.findById(cartDetailId);
         if (cartDetailOptional.isPresent()) {
             CartDetail cartDetail = cartDetailOptional.get();
@@ -109,70 +111,70 @@ public class ProductService implements IProductService {
             }
         }
     }
-	
-	@Override
-	public Cart fetchByUser(User user) {
-		return this.cartRepository.findByUser(user);
-	}
 
-	@Override
-	public List<Product> fetchProducts() {
-		return this.productRepository.findAll();
-	}
+    @Override
+    public Cart fetchByUser(User user) {
+        return this.cartRepository.findByUser(user);
+    }
 
-	@Override
-	public Page<Product> findAllProducts(Pageable pageable) {
-		return productRepository.findAll(pageable);
-	}
+    @Override
+    public List<Product> fetchProducts() {
+        return this.productRepository.findAll();
+    }
 
-	@Override
-	public Page<Product> searchProducts(String keyword, Pageable pageable) {
-		return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
-	}
+    @Override
+    public Page<Product> findAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
 
-	@Override
-	public Product findProductById(int id) {
-		return productRepository.findById(id).orElse(null);
-	}
+    @Override
+    public Page<Product> searchProducts(String keyword, Pageable pageable) {
+        return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
+    }
 
-	@Override
-	public Product saveProduct(Product product) {
-		return productRepository.save(product);
-	}
+    @Override
+    public Product findProductById(int id) {
+        return productRepository.findById(id).orElse(null);
+    }
 
-	@Override
-	public void deleteProduct(int id) {
-		productRepository.deleteById(id);
-	}
+    @Override
+    public Product saveProduct(Product product) {
+        return productRepository.save(product);
+    }
 
-	// Xóa sản phẩm theo danh sách productID
-	public void deleteProductsByIds(List<Integer> ids) {
-		productRepository.deleteAllById(ids);
-	}
-	
-	 @Override
-	    public Page<Product> searchProductsByBrand(int brandId , String keyword, Pageable pageable) {
-	        if (keyword != null && !keyword.isEmpty()) {
-	            return productRepository.findByBrandIdAndNameContaining(brandId, keyword, pageable);
-	        }
-	        return productRepository.findByBrandId(brandId, pageable);
-	    }
+    @Override
+    public void deleteProduct(int id) {
+        productRepository.deleteById(id);
+    }
 
-	@Override
-	public List<Product> findRelatedProducts(String description, String kind, int productId) {
-		 return productRepository.findRelatedProductsByDescriptionAndKind(description, kind, productId);
-	}
+    // Xóa sản phẩm theo danh sách productID
+    public void deleteProductsByIds(List<Integer> ids) {
+        productRepository.deleteAllById(ids);
+    }
 
-	@Override
-	 public List<Product> productSearch(String keyword) {
-	     if (keyword == null || keyword.trim().isEmpty()) {
-	         throw new IllegalArgumentException("Keyword cannot be null or empty");
-	     }
+    @Override
+    public Page<Product> searchProductsByBrand(int brandId, String keyword, Pageable pageable) {
+        if (keyword != null && !keyword.isEmpty()) {
+            return productRepository.findByBrandIdAndNameContaining(brandId, keyword, pageable);
+        }
+        return productRepository.findByBrandId(brandId, pageable);
+    }
 
-	     // Gọi repository để tìm sản phẩm
-	     List<Product> products = productRepository.searchProducts(keyword);
-	     
-	     return products;  // Kiểm tra xem có sản phẩm nào được trả về không
-	 }
-	
+    @Override
+    public List<Product> findRelatedProducts(String description, String kind, int productId) {
+        return productRepository.findRelatedProductsByDescriptionAndKind(description, kind, productId);
+    }
+
+    @Override
+    public List<Product> productSearch(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new IllegalArgumentException("Keyword cannot be null or empty");
+        }
+
+        // Gọi repository để tìm sản phẩm
+        List<Product> products = productRepository.searchProducts(keyword);
+
+        return products;  // Kiểm tra xem có sản phẩm nào được trả về không
+    }
+
 }
