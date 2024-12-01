@@ -27,7 +27,6 @@ import com.Project.CongNghePhanMem.Service.Impl.DepartmentService;
 import com.Project.CongNghePhanMem.Service.Impl.ManagerService;
 import com.Project.CongNghePhanMem.Service.Impl.PromotionService;
 import com.Project.CongNghePhanMem.Service.Impl.StatisticService;
-import com.Project.CongNghePhanMem.Service.IStatisticService;
 import com.Project.CongNghePhanMem.Service.Impl.UserService;
 
 @Controller

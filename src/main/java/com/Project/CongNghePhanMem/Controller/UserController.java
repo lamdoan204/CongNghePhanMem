@@ -157,7 +157,10 @@ public class UserController {
 	        return password.matches(regex);
 	    }
 	
-	 
+	 @GetMapping("/article")
+	 public String article() {
+		 return "user/article";
+	 }
 	 
 
 }
