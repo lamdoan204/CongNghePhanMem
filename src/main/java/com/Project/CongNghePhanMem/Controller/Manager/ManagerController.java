@@ -188,11 +188,10 @@ public class ManagerController {
         if (manager == null) {
             throw new RuntimeException("Không tìm thấy người dùng");
         }
-        // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
         model.addAttribute("promotions", promotionService.getAllPromotions());
-        return "manager/promotion-list"; // Cập nhật đường dẫn template
+        return "manager/promotion-list";
     }
 
     @GetMapping("/promotions/create")
@@ -201,16 +200,15 @@ public class ManagerController {
         if (manager == null) {
             throw new RuntimeException("Không tìm thấy người dùng");
         }
-        // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
         model.addAttribute("promotion", new Promotion());
-        return "manager/promotion_form"; // Cập nhật đường dẫn template
+        return "manager/promotion_form";
     }
 
     @PostMapping("/promotions/create")
     public String createPromotion(@ModelAttribute Promotion promotion) {
-        promotionService.savePromotion(promotion);
+        promotionService.savePromotion(promotion); // Lưu cả thông tin coupon
         return "redirect:/manager/promotions";
     }
 
