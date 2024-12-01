@@ -29,29 +29,21 @@ public class OrderUserController {
 	private UserRepository userRepository;
 
 	@GetMapping
-	public String listOrders(Model model, Principal principal) {
-
-		if (principal != null) {
-			String email = principal.getName();
-			User user = userRepository.findByEmail(email);
-			model.addAttribute("user", user);
-			List<Order> orders = orderService.getOrdersByUser(user);
-			model.addAttribute("orders", orders);
-			model.addAttribute("currentPage", "all"); // Thêm biến này
-		}
+	public String listOrders(Model model, HttpSession session) {
+		User currentUser = (User) session.getAttribute("currentUser");
+		List<Order> orders = orderService.getOrdersByUser(currentUser);
+		model.addAttribute("orders", orders);
+		model.addAttribute("currentPage", "all");
 		return "user/orders";
 	}
 
 	@GetMapping("/pending")
-	public String pendingOrders(Model model, Principal principal) {
-		if (principal != null) {
-			String email = principal.getName();
-			User user = userRepository.findByEmail(email);
-			model.addAttribute("user", user);
-			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.PENDING);
-			model.addAttribute("orders", orders);
-			model.addAttribute("currentPage", "all"); // Thêm biến này
-		}
+	public String pendingOrders(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("currentUser");
+		List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.PENDING);
+		model.addAttribute("orders", orders);
+		model.addAttribute("currentPage", "pending");
+
 		return "user/orders";
 	}
 
