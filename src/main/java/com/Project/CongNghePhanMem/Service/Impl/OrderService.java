@@ -27,11 +27,12 @@ public class OrderService implements IOrderService{
     private OrderDetailRepository orderDetailRepository;
     
     @Override
-	public Order createOrder(User user, Cart cart) {
+	public Order createOrder(User user, Cart cart, boolean isPaidByCard) {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(new Date(System.currentTimeMillis()));
         order.setStatus(Order.PENDING);
+        order.setPaidByCard(isPaidByCard);
         
         // Tính tổng tiền
         float totalPrice = 0;

@@ -28,7 +28,7 @@ public class OrderUserController {
 		User currentUser = (User) session.getAttribute("currentUser");
 		List<Order> orders = orderService.getOrdersByUser(currentUser);
 		model.addAttribute("orders", orders);
-		model.addAttribute("currentPage", "all"); // Thêm biến này
+		model.addAttribute("currentPage", "all");
 		return "user/orders";
 	}
 
@@ -37,7 +37,7 @@ public class OrderUserController {
 		User user = (User) session.getAttribute("currentUser");
 		List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.PENDING);
 		model.addAttribute("orders", orders);
-		model.addAttribute("currentPage", "pending"); // Thêm biến này
+		model.addAttribute("currentPage", "pending");
 		return "user/orders";
 	}
 
