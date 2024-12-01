@@ -11,7 +11,7 @@ import com.Project.CongNghePhanMem.Entity.User;
 @Service
 public interface IOrderService {
 
-	Order createOrder(User user, Cart cart);
+	Order createOrder(User user, Cart cart, boolean isPaidByCard);
 
 	List<Order> getOrdersByUser(User user);
 
