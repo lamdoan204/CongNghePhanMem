@@ -44,11 +44,24 @@
 					<div class="card-body">
 						<h5 class="card-title" th:text="${article.title}"></h5>
 						<p class="card-text" th:text="${article.content}"></p>
-						<p class="text-muted"><small>Ngày đăng: <span th:text="${#dates.format(article.publishDate, 'dd-MM-yyyy')}"></span></small></p>
-						<div class="d-flex justify-content-between">
-							<button class="btn btn-primary btn-sm">👍 Like</button>
-							<button class="btn btn-secondary btn-sm">🔗 Share</button>
+						<p class="text-muted"><small>Ngày đăng: <span
+									th:text="${#dates.format(article.postdate, 'dd-MM-yyyy')}"></span></small></p>
+						<div class="d-flex justify-content-between align-items-center">
+							<!-- Nút Like -->
+							<div class="d-flex align-items-center">
+								<button class="btn btn-primary btn-sm btn-like" onclick="incrementLikes()">❤️</button>
+								<span id="like-count" class="ms-2">0</span> <!-- Hiển thị số lượt tim -->
+							</div>
+							<!-- Nút Share -->
+							<div class="d-flex align-items-center">
+								<a class="btn btn-secondary btn-sm"
+									 th:href="'https://www.facebook.com/sharer/sharer.php?u=http://localhost:8080/user/article/' + ${article.articleId}" target="_blank">
+									🔗 Share
+								</a>
+								<span id="share-count" class="ms-2">0</span> <!-- Hiển thị số lượt chia sẻ -->
+							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>
@@ -74,7 +87,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div th:replace="user/layout/footer"></div>
 
 	<!-- Bootstrap JS -->

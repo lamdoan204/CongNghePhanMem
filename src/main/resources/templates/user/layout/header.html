@@ -5,10 +5,18 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta property="og:title" content="${article.title}" />
+	<meta property="og:description" content="${article.content}" />
+	<meta property="og:url" content="http://localhost:8080/user/article/${article.articleId}" />
+	<meta property="og:type" content="article" />
 	<title>Shop PC Components</title>
 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+	<div id="fb-root"></div>
+	<script async defer crossorigin="anonymous"
+		src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v15.0&appId=YOUR_APP_ID&autoLogAppEvents=1"></script>
 
 
 	<!-- Navbar styles -->
@@ -127,6 +135,19 @@
 				display: none;
 			}
 		}
+
+		.btn-like {
+			background-color: white;
+			color: #ccc;
+			border: 1px solid #ccc;
+			transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+		}
+
+		.btn-like.liked {
+			color: red;
+			border-color: red;
+			transform: scale(1.2);
+		}
 	</style>
 </head>
 
@@ -210,6 +231,43 @@
 	<!-- Common JS -->
 	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		// Biến lưu trữ số lượt tim
+		let likes = 0;
+
+		// Hàm tăng số lượt tim
+		function incrementLikes() {
+			likes++;
+			const likeCountElement = document.getElementById("like-count");
+			likeCountElement.innerText = likes;
+		}
+
+		// Biến lưu trữ số lượt chia sẻ
+		let shares = 0;
+
+		// Hàm tăng số lượt chia sẻ
+		function incrementShares() {
+			const shareCountElement = document.getElementById("share-count");
+			shares++;
+			shareCountElement.innerText = shares;
+		}
+
+		// Khởi tạo Facebook SDK
+		window.fbAsyncInit = function () {
+			FB.init({
+				appId: '1287150115824850', // Thay bằng App ID thật của bạn
+				cookie: true,
+				xfbml: true,
+				version: 'v15.0'
+			});
+		};
+
+		// Hàm chia sẻ lên Facebook
+		function shareOnFacebook(url) {
+			const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+			window.open(facebookShareUrl, '_blank', 'width=600,height=400');
+		}
+	</script>
 </body>
 
 </html>

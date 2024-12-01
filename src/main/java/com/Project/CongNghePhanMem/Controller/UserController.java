@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.Project.CongNghePhanMem.Entity.Article;
 import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.IProductService;
+import com.Project.CongNghePhanMem.Service.Impl.ArticleService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -29,7 +31,8 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/user/")
 public class UserController {
 
-	
+	@Autowired 
+	private ArticleService articleService;
 	
 	@Autowired
 	private UserRepository userRepo;
@@ -158,7 +161,10 @@ public class UserController {
 	    }
 	
 	 @GetMapping("/article")
-	 public String article() {
+	 public String article(Model model) {
+		 List<Article> article = articleService.getAllArticles();
+		 model.addAttribute("articles", article);
+		 
 		 return "user/article";
 	 }
 	 
