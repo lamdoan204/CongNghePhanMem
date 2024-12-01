@@ -27,6 +27,8 @@ public class Article {
 	
 	private String content;
 	
+	private String image;
+	
 	@ManyToOne
     @JoinColumn(name = "user_id")
 	private User author;
@@ -91,7 +93,7 @@ public class Article {
 		this.shares = share;
 	}
 
-	public Article(int articleId, String title, Date orderDate, String content, User author, int like, int share) {
+	public Article(int articleId, String title, Date orderDate, String content, User author, int like, int share, String image) {
 		super();
 		this.articleId = articleId;
 		this.title = title;
@@ -100,14 +102,18 @@ public class Article {
 		this.author = author;
 		this.likes = like;
 		this.shares = share;
+		this.setImage(image);
 	}
 
 	public Article() {
 		super();
 	}
-	
-	
-	
-	
 
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 }

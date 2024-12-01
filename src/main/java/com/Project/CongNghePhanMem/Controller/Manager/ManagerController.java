@@ -2,6 +2,14 @@ package com.Project.CongNghePhanMem.Controller.Manager;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -250,31 +258,63 @@ public class ManagerController {
     }
 
     @PostMapping("/blog/create")
-    public String createBlog(@ModelAttribute("article") Article article) {
-        articleService.saveArticle(article);
-        return "redirect:/manager/blog";
-    }
-    // Sửa bài viết
-    @GetMapping("/blog/edit/{id}")
-    public String showEditBlogForm(@PathVariable("id") int id, Model model) {
-        Article article = articleService.getArticleById(id);
-        if (article != null) {
-            model.addAttribute("article", article);
-            return "manager/blog-form";
+    public String createBlog(@ModelAttribute("blog") Article article, @RequestParam("image") MultipartFile imageFile) throws IOException {
+        if (!imageFile.isEmpty()) {
+            // You can directly get the file name and create the image path without uploading it
+            String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+            
+            // Set the image path (do not move the file)
+            article.setImage("/uploads/" + fileName);
         }
+
+        // Set current user as author
+        User currentUser = userService.getUserCurentLogged();
+        article.setAuthor(currentUser);
+
+        // Initialize likes and shares to 0
+        article.setLike(0);
+        article.setShare(0);
+
+        // Save the article with the image path in the database
+        articleService.saveArticle(article);
+        
         return "redirect:/manager/blog";
     }
+
 
     @PostMapping("/blog/edit")
-    public String editBlog(@ModelAttribute("article") Article article) {
+    public String editBlog(@ModelAttribute("blog") Article article, @RequestParam(value = "image", required = false) MultipartFile imageFile) throws IOException {
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // Delete old image if exists
+            if (article.getImage() != null) {
+                String oldImagePath = "src/main/resources/static" + article.getImage();
+                Files.deleteIfExists(Paths.get(oldImagePath));
+            }
+            
+            // Save new image
+            String uploadDir = "src/main/resources/static/uploads/";
+            String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+            
+            File dir = new File(uploadDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            
+            Path path = Paths.get(uploadDir + fileName);
+            Files.copy(imageFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            
+            article.setImage("/uploads/" + fileName);
+        }
+        
+        // Preserve existing author
+        Article existingArticle = articleService.getArticleById(article.getArticleId());
+        if (existingArticle != null) {
+            article.setAuthor(existingArticle.getAuthor());
+            article.setLike(existingArticle.getLike());
+            article.setShare(existingArticle.getShare());
+        }
+        
         articleService.saveArticle(article);
-        return "redirect:/manager/blog";
-    }
-
-    // Xóa bài viết
-    @GetMapping("/blog/delete/{id}")
-    public String deleteBlog(@PathVariable("id") int id) {
-        articleService.deleteArticleById(id);
         return "redirect:/manager/blog";
     }
 }
