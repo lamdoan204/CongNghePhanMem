@@ -405,7 +405,7 @@
         // Lọc theo năm
         filteredData = monthlyRevenue.filter(item => item.year == selectedYear)
                                      .map(item => ({
-                                         productName: `${item.productName}`,
+                                         period: ` ${item.productName}`,
                                          revenue: item.totalRevenue
                                      }));
 
@@ -498,15 +498,34 @@
             }
         });
 
-        // Tổng doanh thu và tỷ lệ tăng trưởng
-        const totalRevenue = data.reduce((acc, item) => acc + item.revenue, 0);
-        const previousYearRevenue = monthlyRevenue.filter(item => item.year === String(parseInt(selectedYear) - 1))
-                                                    .map(item => item.totalRevenue)
-                                                    .reduce((acc, revenue) => acc + revenue, 0);
+     // Kiểm tra giá trị của selectedYear
+        console.log(selectedYear);  
 
+        // Kiểm tra dữ liệu trong monthlyRevenue
+        console.log(monthlyRevenue);  
+
+        // Kiểm tra dữ liệu sau khi filter
+        const filteredData = monthlyRevenue.filter(item => item.year === parseInt(selectedYear) - 1);
+        console.log(filteredData);  // Kiểm tra dữ liệu của năm trước
+
+        // Tính tổng doanh thu năm trước
+        const previousYearRevenue = filteredData.map(item => item.totalRevenue)
+                                                 .reduce((acc, revenue) => acc + revenue, 0);
+        console.log(previousYearRevenue);  // Kiểm tra giá trị của previousYearRevenue
+
+        // Tính tổng doanh thu hiện tại
+        const totalRevenue = data.reduce((acc, item) => acc + item.revenue, 0);
+
+        // Tính tỷ lệ tăng trưởng
         const growth = previousYearRevenue > 0 ? ((totalRevenue - previousYearRevenue) / previousYearRevenue * 100).toFixed(2) : 0;
+
         document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
         document.getElementById('revenueGrowth').textContent = `${growth}%`;
+
+
+
+
+
     }
 
     // Sự kiện thay đổi bộ lọc năm

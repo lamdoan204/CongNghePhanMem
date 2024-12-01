@@ -56,6 +56,7 @@ public class ManagerController {
 
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
 
         return "manager/index"; 
     }
@@ -112,6 +113,7 @@ public class ManagerController {
         model.addAttribute("totalPages", employee.getTotalPages());
         model.addAttribute("totalItems", employee.getTotalElements());
         model.addAttribute("pageSize", size);
+        model.addAttribute("managerName", manager.getFullName());
 
         return "manager/employeemanagement";
     }
@@ -195,6 +197,7 @@ public class ManagerController {
         // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
         model.addAttribute("promotions", promotionService.getAllPromotions());
         return "manager/promotion-list"; // Cập nhật đường dẫn template
     }
@@ -208,6 +211,7 @@ public class ManagerController {
         // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
         model.addAttribute("promotion", new Promotion());
         return "manager/promotion_form"; // Cập nhật đường dẫn template
     }
@@ -237,6 +241,7 @@ public class ManagerController {
         // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
         model.addAttribute("articles", articleService.getAllArticles());
         return "manager/blog-list";
     }
@@ -251,6 +256,7 @@ public class ManagerController {
         // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
         model.addAttribute("blog", new Article());
         return "manager/blog-form";
     }
@@ -294,16 +300,12 @@ public class ManagerController {
         
          // Ví dụ: Lấy brandId của manager từ session hoặc authentication
          int managerBrandId = managerService.get_DepartmentBrandId(manager);; // Thay bằng cách lấy thực tế
-
-         //List<RevenueStatistic> weeklyRevenue = statisticService.getRevenueByWeekAndKind(managerBrandId);
-         //List<RevenueStatistic> monthlyRevenue = statisticService.getRevenueByMonthAndKind(managerBrandId);
-        // List<RevenueStatistic> quarterlyRevenue = statisticService.getRevenueByQuarterAndKind(managerBrandId);
-         //List<RevenueStatistic> yearlyRevenue = statisticService.getRevenueByYearAndKind(managerBrandId);
+        
          List<RevenueStatistic> monthlyRevenue = statisticService.getRevenueByMonthAndProduct(managerBrandId);
          List<StockReport> stockReport = statisticService.getStockReport(managerBrandId);
          
          model.addAttribute("brand", brand);
-         
+         model.addAttribute("managerName", manager.getFullName());
          model.addAttribute("stockReport", stockReport);
 
          //model.addAttribute("weeklyRevenue", weeklyRevenue);

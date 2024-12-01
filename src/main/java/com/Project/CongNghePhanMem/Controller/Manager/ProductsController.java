@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Service.IUserService;
 import com.Project.CongNghePhanMem.Service.Impl.UserService;
@@ -56,7 +55,7 @@ public class ProductsController {
         model.addAttribute("brand", brand);
         model.addAttribute("products", products);
         model.addAttribute("keyword", keyword);
-        
+        model.addAttribute("managerName", manager.getFullName());
         return "manager/productmanagement";
     }
 
@@ -64,8 +63,19 @@ public class ProductsController {
     @GetMapping("/detail/{productID}")
     public String viewProductDetail(@PathVariable int productID, Model model) {
         try {
+        	User manager = userService.getUserCurentLogged();
+            if (manager == null) {
+                throw new RuntimeException("Không tìm thấy người dùng");
+            }
+            
+         // Gọi Service để lấy tên thương hiệu
+            String brand = managerService.get_DepartmentName(manager);
+            
+            
             ProductDTO productDTO = productService.getProductDetailById(productID);
             model.addAttribute("product", productDTO);
+            model.addAttribute("brand", brand);
+            model.addAttribute("managerName", manager.getFullName());
             return "manager/product-detail";
         } catch (RuntimeException e) {
             model.addAttribute("errorMessage", e.getMessage());
@@ -85,6 +95,7 @@ public class ProductsController {
         String brand = managerService.get_DepartmentName(manager);
         
         model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
         model.addAttribute("product", productService.getNewProductDTOForManager());
         return "manager/product-add";
     }
@@ -119,6 +130,18 @@ public class ProductsController {
     // Hiển thị form chỉnh sửa sản phẩm
     @GetMapping("/edit/{productID}")
     public String showEditForm(@PathVariable int productID, Model model) {
+    	
+    	User manager = userService.getUserCurentLogged();
+        if (manager == null) {
+            throw new RuntimeException("Không tìm thấy người dùng");
+        }
+        
+     // Gọi Service để lấy tên thương hiệu
+        String brand = managerService.get_DepartmentName(manager);
+        
+        model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
+    	
         model.addAttribute("product", productService.getProductDetailById(productID));
         return "manager/product-edit";
     }
