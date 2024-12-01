@@ -46,6 +46,8 @@ public class ProductDetail {
 		this.quantity = quantity;
 	}
 	
-	
+	public boolean isInStock() {
+        return quantity > 0;
+    }
 	
 }
