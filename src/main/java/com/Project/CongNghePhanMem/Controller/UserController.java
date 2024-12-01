@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.Project.CongNghePhanMem.Entity.Notification;
 import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
+import com.Project.CongNghePhanMem.Service.INotificationService;
 import com.Project.CongNghePhanMem.Service.IProductService;
 
 import jakarta.servlet.http.HttpSession;
@@ -35,6 +37,9 @@ public class UserController {
 	
 	@Autowired
 	private BCryptPasswordEncoder passEncoder;
+	
+	@Autowired
+	private  INotificationService notificationService;
 
 	@ModelAttribute
     private void userDetails(Model m, Principal p, HttpSession session) {
@@ -77,6 +82,11 @@ public class UserController {
 		
 		List<Product> products = this.productService.fetchProducts();
     	model.addAttribute("products", products);
+    	
+    	// Lấy danh sách thông báo của người dùng theo userId
+        List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
+        model.addAttribute("notifications", notifications);
+        
 		return "user/home";
 	}
 

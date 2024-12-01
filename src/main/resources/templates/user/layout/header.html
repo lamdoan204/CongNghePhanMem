@@ -146,12 +146,20 @@
 											<li><a href="it_checkout.html">Checkout</a></li>
 										</ul>
 									</li>
-									<li> <a href="it_contact.html">Contact</a>
-										<ul>
-											<li><a href="it_contact.html">Contact Page 1</a></li>
-											<li><a href="it_contact_2.html">Contact Page 2</a></li>
+									
+									
+									<li class="notification-container">
+										<a href="#" class="notify-link">Notify</a>
+										<ul class="navbar-menu">
+											<li th:each="notification : ${notifications}" class="notification-item">
+												<a th:href="@{${notification.url}}" th:text="${notification.message}" class="notification-link"></a>
+
+											</li>
 										</ul>
-									</li>
+                                    </li>
+
+
+
 									<!-- Menu động dựa trên trạng thái người dùng -->
 									<!-- Thay thế phần menu user bằng -->
 									<!--<th:block th:if="${session.currentUser == null}">
