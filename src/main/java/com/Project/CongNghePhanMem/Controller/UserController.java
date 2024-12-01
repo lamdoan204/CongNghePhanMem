@@ -60,6 +60,8 @@ public class UserController {
                 }
             }
             
+            
+            
             // Thêm vào model để view có thể sử dụng
             m.addAttribute("user", currentUser);
         }
@@ -93,10 +95,6 @@ public class UserController {
 		List<Product> products = this.productService.fetchProducts();
     	model.addAttribute("products", products);
     	
-    	// Lấy danh sách thông báo của người dùng theo userId
-        List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
-        model.addAttribute("notifications", notifications);
-        
 
 
 
@@ -115,6 +113,12 @@ public class UserController {
         model.addAttribute("currentPage", productPage.getNumber());
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("totalItems", productPage.getTotalElements());
+        
+     // Lấy danh sách thông báo của người dùng theo userId
+        List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
+        model.addAttribute("notifications", notifications);
+        
+        System.out.println("notifica: " + notifications );
         
         return "user/home";
     }
