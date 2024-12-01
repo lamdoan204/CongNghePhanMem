@@ -26,7 +26,7 @@ public class Department {
     @JoinColumn(name = "user_id", unique = false)
     private User manager;
 	
-	@OneToMany(mappedBy = "department")
+	@OneToMany
     private List<User> employee; 
 	
 	@OneToOne
