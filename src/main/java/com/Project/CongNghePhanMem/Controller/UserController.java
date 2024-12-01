@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,6 +31,8 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/user/")
 public class UserController {
 
+	
+	
 	@Autowired
 	private UserRepository userRepo;
 	
@@ -72,12 +76,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-	@GetMapping("/")
-	public String home(Model model, HttpSession session) {
-		User currentUser = (User) session.getAttribute("currentUser");
+    @GetMapping("/")
+    public String home(
+            Model model, 
+            HttpSession session,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             return "redirect:/login";
         }
+
 		
 		
 		List<Product> products = this.productService.fetchProducts();
@@ -87,8 +97,28 @@ public class UserController {
         List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
         model.addAttribute("notifications", notifications);
         
-		return "user/home";
-	}
+
+
+
+        
+        // Lấy sản phẩm có phân trang
+        Page<Product> productPage = productService.findAllProducts(PageRequest.of(page, size));
+        
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", productPage.getNumber());
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalItems", productPage.getTotalElements());
+        
+     
+        
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", productPage.getNumber());
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalItems", productPage.getTotalElements());
+        
+        return "user/home";
+    }
+
 
 	@PostMapping("/updatePassword")
     public String updatePassword(HttpSession session, Principal p, 
@@ -146,6 +176,10 @@ public class UserController {
 	        return password.matches(regex);
 	    }
 	
-
+	 @GetMapping("/article")
+	 public String article() {
+		 return "user/article";
+	 }
+	 
 
 }

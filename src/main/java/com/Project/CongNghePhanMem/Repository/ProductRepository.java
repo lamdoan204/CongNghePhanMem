@@ -13,7 +13,6 @@ import com.Project.CongNghePhanMem.Entity.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>{
-	// Tìm kiếm theo tên sản phẩm (hoặc các tiêu chí khác nếu cần)
     Page<Product> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
     Page<Product> findByBrandId(int brandId, Pageable pageable);
 

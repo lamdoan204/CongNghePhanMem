@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "cart_detail")
@@ -32,6 +33,13 @@ public class CartDetail implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
+	
+	
+	@Transient
+    private boolean inStock;
+    
+    @Transient
+    private boolean hasEnoughQuantity;
 	
 	public CartDetail() {
 		super();
@@ -84,6 +92,24 @@ public class CartDetail implements Serializable{
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+	
+	
+
+	public boolean isInStock() {
+		return inStock;
+	}
+
+	public void setInStock(boolean inStock) {
+		this.inStock = inStock;
+	}
+
+	public boolean isHasEnoughQuantity() {
+		return hasEnoughQuantity;
+	}
+
+	public void setHasEnoughQuantity(boolean hasEnoughQuantity) {
+		this.hasEnoughQuantity = hasEnoughQuantity;
 	}
 
 	@Override

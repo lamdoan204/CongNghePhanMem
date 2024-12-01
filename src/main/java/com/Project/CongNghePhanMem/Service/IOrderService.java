@@ -20,4 +20,10 @@ public interface IOrderService {
 	 // Cập nhật trạng thái đơn hàng và đồng bộ với notifications
     void updateOrderStatus(int orderId, int newStatus);
 
+	List<Order> getOrdersByUserAndStatus(User user, int status);
+
+	List<Order> getOrdersByStatus(int status);
+
+	void cancelOrder(Integer orderId, String cancelReason);
+
 }
