@@ -64,6 +64,37 @@ public class UserController {
             m.addAttribute("user", currentUser);
         }
     }
+
+    @GetMapping("/profilePage")
+    public String getUserInfoPage(Principal principal, Model model) {
+        if (principal != null) {
+            String email = principal.getName();
+            User user = userRepo.findByEmail(email);
+            model.addAttribute("user", user);
+        }
+        return "user/profile";
+    }
+
+    @PostMapping("/updateProfile")
+    public String updateUserProfile(@ModelAttribute User updatedUser, Principal principal, Model model) {
+        if (principal != null) {
+            String email = principal.getName();
+            User user = userRepo.findByEmail(email);
+
+            user.setFullName(updatedUser.getFullName());
+            user.setAddress(updatedUser.getAddress());
+            user.setEmail(updatedUser.getEmail());
+            user.setPhone(updatedUser.getPhone());
+
+            userRepo.save(user);
+
+            model.addAttribute("user", user);
+            model.addAttribute("msg", "Cập nhật thông tin thành công");
+        }
+        return "redirect:/user/profilePage";
+    }
+
+
     @GetMapping("/profile")
     public ResponseEntity<User> getUserInfo(Principal principal) {
         if (principal != null) {
