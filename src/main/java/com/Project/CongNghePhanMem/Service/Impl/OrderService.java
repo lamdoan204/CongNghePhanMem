@@ -13,41 +13,32 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();  
+    }  
 
-    // Xác nhận đơn hàng
-    public Order confirmOrder(int orderID) {
-        // Tìm đơn hàng theo orderID
-        Order order = orderRepository.findByOrderID(orderID);
-
-        if (order != null) {
-            // Thay đổi trạng thái đơn hàng thành "Đã xác nhận"
-            order.setStatus(1); // Giả sử trạng thái "1" là "Đã xác nhận"
-            // Lưu đơn hàng sau khi thay đổi trạng thái
-            orderRepository.save(order);
-            return order;
-        }
-
-        return null; // Nếu không tìm thấy đơn hàng
-    }
-
-    // Hủy đơn hàng
-    public Order cancelOrder(int orderID) {
-        // Tìm đơn hàng theo orderID
-        Order order = orderRepository.findByOrderID(orderID);
-
-        if (order != null) {
-            // Thay đổi trạng thái đơn hàng thành "Đã hủy"
-            order.setStatus(2); // Giả sử trạng thái "2" là "Đã hủy"
-            // Lưu đơn hàng sau khi thay đổi trạng thái
-            orderRepository.save(order);
-            return order;
-        }
-
-        return null; // Nếu không tìm thấy đơn hàng
-    }
-
-    // Lấy danh sách đơn hàng theo trạng thái
     public List<Order> getOrdersByStatus(int status) {
         return orderRepository.findByStatus(status);
     }
+    
+    public List<Order> getPendingOrders() {
+        return orderRepository.findByStatus(1);
+    }
+    
+    public List<Order> getConfirmedOrders() {
+        return orderRepository.findByStatus(2);
+    }
+    
+    public List<Order> getInDeliveryOrders() {
+        return orderRepository.findByStatus(3);
+    }
+    
+    public List<Order> getDeliveredOrders() {
+        return orderRepository.findByStatus(4);
+    }
+    
+    public List<Order> getCancelledOrders() {
+        return orderRepository.findByStatus(5);
+    }    
 }

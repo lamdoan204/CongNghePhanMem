@@ -12,6 +12,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     // Tìm đơn hàng theo orderID
     Order findByOrderID(int orderID);
+    
+    List<Order> findAll();
 
     // Tìm tất cả các đơn hàng có status
     List<Order> findByStatus(int status);
