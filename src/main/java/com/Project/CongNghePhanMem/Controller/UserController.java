@@ -31,26 +31,24 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/user/")
 public class UserController {
 
-	
-	
-	@Autowired
-	private UserRepository userRepo;
-	
-	@Autowired
-	private IProductService productService;
-	
-	@Autowired
-	private BCryptPasswordEncoder passEncoder;
-	
-	@Autowired
-	private  INotificationService notificationService;
+    @Autowired
+    private UserRepository userRepo;
 
-	@ModelAttribute
+    @Autowired
+    private IProductService productService;
+
+    @Autowired
+    private BCryptPasswordEncoder passEncoder;
+
+    @Autowired
+    private INotificationService notificationService;
+
+    @ModelAttribute
     private void userDetails(Model m, Principal p, HttpSession session) {
         if (p != null) {
             // Kiểm tra user trong session
             User currentUser = (User) session.getAttribute("currentUser");
-            
+
             if (currentUser == null) {
                 // Nếu chưa có trong session, lấy từ database và lưu vào session
                 String email = p.getName();
@@ -59,7 +57,7 @@ public class UserController {
                     session.setAttribute("currentUser", currentUser);
                 }
             }
-            
+
             // Thêm vào model để view có thể sử dụng
             m.addAttribute("user", currentUser);
         }
@@ -94,7 +92,6 @@ public class UserController {
         return "redirect:/user/profilePage";
     }
 
-
     @GetMapping("/profile")
     public ResponseEntity<User> getUserInfo(Principal principal) {
         if (principal != null) {
@@ -109,7 +106,7 @@ public class UserController {
 
     @GetMapping("/")
     public String home(
-            Model model, 
+            Model model,
             HttpSession session,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -119,43 +116,34 @@ public class UserController {
             return "redirect:/login";
         }
 
-		
-		
-		List<Product> products = this.productService.fetchProducts();
-    	model.addAttribute("products", products);
-    	
-    	// Lấy danh sách thông báo của người dùng theo userId
+        List<Product> products = this.productService.fetchProducts();
+        model.addAttribute("products", products);
+
+        // Lấy danh sách thông báo của người dùng theo userId
         List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
         model.addAttribute("notifications", notifications);
-        
 
-
-
-        
         // Lấy sản phẩm có phân trang
         Page<Product> productPage = productService.findAllProducts(PageRequest.of(page, size));
-        
+
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("currentPage", productPage.getNumber());
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("totalItems", productPage.getTotalElements());
-        
-     
-        
+
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("currentPage", productPage.getNumber());
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("totalItems", productPage.getTotalElements());
-        
+
         return "user/home";
     }
 
-
-	@PostMapping("/updatePassword")
-    public String updatePassword(HttpSession session, Principal p, 
+    @PostMapping("/updatePassword")
+    public String updatePassword(HttpSession session, Principal p,
             @RequestParam("oldPass") String oldPass,
             @RequestParam("newPass") String newPass, RedirectAttributes redirectAttributes) {
-            
+
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             return "redirect:/login";
@@ -192,25 +180,24 @@ public class UserController {
         return "redirect:/user/changePass";
     }
 
-	@GetMapping("/changePass")
-	public String changePassword(HttpSession session, Model model) {
-		String msg = (String) session.getAttribute("msg");
-		if (msg != null) {
-			model.addAttribute("msg", msg);
-			session.removeAttribute("msg");
-		}
-		return "user/changePassword";
-	}
-	
-	 private boolean isValidPassword(String password) {
-	        String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
-	        return password.matches(regex);
-	    }
-	
-	 @GetMapping("/article")
-	 public String article() {
-		 return "user/article";
-	 }
-	 
+    @GetMapping("/changePass")
+    public String changePassword(HttpSession session, Model model) {
+        String msg = (String) session.getAttribute("msg");
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
+        return "user/changePassword";
+    }
+
+    private boolean isValidPassword(String password) {
+        String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        return password.matches(regex);
+    }
+
+    @GetMapping("/article")
+    public String article() {
+        return "user/article";
+    }
 
 }
