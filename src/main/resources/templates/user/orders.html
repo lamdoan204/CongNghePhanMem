@@ -183,7 +183,19 @@
 																	th:text="'(' + ${order.appliedPromotion.discountRate * 100} + '%)'"></span>
 															</div>
 														</div>
-
+														<div class="d-flex justify-content-between mb-3">
+															<strong>Phương thức thanh toán:</strong>
+															<span th:if="${order.isPaidByCard}" class="badge bg-info">
+																<i class="fas fa-credit-card me-1"></i> Thanh toán bằng
+																thẻ
+															</span>
+															<span th:unless="${order.isPaidByCard}"
+																class="badge bg-success">
+																<i class="fas fa-money-bill me-1"></i> Thanh toán khi
+																nhận hàng
+															</span>
+														</div>
+														<hr>
 														<!-- Phần table chi tiết sản phẩm -->
 														<table class="table mb-0">
 															<thead>
@@ -344,6 +356,14 @@
 
 		.text-danger {
 			color: #dc3545 !important;
+		}
+
+		.badge.bg-info {
+			background-color: #17a2b8 !important;
+		}
+
+		.badge.bg-success {
+			background-color: #28a745 !important;
 		}
 	</style>
 
