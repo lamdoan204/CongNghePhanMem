@@ -165,6 +165,8 @@ public class UserController {
         model.addAttribute("totalItems", productPage.getTotalElements());
 
         return "user/home";
+
+        
     }
 
     @PostMapping("/updatePassword")
