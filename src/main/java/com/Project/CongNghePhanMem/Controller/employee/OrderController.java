@@ -18,21 +18,21 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-//    // Xác nhận đơn hàng
-//    @PutMapping("/confirm/{orderID}")
-//    public Order confirmOrder(@PathVariable int orderID) {
-//        return orderService.confirmOrder(orderID);
+    // Xác nhận đơn hàng
+    @PutMapping("/confirm/{orderID}")
+    public Order confirmOrder(@PathVariable int orderID) {
+        return orderService.confirmOrder(orderID);
+    }
+//    @PutMapping("/confirm")
+//    public void confirmOrder(@RequestBody Order order) {
+//    	orderService.confirmOrder(order);
 //    }
-////    @PutMapping("/confirm")
-////    public void confirmOrder(@RequestBody Order order) {
-////    	orderService.confirmOrder(order);
-////    }
-//
-//    // Hủy đơn hàng
-//    @PutMapping("/cancel/{orderID}")
-//    public Order cancelOrder(@PathVariable int orderID) {
-//        return orderService.cancelOrder(orderID);
-//    }
+
+    // Hủy đơn hàng
+    @PutMapping("/cancel/{orderID}")
+    public Order cancelOrder(@PathVariable int orderID) {
+        return orderService.cancelOrder(orderID);
+    }
 
     // Lấy danh sách đơn hàng theo trạng thái
     @GetMapping("/status/{status}")
