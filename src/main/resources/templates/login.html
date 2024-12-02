@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+<html lang="vi" xmlns="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
 
 <head>
 	<meta charset="ISO-8859-1">
 	<title>Login</title>
+<style></style>
 </head>
 
 <body id="default_theme" class="it_service">
@@ -27,9 +28,6 @@
 								Logout successfully
 							</div>
 
-							<a href="/oauth2/authorization/facebook" class="btn btn-primary w-100">
-								<i class="fab fa-facebook"></i> Login with Facebook
-							</a>
 							<!-- Login Form -->
 							<form action="/signin" method="post">
 								<!-- Email -->
@@ -69,6 +67,7 @@
 				</div>
 			</div>
 		</div>
+		
 	</section>
 
 

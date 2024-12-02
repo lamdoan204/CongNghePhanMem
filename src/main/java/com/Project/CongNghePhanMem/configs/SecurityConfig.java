@@ -52,33 +52,26 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable())
-
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/manager/**").hasRole("MANAGER")
 						.requestMatchers("/user/**").hasRole("USER").requestMatchers("/employee/**").hasRole("EMPLOYEE")
 						.requestMatchers("/admin/**").hasRole("ADMIN")
 						.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/", "/register",
 								"/notifyVerify", "/forgotPassword", "/verifyOTP", "/resetPassword", "/verify",
-								"/createUser", "/user/**", "/api/messages/send/user1")
+								"/revolution/**",
+
+								"/createUser", "/user/**","/search","/it_shop","/user/cart","/user/shopdetail")
+
 						.permitAll())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/signin")
 						.failureUrl("/login?error=true").successHandler(customsuccessHandler).permitAll())
-				.formLogin(form -> form
-		                .loginPage("/login")                     
-		                .loginProcessingUrl("/signin")
-		                .successHandler(customsuccessHandler)        
-		                .permitAll()                              
-		            )
-		            .logout(logout -> logout
-		                    .logoutUrl("/logout")
-		                    .logoutSuccessUrl("/login")
-		                    .deleteCookies("JSESSIONID")
-		                    .invalidateHttpSession(true)
-		                    .permitAll()
-		                )
+				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/signin")
+						.successHandler(customsuccessHandler).permitAll())
+				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login").deleteCookies("JSESSIONID")
+						.invalidateHttpSession(true).permitAll())
 				.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
-	}
 
+	}
 
 }

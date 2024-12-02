@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống Kê Doanh Thu Chuyên Nghiệp</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-gradient@0.1.0/dist/chartjs-plugin-gradient.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    
+    <style>
+        :root {
+            --primary-color: #3B82F6;
+            --secondary-color: #10B981;
+            --background-light: #F3F4F6;
+            --card-background: #FFFFFF;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--background-light);
+            line-height: 1.6;
+        }
+        .dashboard-card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), #6366F1);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-icon {
+            font-size: 2.5rem;
+            opacity: 0.7;
+        }
+        .filter-container {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        .select2-container {
+            width: 100% !important;
+        }
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f7;
+            line-height: 1.6;
+        }
+        .revenue-dashboard {
+            max-width: 1200px;
+            margin: 30px auto;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .tabs {
+            display: flex;
+            background-color: #007bff;
+            color: white;
+        }
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .tab:hover {
+            background-color: #0056b3;
+        }
+        .tab.active {
+            background-color: #0056b3;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+         /* Định dạng bảng và thanh cuộn */
+        .table-container {
+            max-height: 400px; /* Đặt chiều cao tối đa cho bảng */
+            overflow-y: auto;  /* Cho phép thanh cuộn dọc khi có quá nhiều dòng */
+            border: 1px solid #ddd; /* Đặt đường viền quanh bảng */
+            margin-bottom: 20px; /* Khoảng cách dưới cùng */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e9ecef;
+        }
+        
+#resetButton i {
+    font-size: 16px; /* Tùy chỉnh kích thước biểu tượng */
+}
+
+#resetButton:hover {
+    background-color: #d32f2f;
+}
+        /* Header Thống kê doanh thu */
+.header-revenue-statistics {
+    background: linear-gradient(135deg, #34D399, #10B981); /* Gradient từ xanh lá sáng (#34D399) đến xanh lá đậm (#10B981) */
+    color: #fff; /* Màu chữ trắng nổi bật */
+    padding: 2rem;
+    border-radius: 0 0 20px 20px; /* Bo góc đáy */
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Hiệu ứng đổ bóng nhẹ */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hiệu ứng nền động */
+.header-revenue-statistics::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        rgba(255, 255, 255, 0.3) 25%, 
+        transparent 25%, 
+        transparent 50%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        rgba(255, 255, 255, 0.3) 75%, 
+        transparent 75%, 
+        transparent);
+    background-size: 60px 60px;
+    animation: moveStripes 3s linear infinite; /* Hiệu ứng di chuyển */
+    opacity: 0.2; /* Độ mờ */
+}
+
+/* Animation cho hiệu ứng nền */
+@keyframes moveStripes {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 60px 60px;
+    }
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="~{manager/header}"></div> 
+    <!-- Header của trang Thống kê doanh thu -->
+<div class="page-header text-center header-revenue-statistics">
+    <h1><i class="fas fa-chart-line me-2"></i>Thống Kê Doanh Thu</h1>
+    <p class="lead">Tổng hợp và phân tích doanh thu theo thời gian,phân loại và sản phẩm bán chạy</p>
+    <!-- Hiển thị tên thương hiệu -->
+	 <div class="brand-info" style="color: black; align-items: center">
+	    <strong>
+	        <i class="fas fa-cogs"></i> <!-- Thêm icon cogs từ Font Awesome -->
+	        Thương hiệu quản lý: 
+	    </strong>
+	    <span th:text="${brand}"></span>
+	</div>
+</div>
+        <!-- Ví dụ với Thymeleaf -->
+<div class="revenue-dashboard">
+<p class="lead" style="color: #007bff; font-weight: bold; font-size: 1.2em;">
+    <i class="fas fa-file-alt" style="color: #ff5722; margin-right: 8px;"></i> 
+    BÁO CÁO DOANH THU CHI TIẾT
+</p>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('weekly')">Doanh Thu Theo Tuần</div>
+            <div class="tab" onclick="showTab('monthly')">Doanh Thu Theo Tháng</div>
+            <div class="tab" onclick="showTab('quarterly')">Doanh Thu Theo Quý</div>
+            <div class="tab" onclick="showTab('yearly')">Doanh Thu Theo Năm</div>
+        </div>
+        
+       <!-- Combobox chọn năm -->
+<div class="filter-year">
+    
+    <select id="year" name="year" onchange="filterDataByYear()">
+        <option value="" disabled selected>Chọn Năm</option>
+        <!-- Các năm sẽ được thêm vào ở đây -->
+    </select>
+   <button id="resetButton" onclick="resetData()" title="Reset">
+    <i class="fas fa-undo-alt"></i>
+</button>
+
+
+    
+</div>
+
+        <div id="weekly" class="tab-content active">
+         <div class="table-container">
+            <table>
+                <tr>
+                    <th>Tuần</th>
+                    <th>Năm</th>
+                    <th>Loại Sản Phẩm</th>
+                    <th>Doanh Thu</th>
+                </tr>
+                <tbody id="weeklyTable">
+             
+                   <th:block th:each="revenue : ${weeklyRevenue}">
+	            <tr>
+	                <td th:text="${revenue.period}"></td>
+	                <td th:text="${revenue.year}"></td>
+	                <td th:text="${revenue.kind}"></td>
+	                <td th:text="${revenue.totalRevenue}"></td>
+	            </tr>
+	        </th:block>
+	        </tbody>
+
+                
+            </table>
+            </div>
+        </div>
+
+        <div id="monthly" class="tab-content">
+          <div class="table-container">
+            <table>
+                <tr>
+                    <th>Tháng</th>
+                    <th>Năm</th>
+                    <th>Loại Sản Phẩm</th>
+                    <th>Doanh Thu</th>
+                </tr>
+                <tbody id="monthlyTable">
+                <th:block th:each="revenue : ${monthlyRevenue}">
+	            <tr>
+	                <td th:text="${revenue.period}"></td>
+	                <td th:text="${revenue.year}"></td>
+	                <td th:text="${revenue.kind}"></td>
+	                <td th:text="${revenue.totalRevenue}"></td>
+	            </tr>
+	        </th:block>
+</tbody>
+            </table>
+        </div>
+</div>
+        <div id="quarterly" class="tab-content">
+         <div class="table-container">
+            <table>
+                <tr>
+                    <th>Quý</th>
+                    <th>Năm</th>
+                    <th>Loại Sản Phẩm</th>
+                    <th>Doanh Thu</th>
+                </tr>
+                <tbody id="quarterlyTable">
+               <th:block th:each="revenue : ${quarterlyRevenue}">
+	            <tr>
+	                <td th:text="${revenue.period}"></td>
+	                <td th:text="${revenue.year}"></td>
+	                <td th:text="${revenue.kind}"></td>
+	                <td th:text="${revenue.totalRevenue}"></td>
+	            </tr>
+	        </th:block>
+	         </tbody>
+
+            </table>
+        </div>
+        </div>
+
+        <div id="yearly" class="tab-content">
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Năm</th>
+                     <th>Năm</th>
+                    <th>Loại Sản Phẩm</th>
+                    <th>Doanh Thu</th>
+                </tr>
+                <tbody id="yearlyTable">
+               <th:block th:each="revenue : ${yearlyRevenue}">
+	            <tr>
+	                
+	                <td th:text="${revenue.period}"></td>
+	                <td th:text="${revenue.year}"></td>
+	                <td th:text="${revenue.kind}"></td>
+	                <td th:text="${revenue.totalRevenue}"></td>
+	            </tr>
+	        </th:block>
+	         </tbody>
+
+            </table>
+            </div>
+        </div>
+       
+  </div>
+  
+  
+<div class="revenue-dashboard">
+    <p class="lead" style="color: #007bff; font-weight: bold; font-size: 1.2em;">
+        <i class="fas fa-chart-bar" style="color: #28a745; margin-right: 8px;"></i> 
+        BIỂU ĐỒ THỐNG KÊ DOANH THU
+    </p>
+    
+    <div class="row g-4">
+        <!-- Filters -->
+        <div class="col-lg-4">
+            <div class="filter-container">
+                <h3 class="mb-4 text-center">Bộ Lọc Thông Minh</h3>
+                <!-- Chọn Năm -->
+                <div class="mb-3">
+                    <label class="form-label">Chọn Năm</label>
+                    <select id="yearFilter" class="form-select">
+                        <!-- Các năm sẽ được thêm qua JavaScript -->
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Phân Loại Thời Gian</label>
+                    <select id="timeFilter" class="form-select">
+                        <option value="week">Theo Tuần</option>
+                        <option value="month">Theo Tháng</option>
+                        <option value="quarter">Theo Quý</option>
+                        <option value="year">Theo Năm</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="col-lg-8">
+            <div class="row g-4">
+                <!-- Total Revenue Card -->
+                <div class="col-md-6">
+                    <div class="stat-card">
+                        <div>
+                            <h5 class="mb-2">Tổng Doanh Thu</h5>
+                            <h3 id="totalRevenue" class="mb-0">0 đ</h3>
+                        </div>
+                        <i class="stat-icon">💰</i>
+                    </div>
+                </div>
+                <!-- Revenue Growth Card -->
+                <div class="col-md-6">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #10B981, #34D399);">
+                        <div>
+                            <h5 class="mb-2">Tăng Trưởng</h5>
+                            <h3 id="revenueGrowth" class="mb-0">0%</h3>
+                        </div>
+                        <i class="stat-icon">📈</i>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-center mb-4">Biểu Đồ Doanh Thu</h5>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-center mb-4">Phân Bổ Doanh Thu</h5>
+                            <div class="chart-container">
+                                <canvas id="revenuePieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+        
+
+      
+<script th:inline="javascript">
+    // Truyền dữ liệu từ Spring vào JavaScript qua Thymeleaf
+    const weeklyRevenue = /*[[${weeklyRevenue}]]*/[];
+    const monthlyRevenue = /*[[${monthlyRevenue}]]*/ [];
+    const quarterlyRevenue = /*[[${quarterlyRevenue}]]*/ [];
+    const yearlyRevenue = /*[[${yearlyRevenue}]]*/ [];
+ // Add this at the beginning of your script
+    console.log('Weekly Revenue:', weeklyRevenue);
+    console.log('Monthly Revenue:', monthlyRevenue);
+    console.log('Quarterly Revenue:', quarterlyRevenue);
+    console.log('Yearly Revenue:', yearlyRevenue);
+
+ 
+</script>
+<!-- Thêm Chart.js trước các đoạn mã JavaScript của bạn -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script >
+
+//Thêm danh sách các năm từ dữ liệu có sẵn
+const availableYears = [...new Set(yearlyRevenue.map(item => item.period))]; // Lấy các năm từ yearlyRevenue
+const yearSelect = document.getElementById('yearFilter');
+
+//Thêm các năm vào dropdown
+availableYears.forEach(year => {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    yearSelect.appendChild(option);
+});
+
+// Set năm mặc định là năm hiện tại hoặc một năm trong danh sách
+const currentYear = new Date().getFullYear();
+if (availableYears.includes(currentYear.toString())) {
+    yearSelect.value = currentYear.toString();
+} else {
+    yearSelect.value = availableYears[0]; // Chọn năm đầu tiên nếu năm hiện tại không có trong danh sách
+}
+
+// Hàm format currency
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('vi-VN', { 
+        style: 'currency', 
+        currency: 'VND' 
+    }).format(amount);
+}
+
+// Hàm lọc dữ liệu theo năm và loại thời gian
+function filterRevenueData(timeFilter, selectedYear) {
+    let filteredData = [];
+
+    switch(timeFilter) {
+        case 'week':
+            filteredData = weeklyRevenue.filter(item => {
+                let period = String(item.period);  // Chuyển period thành chuỗi nếu cần thiết
+                let year = String(item.year);
+                return year==selectedYear;  // Sau đó dùng startsWith
+            }).map(item => ({ period: `Tuần ${item.period}`, revenue: item.totalRevenue  }));
+            break;
+        case 'month':
+            filteredData = monthlyRevenue.filter(item => {
+                let period = String(item.period);  // Chuyển period thành chuỗi nếu cần thiết
+                let year = String(item.year);
+                return year==selectedYear;  // Sau đó dùng startsWith
+            }).map(item => ({ period: `Tháng ${item.period}`, revenue: item.totalRevenue  }));
+            break;
+        case 'quarter':
+            filteredData = quarterlyRevenue.filter(item => {
+                let period = String(item.period);  // Chuyển period thành chuỗi nếu cần thiết
+                let year = String(item.year);
+                return year==selectedYear;  // Sau đó dùng startsWith
+            }).map(item => ({ period: `Quý ${item.period}`, revenue: item.totalRevenue  }));
+            break;
+        case 'year':
+            filteredData = yearlyRevenue.filter(item => {
+                let period = String(item.period);  // Chuyển period thành chuỗi nếu cần thiết
+                return period === selectedYear;  // Kiểm tra xem period có khớp với selectedYear không
+            }).map(item => ({ 
+                period: item.period, 
+                revenue: item.totalRevenue 
+            }));
+            break;
+    }
+
+    return filteredData;
+}
+
+let revenueChart, revenuePieChart;
+
+// Hàm cập nhật dashboard
+function updateDashboard() {
+    const timeFilter = document.getElementById('timeFilter').value;
+    const selectedYear = document.getElementById('yearFilter').value;
+    
+    // Lọc dữ liệu theo năm và loại thời gian
+    const data = filterRevenueData(timeFilter, selectedYear);
+
+    // Revenue Line Chart with Gradient
+    if (revenueChart) revenueChart.destroy();
+    revenueChart = new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: data.map(item => item.period),
+            datasets: [{
+                label: 'Doanh Thu',
+                data: data.map(item => item.revenue),
+                borderColor: 'var(--primary-color)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return `${tooltipItem.label}: ${formatCurrency(tooltipItem.raw)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                }
+            }
+        }
+    });
+
+    // Revenue Pie Chart with Improved Styling
+    if (revenuePieChart) revenuePieChart.destroy();
+    revenuePieChart = new Chart(document.getElementById('revenuePieChart'), {
+        type: 'pie',
+        data: {
+            labels: data.map(item => item.period),
+            datasets: [{
+                data: data.map(item => item.revenue),
+                backgroundColor: [
+                    'rgba(59, 130, 246, 0.8)',   // Primary Blue
+                    'rgba(16, 185, 129, 0.8)',   // Green
+                    'rgba(245, 158, 11, 0.8)',   // Amber
+                    'rgba(139, 92, 246, 0.8)',   // Purple
+                    'rgba(255, 99, 132, 0.8)',   // Red
+                    'rgba(54, 162, 235, 0.8)',   // Blue
+                    'rgba(255, 206, 86, 0.8)',   // Yellow
+                ],
+                borderColor: 'rgba(255, 255, 255, 0.5)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return `${tooltipItem.label}: ${formatCurrency(tooltipItem.raw)}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Cập nhật tổng doanh thu và tăng trưởng
+    const totalRevenue = data.reduce((acc, item) => acc + item.revenue, 0);
+    const growthPercentage = ((data[data.length - 1].revenue - data[0].revenue) / data[0].revenue * 100).toFixed(2);
+
+    document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
+    document.getElementById('revenueGrowth').textContent = `${growthPercentage}%`;
+}
+//Event Listeners
+document.getElementById('timeFilter').addEventListener('change', updateDashboard);
+document.getElementById('yearFilter').addEventListener('change', updateDashboard);
+
+
+
+updateDashboard(); // Khởi tạo khi trang tải
+document.addEventListener('DOMContentLoaded', function () {
+    updateDashboard(); // Gọi hàm cập nhật sau khi trang đã tải xong
+});
+
+
+
+   </script>
+<script>
+function resetData() {
+    // Xóa lựa chọn của combobox
+    const yearDropdown = document.getElementById('year');
+    yearDropdown.value = "";
+
+    // Hiển thị lại toàn bộ dữ liệu ban đầu
+    displayDataInTable('weekly', weeklyRevenue);
+    displayDataInTable('monthly', monthlyRevenue);
+    displayDataInTable('quarterly', quarterlyRevenue);
+    displayDataInTable('yearly', yearlyRevenue);
+
+    console.log("Đã reset dữ liệu về trạng thái ban đầu.");
+}
+
+//Hàm để tính toán và điền các năm từ năm hiện tại trở về trước vào combobox
+function populateYearDropdown() {
+    const currentYear = new Date().getFullYear();  // Lấy năm hiện tại
+    const yearDropdown = document.getElementById('year');
+    
+    // Chỉ thêm các năm từ hiện tại trở về trước (ví dụ: 2024, 2023, 2022,...)
+    for (let year = currentYear; year >= 2000; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearDropdown.appendChild(option);
+    }
+}
+
+// Hàm để lọc và hiển thị dữ liệu theo năm đã chọn
+function filterDataByYear() {
+	const selectedYear = document.getElementById('year').value; // Lấy năm đã chọn
+    console.log("Đã chọn năm:", selectedYear);
+
+    // Lọc dữ liệu từ các biến đã truyền
+    const filteredWeekly = weeklyRevenue.filter(item => item.year == selectedYear);
+    const filteredMonthly = monthlyRevenue.filter(item => item.year == selectedYear);
+    const filteredQuarterly = quarterlyRevenue.filter(item => item.year == selectedYear);
+    const filteredYearly = yearlyRevenue.filter(item => item.year == selectedYear);
+
+    // Hiển thị dữ liệu lên bảng
+    displayDataInTable('weekly', filteredWeekly);
+    displayDataInTable('monthly', filteredMonthly);
+    displayDataInTable('quarterly', filteredQuarterly);
+    displayDataInTable('yearly', filteredYearly);
+}
+
+// Gọi hàm để điền combobox khi trang được tải
+window.onload = function() {
+    populateYearDropdown();
+};
+document.addEventListener('DOMContentLoaded', function() {
+	    populateYearDropdown();
+	});
+
+   // Hàm để hiển thị dữ liệu trong các bảng
+   function displayDataInTable(type, data) {
+    const tableBody = document.getElementById(`${type}Table`);
+    tableBody.innerHTML = ''; // Xóa nội dung cũ
+
+    data.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item.period}</td>
+            <td>${item.year}</td>
+            <td>${item.kind}</td>
+            <td>${item.totalRevenue}</td>
+        `;
+        tableBody.appendChild(tr);
+    });
+}
+
+
+   // Gọi hàm để điền combobox khi trang được tải
+   window.onload = function() {
+       populateYearDropdown();
+   };
+        function showTab(tabName) {
+            // Ẩn tất cả các tab content
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Ẩn tất cả các tab
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Hiển thị tab content được chọn
+            document.getElementById(tabName).classList.add('active');
+            
+            // Đánh dấu tab đang chọn
+            event.target.classList.add('active');
+        }
+    </script>
+   
+    <!-- Footer -->
+    <div th:replace="~{manager/footer}"></div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    
+</body>
+</html>
