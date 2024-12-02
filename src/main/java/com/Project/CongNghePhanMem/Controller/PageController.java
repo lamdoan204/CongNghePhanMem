@@ -23,19 +23,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
 import com.Project.CongNghePhanMem.Entity.Product;
-
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
-
 import com.Project.CongNghePhanMem.Service.IProductService;
 import com.Project.CongNghePhanMem.Service.IUserService;
 import com.Project.CongNghePhanMem.Service.JwtService;
 import com.Project.CongNghePhanMem.dto.AuthResponse;
 import com.Project.CongNghePhanMem.dto.UserRequest;
-
-
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -64,7 +59,6 @@ public class PageController {
 
 	@Autowired
 	private IProductService productService;
-	
 	
 	@ModelAttribute
 	private void userDetails(Model m, Principal p) {

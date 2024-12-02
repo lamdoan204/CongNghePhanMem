@@ -1,37 +1,124 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chi Tiết Đơn Hàng</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Đơn Hàng</title>
+    <style>
+        /* Reset các thuộc tính mặc định của trình duyệt */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .order-detail {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .order-detail ul {
+            list-style-type: none;
+        }
+
+        .order-detail li {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .order-detail li span {
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .back-link:hover {
+            background-color: #218838;
+        }
+
+        .order-info p {
+            margin: 10px 0;
+        }
+
+        .order-info span {
+            font-weight: bold;
+        }
+
+        .order-info .value {
+            color: #007bff;
+        }
+
+    </style>
 </head>
 <body>
-	<h1>
-		Chi Tiết Đơn Hàng #<span th:text="${order.orderID}">Order ID</span>
-	</h1>
-	<p>
-		Ngày Tạo: <span th:text="${order.orderDate}">Order Date</span>
-	</p>
-	<p>
-		Tổng Giá Trị: <span th:text="${order.totalPrice}">Total Price</span>
-	</p>
-	<p>
-		Trạng Thái: <span th:text="${order.status}">Order Status</span>
-	</p>
 
+<div class="container">
+    <h1>Chi Tiết Đơn Hàng #<span th:text="${order.orderID}">Order ID</span></h1>
 
-	<p>
-		<strong>Chi Tiết Sản Phẩm:</strong>
-	</p>
-	<ul>
-        <li th:each="orderDetail : ${order.orderDetails}">
-            <span th:text="${orderDetail.product.name}">Product Name</span> - 
-            <span th:text="${orderDetail.quantity}">Quantity</span> x
-            <span th:text="${orderDetail.price}">Price</span>
-        </li>
-    </ul>
+    <div class="order-info">
+        <p>Ngày Tạo: <span class="value" th:text="${order.orderDate}">Order Date</span></p>
+        <p>Tổng Giá Trị: <span class="value" th:text="${order.totalPrice}">Total Price</span></p>
+        <p>Trạng Thái: <span class="value" th:text="${order.status}">Order Status</span></p>
+    </div>
 
+    <div class="order-detail">
+        <p><strong>Chi Tiết Sản Phẩm:</strong></p>
+        <ul>
+            <li th:each="orderDetail : ${order.orderDetails}">
+                <span th:text="${orderDetail.product.name}">Product Name</span> - 
+                <span th:text="${orderDetail.quantity}">Quantity</span> x
+                <span th:text="${orderDetail.price}">Price</span>
+            </li>
+        </ul>
+    </div>
 
-	<a href="/employee/orderManagement">Quay lại danh sách đơn hàng</a>
+    <a class="back-link" href="/employee/orderManagement">Quay lại danh sách đơn hàng</a>
+</div>
+
 </body>
 </html>
