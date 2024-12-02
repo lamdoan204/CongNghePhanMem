@@ -1,6 +1,7 @@
 package com.Project.CongNghePhanMem.Controller.user;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,33 +23,8 @@ public class PromotionApiController {
     @Autowired
     private PromotionService promotionService;
     
-    @GetMapping("/validate") 
-public ResponseEntity<?> validateCoupon(@RequestParam String coupon) {
-    try {
-        Optional<Promotion> promotion = promotionService.findValidPromotionByCoupon(coupon);
-        
-        if (promotion.isPresent()) {
-            Promotion validPromotion = promotion.get();
-            Map<String, Object> response = new HashMap<>();
-            response.put("valid", true);
-            response.put("promotionId", validPromotion.getId());
-            response.put("discountRate", validPromotion.getDiscountRate());
-            
-            // Thêm danh sách sản phẩm được áp dụng
-            List<Integer> applicableProductIds = promotionService.getPromotionProductIds(validPromotion.getId());
-            response.put("applicableProducts", applicableProductIds);
-            
-            return ResponseEntity.ok(response);
-        } else {
-            Map<String, Object> response = new HashMap<>();
-            response.put("valid", false);
-            return ResponseEntity.ok(response);
-        }
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                           .body("Error validating coupon");
-    }
-}
+    @GetMapping("/validate")
+    public ResponseEntity<?> validateCoupon(@RequestParam String coupon) {
         try {
             Optional<Promotion> promotion = promotionService.findValidPromotionByCoupon(coupon);
             
@@ -57,6 +33,11 @@ public ResponseEntity<?> validateCoupon(@RequestParam String coupon) {
                 response.put("valid", true);
                 response.put("promotionId", promotion.get().getId());
                 response.put("discountRate", promotion.get().getDiscountRate());
+                
+                // Lấy danh sách product IDs
+                List<Integer> applicableProductIds = promotionService.getPromotionProductIds(promotion.get().getId());
+                response.put("applicableProducts", applicableProductIds);
+                
                 return ResponseEntity.ok(response);
             } else {
                 Map<String, Object> response = new HashMap<>();
@@ -64,8 +45,9 @@ public ResponseEntity<?> validateCoupon(@RequestParam String coupon) {
                 return ResponseEntity.ok(response);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                               .body("Error validating coupon");
+                               .body("Error validating coupon: " + e.getMessage());
         }
     }
 }

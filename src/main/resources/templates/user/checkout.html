@@ -267,18 +267,27 @@
 							<!-- Products list -->
 							<div class="order-products mb-4">
 								<div class="product-item d-flex justify-content-between mb-3"
-									th:each="item : ${cartDetails}">
+									th:each="item : ${cartDetails}" th:data-product-id="${item.product.productID}">
+									<!-- Thêm data attribute này -->
 									<div class="d-flex align-items-center">
 										<img th:src="@{'/images/products/' + ${item.product.image}}" class="rounded"
 											width="50" height="50">
 										<div class="ms-3">
 											<h6 class="mb-0" th:text="${item.product.name}"></h6>
 											<small class="text-muted" th:text="'x' + ${item.quantity}"></small>
+											<div class="discount-info" style="display: none;">
+												<small class="text-danger">Giảm giá: <span
+														class="discount-value">0đ</span></small>
+											</div>
 										</div>
 									</div>
-									<span class="text-end"
-										th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT') + 'đ'}">
-									</span>
+									<div class="text-end">
+										<span class="original-price"
+											th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT') + 'đ'}"></span>
+										<div class="final-price" style="display: none;">
+											<span class="text-success"></span>
+										</div>
+									</div>
 								</div>
 							</div>
 
@@ -551,13 +560,46 @@
 							discountMessage.querySelector('small').className = 'text-success';
 							discountText.textContent = `Áp dụng mã giảm giá ${data.discountRate * 100}%`;
 
+							let totalDiscount = 0;
+							let newTotalPrice = 0;
+
+							// Duyệt qua từng sản phẩm trong giỏ hàng
+							document.querySelectorAll('.product-item').forEach(item => {
+								const productId = parseInt(item.dataset.productId);
+								const priceElement = item.querySelector('.original-price');
+								const originalPrice = parseFloat(priceElement.textContent.replace(/[^\d]/g, ''));
+								const discountInfo = item.querySelector('.discount-info');
+								const finalPriceElement = item.querySelector('.final-price');
+
+								// Kiểm tra nếu sản phẩm được áp dụng giảm giá
+								if (data.applicableProducts.includes(productId)) {
+									const discountValue = originalPrice * data.discountRate;
+									const finalPrice = originalPrice - discountValue;
+
+									// Hiển thị thông tin giảm giá
+									discountInfo.style.display = 'block';
+									discountInfo.querySelector('.discount-value').textContent = '-' + formatCurrency(discountValue);
+
+									// Hiển thị giá sau giảm
+									finalPriceElement.style.display = 'block';
+									finalPriceElement.querySelector('span').textContent = formatCurrency(finalPrice);
+
+									totalDiscount += discountValue;
+									newTotalPrice += finalPrice;
+								} else {
+									// Ẩn thông tin giảm giá cho sản phẩm không áp dụng
+									discountInfo.style.display = 'none';
+									finalPriceElement.style.display = 'none';
+									newTotalPrice += originalPrice;
+								}
+							});
+
+							// Cập nhật tổng giảm giá và tổng tiền
 							discountRow.style.display = 'flex';
-							const discountValue = originalTotal * data.discountRate;
-							discountAmount.textContent = '-' + formatCurrency(discountValue);
+							discountAmount.textContent = '-' + formatCurrency(totalDiscount);
+							finalTotal.textContent = formatCurrency(newTotalPrice);
 
-							const newTotal = originalTotal - discountValue;
-							finalTotal.textContent = formatCurrency(newTotal);
-
+							// Lưu promotion ID
 							let promoInput = document.querySelector('input[name="promotionId"]');
 							if (!promoInput) {
 								promoInput = document.createElement('input');
