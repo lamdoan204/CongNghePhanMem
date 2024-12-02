@@ -28,4 +28,9 @@ public class MessagingController {
     public DatabaseReference receiveAllMessages() {
         return messagingService.getAllMessages();
     }
+
+    @GetMapping("/listen/{userId}")
+    public void listenForMessages(@PathVariable String userId) {
+        messagingService.listenForMessages(userId);
+    }
 }

@@ -1,9 +1,11 @@
 package com.Project.CongNghePhanMem.Service;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.FirebaseApp;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,5 +27,29 @@ public class MessagingService {
 
     public DatabaseReference getAllMessages() {
         return databaseReference;
+    }
+
+    public void listenForMessages(String userId) {
+        databaseReference.child(userId).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                com.Project.CongNghePhanMem.dto.Message message = dataSnapshot.getValue(com.Project.CongNghePhanMem.dto.Message.class);
+                System.out.println("New message received: " + message.getContent());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.err.println("Failed to listen for messages: " + databaseError.getMessage());
+            }
+        });
     }
 }
