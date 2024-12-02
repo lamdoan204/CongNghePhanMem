@@ -8,6 +8,8 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+<link rel="stylesheet"
+	href="src/main/resource/static/css/employee_home_style.css">
 <style>
 footer {
 	background-color: #6EC2F7; /* Màu nền cho footer */
@@ -47,6 +49,60 @@ body {
 	transform: translateY(-5px);
 	transition: all 0.3s;
 }
+
+/* Main Content Styling */
+#main-content {
+	background-color: #f8f9fa;
+	padding: 30px 0;
+}
+
+.card {
+	border: none;
+	border-radius: 10px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	max-height: 200px;
+	object-fit: cover; /* Giúp hình ảnh không bị biến dạng */
+}
+
+.card-body {
+	text-align: center;
+}
+
+.card-title {
+	font-size: 1.2rem;
+	font-weight: bold;
+	color: #333;
+}
+
+.card-text {
+	font-size: 0.9rem;
+	color: #777;
+	margin: 10px 0;
+}
+
+.card-price {
+	font-size: 1.1rem;
+	font-weight: bold;
+	color: #ff5733; /* Màu cam cho giá */
+	margin-bottom: 15px;
+}
+
+.btn-primary {
+	background-color: #6EC2F7; /* Màu xanh cho nút */
+	border-color: #6EC2F7;
+	padding: 8px 20px;
+	border-radius: 5px;
+}
+
+.btn-primary:hover {
+	background-color: #5db9f2;
+	border-color: #5db9f2;
+}
 </style>
 </head>
 <body>
@@ -54,172 +110,85 @@ body {
 	<div th:replace="employee/header"></div>
 
 	<!-- End Header -->
-	
+
 	<!-- Main Content -->
-	<section id="billboard" class="bg-light py-5">
-		<div class="container">
-			<div class="row justify-content-center">
-				<h1 class="section-title text-center mt-4" data-aos="fade-up">Chào
-					mừng đến với hệ thống</h1>
-				<div class="col-md-6 text-center" data-aos="fade-up"
-					data-aos-delay="300">
-					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-						Saepe voluptas ut dolorum consequuntur, adipisci repellat! Eveniet
-						commodi voluptatem voluptate, eum minima, in suscipit explicabo
-						voluptatibus harum, quibusdam ex repellat eaque!</p>
+	<section id="main-content" class="container mt-5">
+		<h2 class="text-center mb-4">Hệ thống quản lý dành cho nhân viên</h2>
+
+		<div class="row">
+		
+			 <!-- Card: Khách hàng mua hàng nhiều nhất -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card">
+                <img src="/images/products/best-customer.jpg" class="card-img-top" alt="Khách hàng mua hàng nhiều nhất">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Khách hàng mua hàng nhiều nhất</h5>
+                    <p class="card-text">Thông tin về khách hàng mua nhiều nhất</p>
+                    <a href="/employee/bestCustomer" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card: Hóa đơn có giá trị cao nhất -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card">
+                <img src="/images/products/highest-bill.jpg" class="card-img-top" alt="Hóa đơn có giá trị cao nhất">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Hóa đơn có giá trị cao nhất</h5>
+                    <p class="card-text">Thông tin về hóa đơn có giá trị cao nhất</p>
+                    <a href="/employee/highestBill" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+			
+		</div>
+		<div class="row">
+			<!-- Card 1 -->
+			<div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+				<div class="card">
+					<img src="/images/products/AMD Radeon RX 7900 XTX.jpg"
+						class="card-img-top" alt="Máy tính 1">
+					<div class="card-body text-center">
+						<h5 class="card-title">Máy tính Dell Inspiron</h5>
+					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="swiper main-swiper py-4" data-aos="fade-up"
-					data-aos-delay="600">
-					<div class="swiper-wrapper d-flex border-animation-left">
-						<div class="swiper-slide">
-							<div class="banner-item image-zoom-effect">
-								<div class="image-holder">
-									<a href="#"> <img src="static/images/products/pc1.jpg"
-										alt="product" class="img-fluid">
-									</a>
-								</div>
-								<div class="banner-content py-4">
-									<h5 class="element-title text-uppercase">
-										<a href="index.html" class="item-anchor">Soft leather
-											jackets</a>
-									</h5>
-									<p>Scelerisque duis aliquam qui lorem ipsum dolor amet,
-										consectetur adipiscing elit.</p>
-									<div class="btn-left">
-										<a href="#"
-											class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover
-											Now</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="swiper-slide">
-							<div class="banner-item image-zoom-effect">
-								<div class="image-holder">
-									<a href="#"> <img src="static/images/products/pc2.jpg"
-										alt="product" class="img-fluid">
-									</a>
-								</div>
-								<div class="banner-content py-4">
-									<h5 class="element-title text-uppercase">
-										<a href="index.html" class="item-anchor">Soft leather
-											jackets</a>
-									</h5>
-									<p>Scelerisque duis aliquam qui lorem ipsum dolor amet,
-										consectetur adipiscing elit.</p>
-									<div class="btn-left">
-										<a href="#"
-											class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover
-											Now</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="swiper-slide">
-							<div class="banner-item image-zoom-effect">
-								<div class="image-holder">
-									<a href="#"> <img src="static/images/products/pc3.jpg"
-										alt="product" class="img-fluid">
-									</a>
-								</div>
-								<div class="banner-content py-4">
-									<h5 class="element-title text-uppercase">
-										<a href="index.html" class="item-anchor">Soft leather
-											jackets</a>
-									</h5>
-									<p>Scelerisque duis aliquam qui lorem ipsum dolor amet,
-										consectetur adipiscing elit.</p>
-									<div class="btn-left">
-										<a href="#"
-											class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover
-											Now</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="swiper-slide">
-							<div class="banner-item image-zoom-effect">
-								<div class="image-holder">
-									<a href="#"> <img src="static/images/products/pc4.jpg"
-										alt="product" class="img-fluid">
-									</a>
-								</div>
-								<div class="banner-content py-4">
-									<h5 class="element-title text-uppercase">
-										<a href="index.html" class="item-anchor">Soft leather
-											jackets</a>
-									</h5>
-									<p>Scelerisque duis aliquam qui lorem ipsum dolor amet,
-										consectetur adipiscing elit.</p>
-									<div class="btn-left">
-										<a href="#"
-											class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover
-											Now</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="swiper-slide">
-							<div class="banner-item image-zoom-effect">
-								<div class="image-holder">
-									<a href="#"> <img src="static/images/products/pc5.jpg"
-										alt="product" class="img-fluid">
-									</a>
-								</div>
-								<div class="banner-content py-4">
-									<h5 class="element-title text-uppercase">
-										<a href="index.html" class="item-anchor">Out crop sweater</a>
-									</h5>
-									<p>Scelerisque duis aliquam qui lorem ipsum dolor amet,
-										consectetur adipiscing elit.</p>
-									<div class="btn-left">
-										<a href="#"
-											class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover
-											Now</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="swiper-slide">
-							<div class="banner-item image-zoom-effect">
-								<div class="image-holder">
-									<a href="#"> <img src="static/images/products/pc6.jpg"
-										alt="product" class="img-fluid">
-									</a>
-								</div>
-								<div class="banner-content py-4">
-									<h5 class="element-title text-uppercase">
-										<a href="index.html" class="item-anchor">Soft leather
-											jackets</a>
-									</h5>
-									<p>Scelerisque duis aliquam qui lorem ipsum dolor amet,
-										consectetur adipiscing elit.</p>
-									<div class="btn-left">
-										<a href="#"
-											class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover
-											Now</a>
-									</div>
-								</div>
-							</div>
-						</div>
+
+			<!-- Card 2 -->
+			<div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+				<div class="card">
+					<img src="/images/products/ASUS ROG STRIX Z790-E.jpg"
+						class="card-img-top" alt="Máy tính 2">
+					<div class="card-body text-center">
+						<h5 class="card-title">Máy tính HP Pavilion</h5>
 					</div>
-					<div class="swiper-pagination"></div>
 				</div>
-				<div class="icon-arrow icon-arrow-left">
-					<svg width="50" height="50" viewBox="0 0 24 24">
-            <use xlink:href="#arrow-left"></use>
-          </svg>
+			</div>
+
+			<!-- Card 3 -->
+			<div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+				<div class="card">
+					<img src="/images/products/NZXT H7 Elite.jpg" class="card-img-top"
+						alt="Máy tính 3">
+					<div class="card-body text-center">
+						<h5 class="card-title">MacBook Pro 13 inch</h5>
+					</div>
 				</div>
-				<div class="icon-arrow icon-arrow-right">
-					<svg width="50" height="50" viewBox="0 0 24 24">
-            <use xlink:href="#arrow-right"></use>
-          </svg>
+			</div>
+
+			<!-- Card 4 -->
+			<div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+				<div class="card">
+					<img src="/images/products/AMD Ryzen 9 7950X.jpg"
+						class="card-img-top" alt="Máy tính 4">
+					<div class="card-body text-center">
+						<h5 class="card-title">Laptop ASUS ZenBook</h5>
+					</div>
 				</div>
 			</div>
 		</div>
 	</section>
+
 	<!-- End Main Content -->
 
 	<!-- Footer -->
