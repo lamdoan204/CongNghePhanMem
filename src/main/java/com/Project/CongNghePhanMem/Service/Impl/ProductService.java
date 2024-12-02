@@ -1,51 +1,71 @@
 package com.Project.CongNghePhanMem.Service.Impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.Project.CongNghePhanMem.Entity.Cart;
 import com.Project.CongNghePhanMem.Entity.CartDetail;
 import com.Project.CongNghePhanMem.Entity.Product;
+import com.Project.CongNghePhanMem.Entity.ProductDetail;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.CartDetailRepository;
 import com.Project.CongNghePhanMem.Repository.CartRepository;
+import com.Project.CongNghePhanMem.Repository.ProductDetailRepository;
 import com.Project.CongNghePhanMem.Repository.ProductRepository;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.IProductService;
+import com.Project.CongNghePhanMem.dto.ProductDTO;
 
 import jakarta.servlet.http.HttpSession;
+
 
 @Service
 public class ProductService implements IProductService {
 
-    private final ProductRepository productRepository;
-    private final CartRepository cartRepository;
-    private final CartDetailRepository cartDetailRepository;
-    private final UserRepository userRepository;
+	private final ProductRepository productRepository;
+	
 
-    private final UserService userService;
-
-    public ProductService(ProductRepository productRepository, CartRepository cartRepository,
-            CartDetailRepository cartDetailRepository, UserRepository userRepository, UserService userService) {
-        super();
-        this.productRepository = productRepository;
-        this.cartRepository = cartRepository;
-        this.cartDetailRepository = cartDetailRepository;
-        this.userRepository = userRepository;
-        this.userService = userService;
+	private final FileService fileService;
+	private final ProductDetailRepository productDetailRepository;
+	private final CartRepository cartRepository;
+	private final CartDetailRepository cartDetailRepository;
+	private final UserRepository userRepository;
+	private final UserService userService;
+	
+	public ProductService(ProductRepository productRepository, FileService fileService,
+			ProductDetailRepository productDetailRepository, CartRepository cartRepository,
+			CartDetailRepository cartDetailRepository, UserRepository userRepository, UserService userService) {
+		super();
+		this.productRepository = productRepository;
+		this.fileService = fileService;
+		this.productDetailRepository = productDetailRepository;
+		this.cartRepository = cartRepository;
+		this.cartDetailRepository = cartDetailRepository;
+		this.userRepository = userRepository;
+		this.userService = userService;
+	}
+	
+	// Phương thức tính số sản phẩm theo brand_id
+	@Override
+    public long getProductCountByBrand(int brandId) {
+        return productRepository.countByBrandId(brandId);
     }
 
-    // logic luu product vao gio hang
-    @Override
-    public void handleAddProductToCart(String email, int id) {
-        // check user da co cart chua? neu chua -> tao moi
-        User user = this.userService.getUserById(id);
-        if (user != null) {
-            Cart cart = this.cartRepository.findByUser(user);
+	 
+	
+
+	@Override
+	public void handleAddProductToCart(String email, int id) {
+		User user = this.userService.getUserById(id);
+		if (user != null) {
+			Cart cart = this.cartRepository.findByUser(user);
 
             if (cart == null) {
                 // tao moi cart
@@ -127,64 +147,188 @@ public class ProductService implements IProductService {
         return productRepository.findAll(pageable);
     }
 
-    @Override
-    public Page<Product> searchProducts(String keyword, Pageable pageable) {
-        return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
+	@Override
+    public ProductDTO getProductDetailById(int id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại!"));
+        return convertToDTO(product);
     }
 
     @Override
-    public Product findProductById(int id) {
-        return productRepository.findById(id).orElse(null);
-    }
+    public void saveProductWithImage(ProductDTO productDTO, MultipartFile imageFile) {
+        Product product = convertToEntity(productDTO);
+        try {
+            if (productDTO.getBrandId() == 0) {
+                throw new RuntimeException("Brand ID không hợp lệ!");
+            }
 
-    @Override
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
-    }
+            if (!imageFile.isEmpty()) {
+                String fileName = fileService.uploadFile(imageFile, "src/main/resources/static/images/products");
+                product.setImage(fileName);
+            }
 
-    @Override
-    public void deleteProduct(int id) {
-        productRepository.deleteById(id);
-    }
+            productRepository.save(product);
 
-    // Xóa sản phẩm theo danh sách productID
-    public void deleteProductsByIds(List<Integer> ids) {
-        productRepository.deleteAllById(ids);
-    }
+            ProductDetail productDetail = new ProductDetail();
+            productDetail.setProduct(product);
+            productDetail.setQuantity(productDTO.getQuantity());
+            productDetail.setDate(LocalDate.now());
 
-    @Override
-    public Page<Product> searchProductsByBrand(int brandId, String keyword, Pageable pageable) {
-        if (keyword != null && !keyword.isEmpty()) {
-            return productRepository.findByBrandIdAndNameContaining(brandId, keyword, pageable);
+            productDetailRepository.save(productDetail);
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi khi lưu sản phẩm: " + e.getMessage());
         }
-        return productRepository.findByBrandId(brandId, pageable);
     }
 
     @Override
-    public List<Product> findRelatedProducts(String description, String kind, int productId) {
-        return productRepository.findRelatedProductsByDescriptionAndKind(description, kind, productId);
-    }
+    public void updateProduct(int id, ProductDTO productDTO, MultipartFile imageFile) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại!"));
+        try {
+            if (!imageFile.isEmpty()) {
+                String fileName = fileService.uploadFile(imageFile, "src/main/resources/static/images/products");
+                if (product.getImage() != null) {
+                    fileService.deleteFile("src/main/resources/static/images/products", product.getImage());
+                }
+                product.setImage(fileName);
+            }
+            product.setName(productDTO.getName());
+            product.setPrice(productDTO.getPrice());
+            product.setKind(productDTO.getKind());
+            product.setDescription(productDTO.getDescription());
+            productRepository.save(product);
 
-    @Override
-    public List<Product> productSearch(String keyword) {
-        if (keyword == null || keyword.trim().isEmpty()) {
-            throw new IllegalArgumentException("Keyword cannot be null or empty");
+            ProductDetail productDetail = productDetailRepository.findByProduct_productID(id);
+            if (productDetail == null) {
+                productDetail = new ProductDetail();
+                productDetail.setProduct(product);
+            }
+            productDetail.setQuantity(productDTO.getQuantity());
+            productDetailRepository.save(productDetail);
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi khi cập nhật sản phẩm: " + e.getMessage());
         }
-
-        // Gọi repository để tìm sản phẩm
-        List<Product> products = productRepository.searchProducts(keyword);
-
-        return products;  // Kiểm tra xem có sản phẩm nào được trả về không
     }
+
+    @Override
+    public void deleteProductById(int id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại!"));
+        try {
+        	fileService.deleteFile("src/main/resources/static/images/products", product.getImage());
+            // Xóa chi tiết sản phẩm nếu có (sử dụng cascade)
+            productRepository.delete(product); // Xóa sản phẩm, JPA sẽ tự động xóa ProductDetail
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi khi xóa sản phẩm: " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    public void deleteProducts(List<Integer> ids) {
+    	List<Product> products = productRepository.findByProductIDIn(ids);
+        if (products.isEmpty()) {
+            throw new RuntimeException("Không tìm thấy sản phẩm nào để xóa.");
+        }
+        try {
+            // Duyệt qua danh sách các sản phẩm cần xóa
+            for (Product product : products) {
+                // Nếu có ảnh, xóa ảnh khỏi thư mục
+                if (product.getImage() != null) {
+                    fileService.deleteFile("src/main/resources/static/images/products", product.getImage());
+                }
+                productRepository.delete(product);
+            }
+            
+            // Xóa chi tiết sản phẩm (product detail) trước khi xóa sản phẩm chính
+            //productDetailRepository.deleteByProductIDs(ids);
+      
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi khi xóa sản phẩm: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Page<ProductDTO> searchProductsByBrand(int brandId, String keyword, int page, int size) {
+        return productRepository.findByBrandIdAndNameContaining(brandId, keyword, PageRequest.of(page, size))
+                .map(this::convertToDTO);
+    }
+
+    private ProductDTO convertToDTO(Product product) {
+        ProductDetail detail = productDetailRepository.findByProduct_productID(product.getProductID());
+        return new ProductDTO(
+                product.getProductID(),
+                product.getName(),
+                product.getPrice(),
+                product.getImage(),
+                product.getKind(),
+                product.getBrandId(),
+                product.getBrand() != null ? product.getBrand().getBrand() : null,
+                product.getDescription(),
+                detail != null ? detail.getQuantity() : 0,
+                detail != null ? detail.getDate() : null
+        );
+    }
+
+    private Product convertToEntity(ProductDTO dto) {
+        Product product = new Product();
+        product.setProductID(dto.getProductID());
+        product.setName(dto.getName());
+        product.setPrice(dto.getPrice());
+        product.setKind(dto.getKind());
+        product.setDescription(dto.getDescription());
+        product.setBrandId(dto.getBrandId());
+        return product;
+    }
+
+
+
+	@Override
+	public List<Product> findRelatedProducts(String description, String kind, int productId) {
+		 return productRepository.findRelatedProductsByDescriptionAndKind(description, kind, productId);
+	}
+
+	@Override
+	 public List<Product> productSearch(String keyword) {
+	     if (keyword == null || keyword.trim().isEmpty()) {
+	         throw new IllegalArgumentException("Keyword cannot be null or empty");
+	     }
+
+	     // Gọi repository để tìm sản phẩm
+	     List<Product> products = productRepository.searchProducts(keyword);
+	     
+	     return products;  // Kiểm tra xem có sản phẩm nào được trả về không
+	 }
+
+
+
+
+	@Override
+	public Product findProductById(int productId) {
+		return productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại với ID: " + productId));
+	}
+	 @Override
+	    public ProductDTO getNewProductDTOForManager() {
+	        // Trả về một ProductDTO mặc định với các giá trị khởi tạo, ví dụ quantity = 0
+	        ProductDTO productDTO = new ProductDTO();
+	        productDTO.setQuantity(0); // Giá trị mặc định
+	        return productDTO;
+	    }
+
+
+
 
 	@Override
 	public List<Product> findProductsByKinds(List<String> kinds) {
 		return productRepository.findByKindIn(kinds);
 	}
 
+
 	@Override
 	public List<Product> getFeaturedProducts(double threshold) {
 		return productRepository.findFeaturedProducts(threshold);
 	}
+
 
 }

@@ -21,19 +21,26 @@ import com.Project.CongNghePhanMem.Entity.Promotion;
 import com.Project.CongNghePhanMem.Entity.RevenueStatistic;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Service.IManagerService;
+import com.Project.CongNghePhanMem.Service.IProductService;
 import com.Project.CongNghePhanMem.Service.IUserService;
+import com.Project.CongNghePhanMem.Service.IStatisticService;
 import com.Project.CongNghePhanMem.Service.Impl.ArticleService;
 import com.Project.CongNghePhanMem.Service.Impl.DepartmentService;
 import com.Project.CongNghePhanMem.Service.Impl.ManagerService;
+
 import com.Project.CongNghePhanMem.Service.Impl.PromotionService;
 import com.Project.CongNghePhanMem.Service.Impl.StatisticService;
 import com.Project.CongNghePhanMem.Service.Impl.UserService;
+import com.Project.CongNghePhanMem.dto.StockReport;
 
 @Controller
 @RequestMapping("/manager")
 public class ManagerController {
 	@Autowired
-	private StatisticService statisticService;
+	IStatisticService statisticService = new StatisticService();
+	
+	@Autowired
+    IProductService productService ;
 
     @Autowired
     private PromotionService promotionService;
@@ -53,7 +60,13 @@ public class ManagerController {
         }
 
         String brand = managerService.get_DepartmentName(manager);
+        int managerBrandId = managerService.get_DepartmentBrandId(manager);
+        
+        long countProduct = productService.getProductCountByBrand(managerBrandId);
+        
         model.addAttribute("brand", brand);
+        model.addAttribute("countProduct", countProduct);
+        model.addAttribute("managerName", manager.getFullName());
 
         return "manager/index"; 
     }
@@ -110,6 +123,7 @@ public class ManagerController {
         model.addAttribute("totalPages", employee.getTotalPages());
         model.addAttribute("totalItems", employee.getTotalElements());
         model.addAttribute("pageSize", size);
+        model.addAttribute("managerName", manager.getFullName());
 
         return "manager/employeemanagement";
     }
@@ -193,6 +207,7 @@ public class ManagerController {
         // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
         model.addAttribute("promotions", promotionService.getAllPromotions());
         return "manager/promotion-list"; // Cập nhật đường dẫn template
     }
@@ -206,6 +221,7 @@ public class ManagerController {
         // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
         model.addAttribute("promotion", new Promotion());
         return "manager/promotion_form"; // Cập nhật đường dẫn template
     }
@@ -235,6 +251,7 @@ public class ManagerController {
         // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
         model.addAttribute("articles", articleService.getAllArticles());
         return "manager/blog-list";
     }
@@ -249,6 +266,7 @@ public class ManagerController {
         // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
         model.addAttribute("blog", new Article());
         return "manager/blog-form";
     }
@@ -291,19 +309,19 @@ public class ManagerController {
          String brand = managerService.get_DepartmentName(manager);
         
          // Ví dụ: Lấy brandId của manager từ session hoặc authentication
-         int managerBrandId = managerService.get_DepartmentBrandId(manager);; // Thay bằng cách lấy thực tế
-
-         List<RevenueStatistic> weeklyRevenue = statisticService.getRevenueByWeekAndKind(managerBrandId);
-         List<RevenueStatistic> monthlyRevenue = statisticService.getRevenueByMonthAndKind(managerBrandId);
-         List<RevenueStatistic> quarterlyRevenue = statisticService.getRevenueByQuarterAndKind(managerBrandId);
-         List<RevenueStatistic> yearlyRevenue = statisticService.getRevenueByYearAndKind(managerBrandId);
+         int managerBrandId = managerService.get_DepartmentBrandId(manager); // Thay bằng cách lấy thực tế
+        
+         List<RevenueStatistic> monthlyRevenue = statisticService.getRevenueByMonthAndProduct(managerBrandId);
+         List<StockReport> stockReport = statisticService.getStockReport(managerBrandId);
          
          model.addAttribute("brand", brand);
+         model.addAttribute("managerName", manager.getFullName());
+         model.addAttribute("stockReport", stockReport);
 
-         model.addAttribute("weeklyRevenue", weeklyRevenue);
-         model.addAttribute("monthlyRevenue", monthlyRevenue);
-         model.addAttribute("quarterlyRevenue", quarterlyRevenue);
-         model.addAttribute("yearlyRevenue", yearlyRevenue);
+         //model.addAttribute("weeklyRevenue", weeklyRevenue);
+         model.addAttribute("monthlyRevenues", monthlyRevenue);
+         //model.addAttribute("quarterlyRevenue", quarterlyRevenue);
+        // model.addAttribute("yearlyRevenue", yearlyRevenue);
 
          return "manager/revenueManagement"; // Đảm bảo tên này khớp với file template
     }

@@ -142,7 +142,8 @@
                         <th>Tên sản phẩm</th>
                         <th>Giá</th>
                         <th>Loại</th>
-                        <th>Mô tả</th>
+                        <th>Số lượng nhập kho</th>
+                        
                         <th>Hành động</th>
                         <th>
                             <input type="checkbox" id="selectAll" onclick="toggleAll(this)"> Chọn
@@ -150,26 +151,29 @@
                     </tr>
                 </thead>
                <tbody class="table-light" style="border: 1px solid #000;">
-    <tr th:each="product, stat : ${products.content}" th:if="${product.brandId == managerBrandId}">
+    <tr th:each="product, stat : ${products.content}" >
+
         <!-- Kiểm tra xem sản phẩm có đúng thuộc thương hiệu mà manager quản lý không -->
       
             <td th:text="${stat.index + 1}"></td>
             <td>
                 <!-- Hiển thị hình ảnh -->
-                <img th:if="${product.image != null}"
+                <img th:if="${product.image != null}" th:title="${product.image}"
                      th:src="@{'/images?fname=' + ${product.image}}" class="product-image"
-                     th:alt="${product.name}">
+                     th:alt="${product.name}" style="width: 200px; height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 5px; margin: 10px 0;">
                 <img th:unless="${product.image != null}" th:src="@{'/image?fname=no-image.png'}"
                      class="product-image" alt="No Image">
             </td>
             <td th:text="${product.name}"></td>
-            <td th:text="${product.price}"></td>
+            <td th:text="${product.price} + ' VND'"></td>
             <td th:text="${product.kind}"></td>
-            <td th:text="${product.description}"></td>
+            <!-- Lấy số lượng từ Map productQuantities -->
+            <td th:text="${product.quantity}"></td>
+           
             <td>
                 <a th:href="@{/manager/manage-products/detail/{id}(id=${product.productID})}" class="btn btn-sm btn-info">Xem chi tiết</a>
                 <a th:href="@{/manager/manage-products/edit/{id}(id=${product.productID})}" class="btn btn-sm btn-warning">Sửa</a>
-                <a href="#" th:href="@{/manager/manage-products/delete/{id}(id=${product.productID})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</a>
+                <a th:href="@{/manager/manage-products/delete/{id}(id=${product.productID})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</a>
             </td>
             <td>
                 <input type="checkbox" name="selectedItems" th:value="${product.productID}">

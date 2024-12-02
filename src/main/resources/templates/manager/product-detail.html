@@ -133,7 +133,7 @@
         <h1 th:text="${product.name}">Tên Sản Phẩm</h1>
         <div class="custom-badge">
             <i class="fas fa-tag"></i>
-            <span th:text="${brand}">Thương hiệu</span>
+            <span th:text="${product.brandName}">Thương hiệu</span>
         </div>
     </div>
 
@@ -144,7 +144,7 @@
          >
          <img th:if="${product.image != null}"
                      th:src="@{'/images?fname=' + ${product.image}}" class="product-image" id="currentImage" 
-                     th:alt="${product.name}">
+                     th:alt="${product.name}" style="width: 500px; height: 520px;">
     </div>
 
         <!-- Thông tin sản phẩm -->
@@ -152,8 +152,11 @@
             <div class="info-title">
                 <i class="fas fa-info-circle"></i> Thông tin chi tiết
             </div>
-            <p><strong>Loại:</strong> <span th:text="${product.kind}">Loại sản phẩm</span></p>
-            <p><strong>Thương hiệu:</strong> <span th:text="${brand}">Thương hiệu</span></p>
+            <p><strong>Loại sản phẩm:</strong> <span th:text="${product.kind}">Loại sản phẩm</span></p>
+            <p><strong>Thương hiệu:</strong> <span th:text="${product.brandName}">Thương hiệu</span></p>
+            <p><strong>Số lượng nhập kho:</strong> <span th:text="${product.quantity}">Số lượng</span></p>
+            <p><strong>Ngày nhập kho:</strong> <span th:text="${product.date != null ? #temporals.format(product.date, 'dd/MM/yyyy') : ''}">Ngày nhập kho</span></p>
+
             <div class="price-tag">
                 Giá: <span th:text="${product.price}">0</span> VNĐ
             </div>

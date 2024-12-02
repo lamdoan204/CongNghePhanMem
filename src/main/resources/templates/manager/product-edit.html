@@ -41,7 +41,7 @@
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
             margin: 2rem auto;
-            max-width: 800px;
+            max-width: 1200px;
         }
 
         /* Style cho nhãn của các trường input */
@@ -179,7 +179,7 @@
     <!-- Import header từ template -->
     <div th:replace="manager/header"></div>
 
-    <!-- Phần tiêu đề trang với animation -->
+  <!-- Phần tiêu đề trang với animation -->
     <div class="page-header text-center">
         <h1><i class="fas fa-edit me-2"></i>Sửa sản phẩm</h1>
         <p class="lead">Cập nhật thông tin sản phẩm của bạn</p>
@@ -189,49 +189,96 @@
 	        <i class="fas fa-cogs"></i> <!-- Thêm icon cogs từ Font Awesome -->
 	        Thương hiệu quản lý: 
 	    </strong>
-	    <span th:text="${brand}"></span>
+	    <span th:text="${product.brandName}"></span>
 	</div>
     </div>
 
     <div class="container">
-        <!-- Form chỉnh sửa sản phẩm -->
-        <!-- Action form sẽ gửi dữ liệu đến endpoint /manager/manage-products/save/{productID} -->
-        <form th:action="@{/manager/manage-products/save/{productID}(productID=${product.productID})}" 
-              method="POST" 
-              th:object="${product}" 
-              class="form-container" enctype="multipart/form-data">
+    <form th:action="@{/manager/manage-products/save/{productID}(productID=${product.productID})}" 
+                  method="POST" 
+                  th:object="${product}" 
+                  class="form-container" enctype="multipart/form-data">
+    <div class="row align-items-start">
+        <!-- Cột hình ảnh nằm bên trái -->
+        <div class="col-md-5 text-center" style="margin-top: 0px;">
+            <label for="currentImage" class="form-label">
+                <i class="fas fa-image text-info me-2"></i> Hình ảnh hiện tại
+            </label>
+            <div>
+                <img th:if="${product.image != null}"
+                     th:src="@{'/images?fname=' + ${product.image}}" 
+                     class="product-image" 
+                     id="currentImage" 
+                     th:alt="${product.name}" 
+                     style="width: 370px; height: 360px; object-fit: cover; border: 1px solid #ddd; border-radius: 5px; margin: 10px 0;">
+                <img th:unless="${product.image != null}" 
+                     th:src="@{'/image?fname=no-image.png'}"
+                     class="product-image" 
+                     id="currentImage"  
+                     alt="No Image" 
+                     style="width: 370px; height: 360px; object-fit: cover; border: 1px solid #ddd; border-radius: 5px; margin: 10px 0; opacity: 0.7;">
+            </div>
+
+            <!-- Trường nhập hình ảnh sản phẩm mới -->
+            <div class="form-floating mt-3">
+                <input type="file" 
+                       class="form-control" 
+                       name="productImage" 
+                       id="productImage" 
+                       onchange="previewImage()" 
+                       placeholder="Chọn hình ảnh sản phẩm mới">
+                <label for="productImage">
+                    <i class="fas fa-image text-primary me-2"></i>
+                    Tải lên hình ảnh mới
+                </label>
+            </div>
+        </div>
+
+        <!-- Cột thông tin sản phẩm nằm bên phải -->
+        <div class="col-md-7">
             
-            <!-- Trường nhập tên sản phẩm -->
-            <div class="form-floating mb-3" style="border: 2px solid #00FF99;border-radius: 10px;">
-                <input type="text" 
-                       class="form-control" 
-                       th:field="*{name}" 
-                       id="productName" 
-                       placeholder="Tên sản phẩm"
-                       required>
-                <label for="productName">
-                    <i class="fas fa-tag text-primary me-2"></i>
-                    Tên sản phẩm
-                </label>
-            </div>
+                  <!-- Trường số lượng -->
+    			<input type="hidden" th:field="*{quantity}" />
+                 <!-- Trường nhập tên sản phẩm -->
+          <div class="form-floating mb-3">
+              <input type="text" 
+                     class="form-control" 
+                     th:field="*{name}" 
+                     id="productName" 
+                     placeholder="Tên sản phẩm"
+                     required
+                     style="border: 2px solid #d4edda; box-shadow: none;"
+                     onfocus="this.style.borderColor='#28a745'; this.style.boxShadow='0 0 5px rgba(40, 167, 69, 0.5)';"
+                     onblur="this.style.borderColor='#d4edda'; this.style.boxShadow='none';">
+              <label for="productName">
+                  <i class="fas fa-tag text-primary me-2"></i>
+                  Tên sản phẩm
+              </label>
+          </div>
 
-            <!-- Trường nhập giá sản phẩm -->
-            <div class="form-floating mb-3" style="border: 2px solid #00FF99;border-radius: 10px;">
-                <input type="number" 
-                       class="form-control" 
-                       th:field="*{price}" 
-                       id="productPrice" 
-                       placeholder="Giá"
-                       required>
-                <label for="productPrice">
-                    <i class="fas fa-dollar-sign text-success me-2"></i>
-                    Giá
-                </label>
-            </div>
+          <!-- Trường nhập giá sản phẩm -->
+          <div class="form-floating mb-3">
+              <input type="number" 
+                     class="form-control" 
+                     th:field="*{price}" 
+                     id="productPrice" 
+                     placeholder="Giá"
+                     required
+                     style="border: 2px solid #d4edda; box-shadow: none;"
+                     onfocus="this.style.borderColor='#28a745'; this.style.boxShadow='0 0 5px rgba(40, 167, 69, 0.5)';"
+                     onblur="this.style.borderColor='#d4edda'; this.style.boxShadow='none';">
+              <label for="productPrice">
+                  <i class="fas fa-dollar-sign text-success me-2"></i>
+                  Giá
+              </label>
+          </div>
 
-            <!-- Loại sản phẩm -->
-<div class="form-floating mb-3" style="border: 2px solid #6699FF; border-radius: 10px;">
-    <select class="form-control" th:field="*{kind}" id="productKind" required>
+          <!-- Loại sản phẩm -->
+          <div class="form-floating mb-3">
+    <select class="form-control" th:field="*{kind}" id="productKind" required
+            style="border: 2px solid #d4edda; box-shadow: none;"
+            onfocus="this.style.borderColor='#28a745'; this.style.boxShadow='0 0 5px rgba(40, 167, 69, 0.5)';"
+            onblur="this.style.borderColor='#d4edda'; this.style.boxShadow='none';">
         <option value="" disabled selected>Chọn loại sản phẩm</option>
         <option value="CPU" th:selected="*{kind} == 'CPU'">CPU</option>
         <option value="GPU" th:selected="*{kind} == 'GPU'">GPU</option>
@@ -240,6 +287,22 @@
         <option value="Storage" th:selected="*{kind} == 'Storage'">Storage</option>
         <option value="PSU" th:selected="*{kind} == 'PSU'">PSU</option>
         <option value="Case" th:selected="*{kind} == 'Case'">Case</option>
+        <option value="Cooling System" th:selected="*{kind} == 'Cooling System'">Cooling System</option>
+        <option value="Monitor" th:selected="*{kind} == 'Monitor'">Monitor</option>
+        <option value="Keyboard" th:selected="*{kind} == 'Keyboard'">Keyboard</option>
+        <option value="Mouse" th:selected="*{kind} == 'Mouse'">Mouse</option>
+        <option value="Power Strip" th:selected="*{kind} == 'Power Strip'">Power Strip</option>
+        <option value="Sound Card" th:selected="*{kind} == 'Sound Card'">Sound Card</option>
+        <option value="Network Card" th:selected="*{kind} == 'Network Card'">Network Card</option>
+        <option value="SSD" th:selected="*{kind} == 'SSD'">SSD</option>
+        <option value="HDD" th:selected="*{kind} == 'HDD'">HDD</option>
+        <option value="Fans" th:selected="*{kind} == 'Fans'">Fans</option>
+        <option value="Optical Drive" th:selected="*{kind} == 'Optical Drive'">Optical Drive</option>
+        <option value="Laptop Battery" th:selected="*{kind} == 'Laptop Battery'">Laptop Battery</option>
+        <option value="Docking Station" th:selected="*{kind} == 'Docking Station'">Docking Station</option>
+        <option value="Webcam" th:selected="*{kind} == 'Webcam'">Webcam</option>
+        <option value="Headset" th:selected="*{kind} == 'Headset'">Headset</option>
+        <option value="Graphics Tablet" th:selected="*{kind} == 'Graphics Tablet'">Graphics Tablet</option>
     </select>
     <label for="productKind">
         <i class="fas fa-cogs text-primary me-2"></i>
@@ -247,68 +310,46 @@
     </label>
 </div>
 
-            
-            <!-- Hiển thị hình ảnh hiện tại của sản phẩm nếu có -->
-<div class="mb-3">
-    <label for="currentImage" class="form-label">
-        <i class="fas fa-image text-info me-2"></i> Hình ảnh hiện tại
-    </label>
-    <div>
-        <!-- Hiển thị hình ảnh hiện tại từ thư mục images/products -->
-       
-             <!-- Hiển thị hình ảnh -->
-                <img th:if="${product.image != null}"
-                     th:src="@{'/images?fname=' + ${product.image}}" class="product-image" id="currentImage" 
-                     th:alt="${product.name}">
-                <img th:unless="${product.image != null}" th:src="@{'/image?fname=no-image.png'}"
-                     class="product-image" id="currentImage"  alt="No Image">
+
+
+          <!-- Trường nhập mô tả sản phẩm -->
+          <label for="productDescription">
+              <i class="fas fa-pencil-alt text-secondary me-2"></i>
+              Mô tả
+          </label>
+          <div class="form-floating mb-4">
+              <textarea class="form-textarea" 
+                        th:field="*{description}" 
+                        id="productDescription" 
+                        rows="4"
+                        placeholder="Mô tả"
+                        style="border: 2px solid #d4edda; box-shadow: none;"
+                        onfocus="this.style.borderColor='#28a745'; this.style.boxShadow='0 0 5px rgba(40, 167, 69, 0.5)';"
+                        onblur="this.style.borderColor='#d4edda'; this.style.boxShadow='none';"></textarea>
+          </div>
+
+          <!-- Container chứa các nút điều hướng -->
+          <div class="d-flex justify-content-between mt-4">
+              <!-- Nút Quay lại -->
+              <a href="/manager/manage-products" class="btn-back">
+                  <i class="fas fa-arrow-left"></i>
+                  Quay lại
+              </a>
+              <!-- Nút Lưu thay đổi -->
+              <button type="submit" class="btn-custom">
+                  <i class="fas fa-save"></i>
+                  Lưu thay đổi
+              </button>
+          </div>
+           
+        </div>
     </div>
+     </form>
 </div>
 
-<!-- Trường nhập hình ảnh sản phẩm mới -->
-<div class="form-floating mb-3">
-    <input type="file" 
-           class="form-control" 
-            name="productImage" 
-           id="productImage" 
-           onchange="previewImage()" 
-           placeholder="Chọn hình ảnh sản phẩm mới">
-    <label for="productImage">
-        <i class="fas fa-image text-primary me-2"></i>
-        Tải lên hình ảnh mới
-    </label>
-</div>
-
-
-            <!-- Trường nhập mô tả sản phẩm -->
-            <label for="productDescription" >
-                    <i class="fas fa-pencil-alt text-secondary me-2"></i>
-                    Mô tả
-                </label>
-            <div class="form-floating mb-4" style="border: 2px solid #00FF99;border-radius: 10px;">
-                <textarea class="form-textarea" 
-                          th:field="*{description}" 
-                          id="productDescription" 
-                          rows="4"
-                          placeholder="Mô tả"></textarea>
-                
-            </div>
-
-            <!-- Container chứa các nút điều hướng -->
-            <div class="d-flex justify-content-between mt-4" >
-                <!-- Nút Quay lại -->
-                <a href="/manager/manage-products" class="btn-back">
-                    <i class="fas fa-arrow-left"></i>
-                    Quay lại
-                </a>
-                <!-- Nút Lưu thay đổi -->
-                <button type="submit" class="btn-custom">
-                    <i class="fas fa-save"></i>
-                    Lưu thay đổi
-                </button>
-            </div>
-        </form>
-    </div>
+   
+    
+    
 
     <!-- Import footer từ template -->
     <div th:replace="manager/footer"></div>

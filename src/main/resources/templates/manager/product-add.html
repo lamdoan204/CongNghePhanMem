@@ -189,7 +189,7 @@
               class="form-container" enctype="multipart/form-data">
             
             <!-- Trường ID ẩn -->
-            <input type="hidden" th:field="*{productID}">	 
+             
 
             <!-- Tên sản phẩm -->
             <div class="form-floating mb-3" style="border: 2px solid #6699FF;border-radius: 10px;">
@@ -222,7 +222,8 @@
 <div class="form-floating mb-3" style="border: 2px solid #6699FF; border-radius: 10px;">
     <select class="form-control" th:field="*{kind}" id="productKind" required>
         <option value="" disabled selected>Chọn loại sản phẩm</option>
-        <option value="CPU"></option>
+        <option value=""></option>
+        <!-- Danh sách loại sản phẩm mở rộng -->
         <option value="CPU">CPU</option>
         <option value="GPU">GPU</option>
         <option value="Motherboard">Motherboard</option>
@@ -230,13 +231,57 @@
         <option value="Storage">Storage</option>
         <option value="PSU">PSU</option>
         <option value="Case">Case</option>
+        <option value="Cooling System">Cooling System</option>
+        <option value="Monitor">Monitor</option>
+        <option value="Keyboard">Keyboard</option>
+        <option value="Mouse">Mouse</option>
+        <option value="Power Strip">Power Strip</option>
+        <option value="Sound Card">Sound Card</option>
+        <option value="Network Card">Network Card</option>
+        <option value="SSD">SSD</option>
+        <option value="HDD">HDD</option>
+        <option value="Fans">Fans</option>
+        <option value="Optical Drive">Optical Drive</option>
+        <option value="Laptop Battery">Laptop Battery</option>
+        <option value="Docking Station">Docking Station</option>
+        <option value="Webcam">Webcam</option>
+        <option value="Headset">Headset</option>
+        <option value="Graphics Tablet">Graphics Tablet</option>
     </select>
     <label for="productKind">
         <i class="fas fa-cogs text-primary me-2"></i>
         Loại
     </label>
 </div>
-             
+
+<!-- Số lượng sản phẩm -->
+<!-- Số lượng sản phẩm -->
+<div class="mb-3" style="display: flex; align-items: center;">
+<label for="productQuantity">
+        <i class="fas fa-boxes text-primary me-2"></i>
+        Số lượng :      
+  </label><a>   </a>
+<button type="button" 
+            class="btn btn-outline-primary" 
+            onclick="decreaseQuantity()" 
+            style="margin-right: 5px;">
+        <i class="fas fa-minus"></i>
+    </button>
+    <input type="number" 
+           class="form-control text-center" 
+           th:field="*{quantity}" 
+           id="productQuantity" 
+           min="1" 
+           value="1" 
+           style="max-width: 80px;" required>
+    <button type="button" 
+            class="btn btn-outline-primary" 
+            onclick="increaseQuantity()" 
+            style="margin-left: 5px;">
+        <i class="fas fa-plus"></i>
+    </button>                                
+</div> 
+     
            <!-- Hình ảnh sản phẩm -->
            <div class="mb-3">
     <label for="productImage" class="form-label">
@@ -244,9 +289,9 @@
         Hình ảnh
     </label>
 			<input type="file"  class="form-control" id="imageFile" name="imageFile" 
-                                       accept="image/*">
+                                       accept="images/*" required>
 			<div class="mt-2">
-                 <img id="preview" class="preview-image" alt="Preview">
+                 <img  id="preview" class="preview-image" alt="Preview" style="width: 360px; height: 300px; object-fit: cover; border: 1px solid #ddd; border-radius: 5px; margin: 10px 0;">
             </div>
 	</div>
 
@@ -258,14 +303,14 @@
                 </label>
 
             <!-- Mô tả sản phẩm -->
-            <div class="form-floating mb-4" style="border: 2px solid #6699FF;border-radius: 10px;">
-                <textarea class="form-textarea" 
-                          th:field="*{description}" 
-                          id="productDescription" 
-                          rows="4"
-                          placeholder="Mô tả"></textarea>
-                
-            </div>
+            <textarea class="form-textarea" 
+          th:field="*{description}" 
+          id="productDescription" 
+          rows="4"
+          placeholder="Mô tả"
+          maxlength="500" required></textarea>
+<small class="text-muted">Tối đa 500 ký tự</small>
+
 
             <!-- Các nút điều hướng -->
             <div class="d-flex justify-content-between mt-4">
@@ -284,15 +329,20 @@
    
     <!-- Sửa lại script xem trước ảnh -->
     <script>
-        // Validate form before submission
+        //Validate form before submission
         document.querySelector('form').addEventListener('submit', function(e) {
-            const nameInput = document.getElementById('name');
-            if (!nameInput.value.trim()) {
-                e.preventDefault();
-                alert('Please enter a category name');
-                nameInput.focus();
-            }
-        });
+   
+    const imageInput = document.getElementById('imageFile');
+
+    if (!imageInput.files.length) {
+        e.preventDefault();
+        alert('Vui lòng chọn hình ảnh sản phẩm');
+        imageInput.focus();
+        return;
+    }
+    
+});
+
 
         // Preview image before upload
         document.getElementById('imageFile').addEventListener('change', function(e) {
@@ -319,56 +369,29 @@
                 preview.style.display = 'none';
             }
         });
+        
+       
+      
+        // Tăng số lượng sản phẩm
+        function increaseQuantity() {
+            const quantityInput = document.getElementById("productQuantity");
+            const currentValue = parseInt(quantityInput.value) || 0;
+            quantityInput.value = currentValue + 1;
+        }
+
+        // Giảm số lượng sản phẩm
+        function decreaseQuantity() {
+            const quantityInput = document.getElementById("productQuantity");
+            const currentValue = parseInt(quantityInput.value) || 1;
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+        }
+    
+
     </script>
-    <script>
-    // Validate form before submission
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const nameInput = document.getElementById('productName');
-        const imageInput = document.getElementById('imageFile');
-        
-        // Kiểm tra tên sản phẩm
-        if (!nameInput.value.trim()) {
-            e.preventDefault();
-            alert('Please enter the product name');
-            nameInput.focus();
-            return;
-        }
+   
 
-        // Kiểm tra hình ảnh
-        if (!imageInput.files.length) {
-            e.preventDefault();
-            alert('Please choose a product image');
-            imageInput.focus();
-            return;
-        }
-    });
-
-    // Preview image before upload
-    document.getElementById('imageFile').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        const preview = document.getElementById('preview');
-        
-        if (file) {
-            // Kiểm tra kích thước
-            if (file.size > 5242880) { // 5MB
-                alert('File size should not exceed 5MB');
-                this.value = '';
-                preview.style.display = 'none';
-                return;
-            }
-            
-            // Hiển thị preview
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            }
-            reader.readAsDataURL(file);
-        } else {
-            preview.style.display = 'none';
-        }
-    });
-</script>
     <div>
     <footer th:replace="~{manager/footer}"></footer>
 </div>

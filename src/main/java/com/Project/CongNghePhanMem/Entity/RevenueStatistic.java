@@ -1,15 +1,23 @@
 package com.Project.CongNghePhanMem.Entity;
 
 public class RevenueStatistic {
-	private int period; // Tuần, Tháng, Quý hoặc Năm
-	private int year;
-	private String kind;
-    private double totalRevenue;
+    private int period;             // Tuần, Tháng, Quý hoặc Năm
+    private int year;
+    private String productName;     // Tên sản phẩm
+             // Ngày đầu tiên của đơn hàng trong nhóm
+    private int totalQuantitySold;  // Tổng số lượng bán
+    private int remainingQuantity;  // Số lượng còn lại
+    private double totalRevenue;    // Tổng doanh thu
 
-    public RevenueStatistic(int period,  int year,String kind,double totalRevenue) {
+    public RevenueStatistic(int period, int year, String productName,
+                            int totalQuantitySold,
+                            int remainingQuantity, double totalRevenue) {
         this.period = period;
-        this.year =year;
-        this.kind = kind;
+        this.year = year;
+        this.productName = productName;
+       
+        this.totalQuantitySold = totalQuantitySold;
+        this.remainingQuantity = remainingQuantity;
         this.totalRevenue = totalRevenue;
     }
 
@@ -22,6 +30,40 @@ public class RevenueStatistic {
         this.period = period;
     }
 
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+   
+
+    public int getTotalQuantitySold() {
+        return totalQuantitySold;
+    }
+
+    public void setTotalQuantitySold(int totalQuantitySold) {
+        this.totalQuantitySold = totalQuantitySold;
+    }
+
+    public int getRemainingQuantity() {
+        return remainingQuantity;
+    }
+
+    public void setRemainingQuantity(int remainingQuantity) {
+        this.remainingQuantity = remainingQuantity;
+    }
+
     public double getTotalRevenue() {
         return totalRevenue;
     }
@@ -29,21 +71,4 @@ public class RevenueStatistic {
     public void setTotalRevenue(double totalRevenue) {
         this.totalRevenue = totalRevenue;
     }
-
-	public int getYear() {
-		return year;
-	}
-
-	public void setYear(int year) {
-		this.year = year;
-	}
-
-	public String getKind() {
-		return kind;
-	}
-
-	public void setKind(String kind) {
-		this.kind = kind;
-	}
-
 }

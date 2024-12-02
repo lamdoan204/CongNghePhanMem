@@ -1,10 +1,11 @@
 package com.Project.CongNghePhanMem.Entity;
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -21,6 +22,7 @@ public class ProductDetail {
 	private Product product;
 	
 	private int quantity;
+    private LocalDate date;
 
 	public int getId() {
 		return id;
@@ -44,6 +46,14 @@ public class ProductDetail {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
 	
 	public boolean isInStock() {
