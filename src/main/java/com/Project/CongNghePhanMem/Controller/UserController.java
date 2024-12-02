@@ -166,8 +166,17 @@ public class UserController {
         // Lấy danh sách thông báo của người dùng theo userId
         List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
         model.addAttribute("notifications", notifications);
+        
+        System.out.println("notifica: " + notifications );
+        
+        double ratingThreshold = 4.0; // Ngưỡng đánh giá để xác định sản phẩm nổi bật
+        List<Product> featuredProducts = productService.getFeaturedProducts(ratingThreshold);
 
-        System.out.println("notifica: " + notifications);
+        model.addAttribute("featuredProducts", featuredProducts);
+        
+        System.out.println("featuredProducts: " + featuredProducts );
+        
+
         return "user/home";
 
     }

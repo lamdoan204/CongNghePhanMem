@@ -50,16 +50,18 @@ public class Order {
     private User user;
     
     
-    public Order(int orderID, Date orderDate, float totalPrice, List<OrderDetail> orderDetails, User user) {
-		super();
-		this.orderID = orderID;
-//		this.locked = locked;
-//		this.lockedBy = lockedBy;
-		this.orderDate = orderDate;
-		this.totalPrice = totalPrice;
-		this.orderDetails = orderDetails;
-		this.user = user;
-	}
+    @ManyToOne
+    @JoinColumn(name = "promotion_id")
+    private Promotion appliedPromotion;  // Thêm trường này
+
+    // Thêm getter/setter
+    public Promotion getAppliedPromotion() {
+        return appliedPromotion;
+    }
+
+    public void setAppliedPromotion(Promotion appliedPromotion) {
+        this.appliedPromotion = appliedPromotion;
+    }
 
 	public Order() {
 		super();

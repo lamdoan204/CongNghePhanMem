@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.Project.CongNghePhanMem.Entity.Cart;
 import com.Project.CongNghePhanMem.Entity.Order;
+import com.Project.CongNghePhanMem.Entity.Promotion;
 import com.Project.CongNghePhanMem.Entity.User;
 
 public interface IOrderService {
@@ -32,7 +33,7 @@ public interface IOrderService {
 	 
 	 List<Order> searchOrders(String searchTerm);
 
-	Order createOrder(User user, Cart cart, boolean isPaidByCard);
+	Order createOrder(User user, Cart cart, boolean isPaidByCard, float finalPrice, Promotion promotion);
 
 	List<Order> getOrdersByUser(User user);
 

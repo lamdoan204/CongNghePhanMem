@@ -51,16 +51,17 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth.requestMatchers("/manager/**")
-				.hasRole("MANAGER").requestMatchers("/user/**").hasRole("USER").requestMatchers("/employee/**")
-				.hasRole("EMPLOYEE").requestMatchers("/admin/**").hasRole("ADMIN")
-				.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/", "/register", "/notifyVerify",
-						"/forgotPassword", "/verifyOTP", "/resetPassword", "/verify", "/revolution/**",
+		http.csrf(csrf -> csrf.disable())
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/manager/**").hasRole("MANAGER")
+						.requestMatchers("/user/**").hasRole("USER").requestMatchers("/employee/**").hasRole("EMPLOYEE")
+						.requestMatchers("/admin/**").hasRole("ADMIN")
+						.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/", "/register",
+								"/notifyVerify", "/forgotPassword", "/verifyOTP", "/resetPassword", "/verify",
+								"/revolution/**",
 
-						"/createUser", "/user/**", "/search", "/it_shop", "/user/cart", "/user/shopdetail",
-						"/api/messages/send/user4", "/api/messages/listen/user4", "api/messages/listen/all")
+								"/createUser", "/user/**","/search","/it_shop","/user/cart","/user/shopdetail", "/api/promotions/validate")
 
-				.permitAll())
+						.permitAll())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/signin")
 						.failureUrl("/login?error=true").successHandler(customsuccessHandler).permitAll())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/signin")

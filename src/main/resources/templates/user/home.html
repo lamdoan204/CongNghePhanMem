@@ -130,30 +130,29 @@
 		</div>
 	</div>
 
-	<!-- Sản phẩm -->
-	<div class="container py-5">
-		<h2 class="text-center mb-4">Sản phẩm nổi bật</h2>
-		<div class="row row-cols-1 row-cols-md-5 g-4">
-			<!-- Thẻ sản phẩm -->
-			<div class="col sản phẩm-thẻ">
-				<div class="thẻ bóng-sm">
-					<img th:src="@{/images/products/Intel Core i9-13900K.jpg}" class="card-img-top" alt="Sản phẩm 1">
-					<div class="card-body">
-						<h5 class="card-title">Đồ họa card RTX 4090</h5>
-						<p class="card-text text-danger fw-bold">49.990.000 VNĐ</p>
-						<div class="mb-2">
-							<span class="text-warning">5.0</span>
-							<i class="fas fa-star text-warning"></i>
-							<span class="text-muted">(1 đánh giá)</span>
-						</div>
-						<a href="/user/shopdetail" class="btn btn-success w-100 mb-2">Chi tiết sản phẩm</a>
-						<a href="#" class="btn btn-primary w-100">Thêm vào giỏ hàng</a>
-					</div>
-				</div>
-			</div>
-			<!-- Lặp lại thẻ sản phẩm nếu cần -->
-		</div>
-	</div>
+	<!-- Sản phẩm nổi bật -->
+<div class="container py-5">
+    <h2 class="text-center mb-4">Sản phẩm nổi bật</h2>
+    <div class="row row-cols-1 row-cols-md-5 g-4">
+        <div class="col product-card" th:each="product : ${featuredProducts}">
+            <div class="card shadow-sm">
+                <img th:src="@{'/images/products/' + ${product.image}}" class="card-img-top"
+                     th:alt="${product.name}">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.name}"></h5>
+                    <p class="price mb-2"
+                       th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></p>
+                   
+                    <a th:href="@{/user/shopdetail/{id}(id=${product.productID})}" 
+                       class="btn btn-success w-100 mb-2">Chi tiết sản phẩm</a>
+                    <a href="#" class="btn btn-primary w-100">Thêm vào giỏ hàng</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 	<!-- Section Divider -->
 	<div class="section-divider"></div>
@@ -183,7 +182,8 @@
 
 						<!-- Nút mua hàng -->
 						<div class="d-grid gap-2">
-							<a th:href="@{/user/shopdetail/{id}(id=${product.productID})}" class="btn btn-success w-100 mb-2">
+							<a th:href="@{/user/shopdetail/{id}(id=${product.productID})}"
+								class="btn btn-success w-100 mb-2">
 								Chi tiết sản phẩm
 							</a>
 							<form th:action="@{/user/add-product-to-cart/{id}(id=${product.productID})}" method="post">

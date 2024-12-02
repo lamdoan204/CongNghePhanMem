@@ -202,36 +202,37 @@
 </div>
 <!-- Ví dụ với Thymeleaf -->
 <div class="revenue-dashboard">
-<p class="lead" style="color: #007bff; font-weight: bold; font-size: 1.2em;">
-    <i class="fas fa-box-open" style="color: purple; margin-right: 8px;"></i> 
-    BÁO CÁO NHẬP XUẤT SẢN PHẨM
-   
-</p>
- <div class="table-container" >
-    <table>
-        <thead>
-            <tr>
-                <th>Ngày nhập</th>
-                <th>Tên sản phẩm</th>
-                <th>Loại sản phẩm</th>
-                <th>Số lượng nhập kho</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Lặp qua danh sách stockReport -->
-            <tr th:each="stock : ${stockReport}">
-                <td th:text="${stock.stockDate != null ? #temporals.format(stock.stockDate, 'dd/MM/yyyy') : ''}">Ngày nhập</td>
-
-
-                <td th:text="${stock.productName}">Tên sản phẩm</td>
-                <td th:text="${stock.productKind}">Loại sản phẩm</td>
-                <td th:text="${stock.totalQuantityInStock}">Số lượng nhập kho</td>
-               
-            </tr>
-        </tbody>
-    </table>
-</div>
+    <p class="lead" style="color: #007bff; font-weight: bold; font-size: 1.2em;">
+        <i class="fas fa-box-open" style="color: purple; margin-right: 8px;"></i>
+        BÁO CÁO NHẬP KHO SẢN PHẨM
+    </p>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ngày nhập</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Loại sản phẩm</th>
+                    <th>Số lượng nhập kho</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Check if stockReport is null or empty -->
+                <tr th:if="${#lists.isEmpty(stockReport)}">
+                    <td colspan="4" class="text-center text-muted">
+                        Không có dữ liệu để hiển thị
+                    </td>
+                </tr>
+                <!-- Loop through stockReport if not empty -->
+                <tr th:each="stock : ${stockReport}">
+                    <td th:text="${stock.stockDate != null ? #temporals.format(stock.stockDate, 'dd/MM/yyyy') : ''}">Ngày nhập</td>
+                    <td th:text="${stock.productName}">Tên sản phẩm</td>
+                    <td th:text="${stock.productKind}">Loại sản phẩm</td>
+                    <td th:text="${stock.totalQuantityInStock}">Số lượng nhập kho</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="revenue-dashboard">
@@ -242,46 +243,67 @@
 </p>
    
 
-<div class="table-container" >
- <!-- Combobox chọn năm -->
-<div class="filter-year">
-    
-    <select id="year" name="year" onchange="filterDataByYear()">
-        <option value="" disabled selected>Chọn Năm</option>
-        <!-- Các năm sẽ được thêm vào ở đây -->
-    </select>
-   <button id="resetButton" onclick="resetData()" title="Reset">
-    <i class="fas fa-undo-alt"></i>
-</button>
+<div class="table-container">
+    <!-- Combobox chọn năm -->
+    <div class="filter-year">
+        <select id="year" name="year" onchange="filterDataByYear()">
+            <option value="" disabled selected>Chọn Năm</option>
+            <!-- Các năm sẽ được thêm vào ở đây -->
+        </select>
+
+        <select id="month" name="month" onchange="filterDataByMonth()">
+            <option value="" disabled selected>Chọn Tháng</option>
+            <option value="1">Tháng 1</option>
+            <option value="2">Tháng 2</option>
+            <option value="3">Tháng 3</option>
+            <option value="4">Tháng 4</option>
+            <option value="5">Tháng 5</option>
+            <option value="6">Tháng 6</option>
+            <option value="7">Tháng 7</option>
+            <option value="8">Tháng 8</option>
+            <option value="9">Tháng 9</option>
+            <option value="10">Tháng 10</option>
+            <option value="11">Tháng 11</option>
+            <option value="12">Tháng 12</option>
+        </select>
+        
+       
+    </div>
+
     <table id="monthlyTable">
         <thead>
             <tr>
                 <th>Tháng</th>
                 <th>Năm</th>
                 <th>Tên sản phẩm</th>
-                <th>Ngày đặt hàng</th>
+               
                 <th>Số lượng xuất kho</th>
                 <th>Số lượng tồn kho</th>
                 <th>Doanh thu</th>
-                
             </tr>
         </thead>
+
         <tbody>
-            <!-- Lặp qua danh sách stockReport -->
+            <!-- Nếu danh sách có dữ liệu -->
             <tr th:each="revenue : ${monthlyRevenues}">
-            	<td th:text="${revenue.period}">Tháng</td>
-            	<td th:text="${revenue.year}">Năm</td>
-            	<td th:text="${revenue.productName}">Tên sản phẩm</td>
-                <td th:text="${revenue.orderDate != null ? #temporals.format(revenue.orderDate, 'dd/MM/yyyy') : ''}">Ngày đặt hàng</td>
+                <td th:text="${revenue.period}">Tháng</td>
+                <td th:text="${revenue.year}">Năm</td>
+                <td th:text="${revenue.productName}">Tên sản phẩm</td>
+               
                 <td th:text="${revenue.totalQuantitySold}">Số lượng xuất kho</td>
                 <td th:text="${revenue.remainingQuantity}">Số lượng tồn kho</td>
                 <td th:text="${revenue.totalRevenue}">Doanh thu</td>
-               
+            </tr>
+            <!-- Dòng tổng doanh thu -->
+            <tr id="totalRevenueRow">
+                <td colspan="6" style="text-align: right; font-weight: bold;">Tổng Doanh Thu:</td>
+                <td id="totalRevenue">0</td>
             </tr>
         </tbody>
     </table>
 </div>
-</div>
+
+
 </div>
 
   
@@ -303,6 +325,7 @@
                         <!-- Các năm sẽ được thêm qua JavaScript -->
                     </select>
                 </div>
+                
 
                 <!-- Chọn Thời Gian (Chỉ Tháng) -->
                 <div class="mb-3" style="display: none;">
@@ -322,7 +345,7 @@
                     <div class="stat-card">
                         <div>
                             <h5 class="mb-2">Tổng Doanh Thu</h5>
-                            <h3 id="totalRevenue" class="mb-0">0 đ</h3>
+                            <h3 id="totalRevenues" class="mb-0">0 đ</h3>
                         </div>
                         <i class="stat-icon">💰</i>
                     </div>
@@ -514,16 +537,13 @@
         console.log(previousYearRevenue);  // Kiểm tra giá trị của previousYearRevenue
 
         // Tính tổng doanh thu hiện tại
-        const totalRevenue = data.reduce((acc, item) => acc + item.revenue, 0);
-
+        const totalRevenues = data.reduce((acc, item) => acc + item.revenue, 0);
+        console.log(totalRevenues);
         // Tính tỷ lệ tăng trưởng
-        const growth = previousYearRevenue > 0 ? ((totalRevenue - previousYearRevenue) / previousYearRevenue * 100).toFixed(2) : 0;
-
-        document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
+        const growth = previousYearRevenue > 0 ? ((totalRevenues - previousYearRevenue) / previousYearRevenue * 100).toFixed(2) : 0;
+      
+        document.getElementById('totalRevenues').textContent = formatCurrency(totalRevenues);
         document.getElementById('revenueGrowth').textContent = `${growth}%`;
-
-
-
 
 
     }
@@ -537,16 +557,6 @@
 
 
 <script>
-function resetData() {
-    // Xóa lựa chọn của combobox
-    const yearDropdown = document.getElementById('year');
-    yearDropdown.value = "";
-
-    // Hiển thị lại toàn bộ dữ liệu ban đầu
-    displayDataInTable('monthly', monthlyRevenue);
-
-    console.log("Đã reset dữ liệu về trạng thái ban đầu.");
-}
 
 // Hàm để tính toán và điền các năm từ năm hiện tại trở về trước vào combobox
 function populateYearDropdown() {
@@ -562,35 +572,129 @@ function populateYearDropdown() {
     }
 }
 
-// Hàm để lọc và hiển thị dữ liệu theo năm đã chọn
+document.addEventListener('DOMContentLoaded', function() {
+    // Tự động chọn năm và tháng hiện tại
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+ 
+
+    // Đặt giá trị mặc định cho combobox năm và tháng
+    const yearDropdown = document.getElementById('year');
+   
+
+    // Đặt năm hiện tại vào combobox năm
+    yearDropdown.value = currentYear;
+
+   
+
+    // Gọi hàm filterDataByYear để lọc dữ liệu theo năm và tháng hiện tại
+    filterDataByYear();
+});
+
+// Hàm lọc dữ liệu theo năm đã chọn
 function filterDataByYear() {
     const selectedYear = document.getElementById('year').value; // Lấy năm đã chọn
+    const selectedMonth = document.getElementById('month').value; // Lấy tháng đã chọn
+
+    // Kiểm tra nếu người dùng chưa chọn năm hoặc tháng
+    if (!selectedYear || !selectedMonth) {
+        return;
+    }
+
     console.log("Đã chọn năm:", selectedYear);
+    console.log("Đã chọn tháng:", selectedMonth);
 
-    // Lọc dữ liệu từ các biến đã truyền
-    const filteredMonthly = monthlyRevenue.filter(item => item.year == selectedYear);
+    // Lọc dữ liệu từ các biến đã truyền theo năm và tháng
+    const filteredMonthly = monthlyRevenue.filter(item => 
+        item.year == selectedYear && item.period == selectedMonth
+    );
+
+    // Hiển thị lại dữ liệu đã lọc trong bảng
     displayDataInTable('monthly', filteredMonthly);
+
+    // Tính tổng doanh thu của dữ liệu đã lọc
+    const totalRevenue = calculateTotalRevenue(filteredMonthly);
+
+    // Hiển thị tổng doanh thu ở cuối bảng
+    displayTotalRevenue(totalRevenue);
 }
 
-// Hàm để hiển thị dữ liệu trong các bảng
+// Hàm lọc dữ liệu theo tháng đã chọn
+function filterDataByMonth() {
+    const selectedYear = document.getElementById('year').value; // Lấy năm đã chọn
+    const selectedMonth = document.getElementById('month').value; // Lấy tháng đã chọn
+
+    // Kiểm tra nếu người dùng chưa chọn năm hoặc tháng
+    if (!selectedYear || !selectedMonth) {
+        return;
+    }
+
+    console.log("Đã chọn năm:", selectedYear);
+    console.log("Đã chọn tháng:", selectedMonth);
+
+    // Lọc dữ liệu từ các biến đã truyền theo năm và tháng
+    const filteredMonthly = monthlyRevenue.filter(item => 
+        item.year == selectedYear && item.period == selectedMonth
+    );
+
+    // Hiển thị lại dữ liệu đã lọc trong bảng
+    displayDataInTable('monthly', filteredMonthly);
+
+    // Tính tổng doanh thu của dữ liệu đã lọc
+    const totalRevenue = calculateTotalRevenue(filteredMonthly);
+
+    // Hiển thị tổng doanh thu ở cuối bảng
+    displayTotalRevenue(totalRevenue);
+}
+
+// Hàm tính tổng doanh thu
+function calculateTotalRevenue(data) {
+    return data.reduce((total, item) => total + item.totalRevenue, 0);
+}
+
+function displayTotalRevenue(totalRevenue) {
+    const tableBody = document.querySelector('#monthlyTable tbody');
+    
+    // Kiểm tra xem đã có dòng tổng doanh thu chưa, nếu có thì xóa đi
+    const existingTotalRow = document.querySelector('.total-revenue-row');
+    if (existingTotalRow) {
+        existingTotalRow.remove();
+    }
+
+    // Thêm một dòng tổng doanh thu mới
+    const tr = document.createElement('tr');
+    tr.classList.add('total-revenue-row');
+    tr.innerHTML = `
+        <td colspan="6" style="text-align: right; font-weight: bold;">Tổng Doanh Thu:</td>
+        <td>${totalRevenue.toLocaleString()}</td>
+    `;
+    
+    // Thêm dòng vào cuối tbody
+    tableBody.appendChild(tr);
+}
+
+
 function displayDataInTable(type, data) {
-	 const tableBody = document.querySelector(`#${type}Table tbody`);
-	    tableBody.innerHTML = ''; // Xóa nội dung cũ
+    const tableBody = document.querySelector(`#${type}Table tbody`);
+    tableBody.innerHTML = ''; // Xóa nội dung cũ
 
-	    data.forEach(item => {
-	        const tr = document.createElement('tr');
-	        tr.innerHTML = `
-	            <td>${item.period}</td>
-	            <td>${item.year}</td>
-	            <td>${item.productName}</td>
-	            <td>${item.orderDate ? new Date(item.orderDate).toLocaleDateString() : ''}</td>
-	            <td>${item.totalQuantitySold}</td>
-	            <td>${item.remainingQuantity}</td>
-	            <td>${item.totalRevenue}</td>
-	        `;
-	        tableBody.appendChild(tr);
-	    });
+    // Hiển thị các dòng dữ liệu
+    data.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item.period}</td>
+            <td>${item.year}</td>
+            <td>${item.productName}</td>
+            
+            <td>${item.totalQuantitySold}</td>
+            <td>${item.remainingQuantity}</td>
+            <td>${item.totalRevenue}</td>
+        `;
+        tableBody.appendChild(tr);
+    });
 }
+
+
 
 
 // Gọi hàm để điền combobox khi trang được tải
