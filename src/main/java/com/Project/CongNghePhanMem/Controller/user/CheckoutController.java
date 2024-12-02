@@ -78,7 +78,7 @@ public class CheckoutController {
 			Order order = orderService.createOrder(currentUser, cart, isPaidByCard);
 
 			// Xóa giỏ hàng sau khi đặt hàng thành công
-			// cartService.clearCart(session);
+			cartService.clearCart(session);
 			
 			return "/user/orders";
 
