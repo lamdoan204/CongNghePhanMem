@@ -5,19 +5,11 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta property="og:title" content="${article.title}" />
-	<meta property="og:description" content="${article.content}" />
-	<meta property="og:url" content="http://localhost:8080/user/article/${article.articleId}" />
-	<meta property="og:type" content="article" />
+	
 	<title>Shop PC Components</title>
 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-	<div id="fb-root"></div>
-	<script async defer crossorigin="anonymous"
-		src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v15.0&appId=YOUR_APP_ID&autoLogAppEvents=1"></script>
-
 
 	<!-- Navbar styles -->
 	<style>
@@ -135,31 +127,11 @@
 				display: none;
 			}
 		}
-
-		.btn-like {
-			background-color: white;
-			color: #ccc;
-			border: 1px solid #ccc;
-			transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-		}
-
-		.btn-like.liked {
-			color: red;
-			border-color: red;
-			transform: scale(1.2);
-		}
 	</style>
 </head>
 
 <body>
-	<div class="advertisement advertisement-left">
-		<img th:src="@{/images/banner.png}" alt="Quảng cáo trái">
-	</div>
 
-	<!-- Quảng cáo bên phải -->
-	<div class="advertisement advertisement-right">
-		<img th:src="@{/images/banner2.png}" alt="Quảng cáo phải">
-	</div>
 	<!-- Navbar -->
 	<nav class="navbar navbar-expand-lg">
 		<div class="container">
@@ -174,27 +146,38 @@
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav me-auto">
 					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button"
+						<a class="nav-link dropdown-toggle" href="@{/user/}" id="categoryDropdown" role="button"
 							data-bs-toggle="dropdown" aria-expanded="false">
 							Danh mục sản phẩm
 						</a>
 						<ul class="dropdown-menu" aria-labelledby="categoryDropdown">
-							<li><a class="dropdown-item" href="#">Case, nguồn, tản nhiệt</a></li>
-							<li><a class="dropdown-item" href="#">Ổ cứng, ram</a></li>
-							<li><a class="dropdown-item" href="#">Mainboard, CPU, VGA</a></li>
-							<li><a class="dropdown-item" href="#">Màn hình, bàn phím, chuột, tai nghe...</a></li>
-						</ul>
+							<li><a class="dropdown-item" href="category/Case%2C%20nguon%2C%20tan%20nhiet">Case, nguồn,
+									tản nhiệt</a></li>
+							<li><a class="dropdown-item" href="category/Mainboard%2C%20CPU%2C%20VGA">Mainboard, CPU,
+									VGA</a></li>
 					</li>
-					<li class="nav-item"><a class="nav-link" href="article">Bài viết</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">Khuyến mãi</a></li>
+					<li><a class="dropdown-item"
+							href="category/Man%20hinh%2C%20ban%20phim%2C%20chuot%2C%20tai%20nghe">Màn hình, bàn phím,
+							chuột, tai nghe...</a></li>
+
+				</ul>
+				</li>
+				<li class="nav-item"><a class="nav-link" href="article">Bài viết</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Khuyến mãi</a></li>
 				</ul>
 			</div>
 			<!-- Search Box -->
 			<div class="search-box">
-				<input type="text" class="form-control" placeholder="Tìm kiếm laptop và phụ kiện">
-				<i class="fas fa-search"></i>
+				<!-- Form chứa ô tìm kiếm -->
+				<form action="/user/search" method="get" class="">
+					<input type="text" name="query" class="form-control" placeholder="Tìm kiếm laptop và phụ kiện">
+
+				</form>
+				<!-- Nút tìm kiếm bên ngoài ô nhập liệu -->
+
 			</div>
-			<!-- Icons Section -->
+
+
 			<div class="d-flex align-items-center">
 				<a href="#" class="icon-btn mx-2">
 					<i class="fas fa-comment"></i>
@@ -203,23 +186,53 @@
 					<i class="fas fa-shopping-cart"></i>
 					<span class="badge">0</span>
 				</a>
-				<a href="#" class="icon-btn mx-2">
-					<img th:src="@{/images/logos/icon_notif.png}" alt="Icon Notif" style="width: 24px; height: 24px;">
-					<span class="badge">0</span>
-				</a>
-				<div class="dropdown">
-					<a href="#" class="icon-btn dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown"
-						aria-expanded="false">
-						<i class="fas fa-user"></i>
-					</a>
-					<ul class="dropdown-menu" aria-labelledby="userDropdown">
-						<li><a class="dropdown-item" href="#">Xin chào, User</a></li>
-						<li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
-						<li><a class="dropdown-item" th:href="@{/user/orders}">Lịch sử đơn hàng</a></li>
-						<li><a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a></li>
-					</ul>
-				</div>
+
 			</div>
+
+			<!-- Icon chuông thông báo -->
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false">
+					<div class="position-relative">
+						<!-- Icon chuông -->
+						<img th:src="@{/images/logos/icon_notif.png}" alt="" class=""
+							style="width: 30px; height: 30px; object-fit: contain;">
+
+						<!-- Badge thông báo (số lượng thông báo) -->
+						<span class="" id="">
+
+						</span>
+					</div>
+				</a>
+
+				<!-- Dropdown menu -->
+				<ul class="dropdown-menu" aria-labelledby="notifDropdown">
+					<li th:each="notification : ${notifications}">
+						<a class="dropdown-item" th:href="@{${notification.url}}" th:text="${notification.message}"></a>
+					</li>
+				</ul>
+			</li>
+
+
+
+
+
+
+
+			<div class="dropdown">
+				<a href="#" class="icon-btn dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown"
+					aria-expanded="false">
+					<i class="fas fa-user"></i>
+				</a>
+				<ul class="dropdown-menu" aria-labelledby="userDropdown">
+					<li><a class="dropdown-item" href="#">Xin chào, User</a></li>
+					<li><a class="dropdown-item" href="/user/profilePage">Thông tin cá nhân</a></li>
+					<li><a class="dropdown-item" th:href="@{/user/orders}">Lịch sử đơn hàng</a></li>
+					<li><a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a></li>
+				</ul>
+
+			</div>
+		</div>
 		</div>
 	</nav>
 
@@ -231,43 +244,6 @@
 	<!-- Common JS -->
 	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-	<script>
-		// Biến lưu trữ số lượt tim
-		let likes = 0;
-
-		// Hàm tăng số lượt tim
-		function incrementLikes() {
-			likes++;
-			const likeCountElement = document.getElementById("like-count");
-			likeCountElement.innerText = likes;
-		}
-
-		// Biến lưu trữ số lượt chia sẻ
-		let shares = 0;
-
-		// Hàm tăng số lượt chia sẻ
-		function incrementShares() {
-			const shareCountElement = document.getElementById("share-count");
-			shares++;
-			shareCountElement.innerText = shares;
-		}
-
-		// Khởi tạo Facebook SDK
-		window.fbAsyncInit = function () {
-			FB.init({
-				appId: '1287150115824850', // Thay bằng App ID thật của bạn
-				cookie: true,
-				xfbml: true,
-				version: 'v15.0'
-			});
-		};
-
-		// Hàm chia sẻ lên Facebook
-		function shareOnFacebook(url) {
-			const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-			window.open(facebookShareUrl, '_blank', 'width=600,height=400');
-		}
-	</script>
 </body>
 
 </html>

@@ -42,38 +42,54 @@ public class OrderUserController {
 	}
 
 	@GetMapping("/confirmed")
-	public String confirmedOrders(Model model, HttpSession session) {
-		User user = (User) session.getAttribute("currentUser");
-		List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.CONFIRMED);
-		model.addAttribute("orders", orders);
-		model.addAttribute("currentPage", "confirmed"); // Thêm biến này
+	public String confirmedOrders(Model model, Principal principal) {
+		if (principal != null) {
+			String email = principal.getName();
+			User user = userRepository.findByEmail(email);
+			model.addAttribute("user", user);
+			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.CONFIRMED);
+			model.addAttribute("orders", orders);
+			model.addAttribute("currentPage", "confirmed");
+		}
 		return "user/orders";
 	}
 
 	@GetMapping("/shipping")
-	public String shippingOrders(Model model, HttpSession session) {
-		User user = (User) session.getAttribute("currentUser");
-		List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.IN_DELIVERY);
-		model.addAttribute("orders", orders);
-		model.addAttribute("currentPage", "shipping"); // Thêm biến này
+	public String shippingOrders(Model model, Principal principal) {
+		if (principal != null) {
+			String email = principal.getName();
+			User user = userRepository.findByEmail(email);
+			model.addAttribute("user", user);
+			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.IN_DELIVERY);
+			model.addAttribute("orders", orders);
+			model.addAttribute("currentPage", "shipping");
+		}
 		return "user/orders";
 	}
 
 	@GetMapping("/delivered")
-	public String deliveredOrders(Model model, HttpSession session) {
-		User user = (User) session.getAttribute("currentUser");
-		List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.DELIVERED);
-		model.addAttribute("orders", orders);
-		model.addAttribute("currentPage", "delivered"); // Thêm biến này
+	public String deliveredOrders(Model model, Principal principal) {
+		if (principal != null) {
+			String email = principal.getName();
+			User user = userRepository.findByEmail(email);
+			model.addAttribute("user", user);
+			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.DELIVERED);
+			model.addAttribute("orders", orders);
+			model.addAttribute("currentPage", "delivered");
+		}
 		return "user/orders";
 	}
 
 	@GetMapping("/cancelled")
-	public String cancelledOrders(Model model, HttpSession session) {
-		User user = (User) session.getAttribute("currentUser");
-		List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.CANCELLED);
-		model.addAttribute("orders", orders);
-		model.addAttribute("currentPage", "cancelled"); // Thêm biến này
+	public String cancelledOrders(Model model, Principal principal) {
+		if (principal != null) {
+			String email = principal.getName();
+			User user = userRepository.findByEmail(email);
+			model.addAttribute("user", user);
+			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.CANCELLED);
+			model.addAttribute("orders", orders);
+			model.addAttribute("currentPage", "cancelled");
+		}
 		return "user/orders";
 	}
 

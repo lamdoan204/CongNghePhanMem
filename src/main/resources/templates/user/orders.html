@@ -174,6 +174,17 @@
 											<td colspan="6" class="p-0">
 												<div class="collapse" th:id="'order-' + ${order.orderID}">
 													<div class="card card-body">
+														<!-- Thêm phần thông tin khuyến mãi -->
+														<div class="mb-3" th:if="${order.appliedPromotion != null}">
+															<div class="alert alert-info">
+																<strong>Mã giảm giá đã áp dụng:</strong>
+																<span th:text="${order.appliedPromotion.name}"></span>
+																<span
+																	th:text="'(' + ${order.appliedPromotion.discountRate * 100} + '%)'"></span>
+															</div>
+														</div>
+
+														<!-- Phần table chi tiết sản phẩm -->
 														<table class="table mb-0">
 															<thead>
 																<tr>
@@ -181,6 +192,11 @@
 																	<th>Số lượng</th>
 																	<th>Đơn giá</th>
 																	<th>Thành tiền</th>
+																	<th th:if="${order.appliedPromotion != null}">Giảm
+																		giá</th>
+																	<th th:if="${order.appliedPromotion != null}">Sau
+																		giảm</th>
+																	<th>Chi tiết</th>
 																</tr>
 															</thead>
 															<tbody>
@@ -195,18 +211,60 @@
 																	</td>
 																	<td th:text="${item.quantity}"></td>
 																	<td
-																		th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 2, 'POINT')}">
+																		th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT') + 'đ'}">
 																	</td>
 																	<td
-																		th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 2, 'POINT')}">
+																		th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT') + 'đ'}">
+																	</td>
+
+																	<!-- Hiển thị thông tin giảm giá nếu có -->
+																	<td th:if="${order.appliedPromotion != null}">
+																		<span
+																			th:if="${#lists.contains(order.appliedPromotion.applicableProducts, item.product)}"
+																			class="text-danger"
+																			th:text="'-' + ${#numbers.formatDecimal(item.price * item.quantity * order.appliedPromotion.discountRate, 0, 'COMMA', 0, 'POINT') + 'đ'}">
+																		</span>
+																		<span
+																			th:unless="${#lists.contains(order.appliedPromotion.applicableProducts, item.product)}">
+																			-
+																		</span>
+																	</td>
+
+																	<!-- Giá sau giảm -->
+																	<td th:if="${order.appliedPromotion != null}">
+																		<span
+																			th:if="${#lists.contains(order.appliedPromotion.applicableProducts, item.product)}"
+																			class="text-success"
+																			th:text="${#numbers.formatDecimal(item.price * item.quantity * (1 - order.appliedPromotion.discountRate), 0, 'COMMA', 0, 'POINT') + 'đ'}">
+																		</span>
+																		<span
+																			th:unless="${#lists.contains(order.appliedPromotion.applicableProducts, item.product)}"
+																			th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT') + 'đ'}">
+																		</span>
+																	</td>
+
+																	<td>
+																		<a th:href="@{/it_shop_detail(id=${item.product.productID})}"
+																			class="btn btn-info btn-sm">
+																			Xem chi tiết
+																		</a>
 																	</td>
 																</tr>
 															</tbody>
+															<!-- Footer cho tổng cộng -->
+															<tfoot>
+																<tr>
+																	<td colspan="3" class="text-end"><strong>Tổng
+																			tiền:</strong></td>
+																	<td colspan="2"><strong
+																			th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+																	</td>
+																</tr>
+															</tfoot>
 														</table>
 													</div>
 												</div>
 											</td>
-
 										</tr>
 									</th:block>
 								</tbody>
@@ -260,6 +318,32 @@
 
 		.collapse table {
 			background: #f8f9fa;
+		}
+
+		.alert-info {
+			background-color: #e8f4f8;
+			border-color: #b8e2ec;
+			color: #0c5460;
+		}
+
+		.discount-badge {
+			background-color: #ffeeba;
+			color: #856404;
+			padding: 2px 6px;
+			border-radius: 4px;
+			font-size: 0.9em;
+		}
+
+		.table td {
+			vertical-align: middle;
+		}
+
+		.text-success {
+			color: #28a745 !important;
+		}
+
+		.text-danger {
+			color: #dc3545 !important;
 		}
 	</style>
 

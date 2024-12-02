@@ -1,6 +1,9 @@
 package com.Project.CongNghePhanMem.Controller.user;
 
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Project.CongNghePhanMem.Entity.Cart;
+import com.Project.CongNghePhanMem.Entity.CartDetail;
 import com.Project.CongNghePhanMem.Entity.Order;
+import com.Project.CongNghePhanMem.Entity.Promotion;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Service.IOrderService;
 import com.Project.CongNghePhanMem.Service.Impl.CartService;
+import com.Project.CongNghePhanMem.Service.Impl.PromotionService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -28,6 +34,10 @@ public class CheckoutController {
 
 	@Autowired
 	private IOrderService orderService;
+	
+	@Autowired
+    private PromotionService promotionService;
+
 
 	@GetMapping
 	public String showCheckoutPage(Model model, HttpSession session) {
@@ -57,39 +67,60 @@ public class CheckoutController {
 	}
 
 	@PostMapping("/place-order")
-	public String placeOrder(@RequestParam String fullName, @RequestParam String phone, @RequestParam String email,
-			@RequestParam String address, @RequestParam(required = false) String note, HttpSession session,
-			RedirectAttributes redirectAttributes) {
-		try {
-			// Lấy thông tin user và cart
-			User currentUser = (User) session.getAttribute("currentUser");
-			Cart cart = cartService.getCurrentCart(session);
+	public String placeOrder(
+	        @RequestParam String fullName,
+	        @RequestParam String phone,
+	        @RequestParam String email,
+	        @RequestParam String address,
+	        @RequestParam(required = false) String note,
+	        @RequestParam boolean isPaidByCard,
+	        @RequestParam(required = false) Integer promotionId,
+	        HttpSession session,
+	        RedirectAttributes redirectAttributes) {
+	    try {
+	        User currentUser = (User) session.getAttribute("currentUser");
+	        Cart cart = cartService.getCurrentCart(session);
 
-			if (currentUser == null || cart == null || cart.getCartDetails().isEmpty()) {
-				return "redirect:/user/cart";
-			}
+	        if (currentUser == null || cart == null || cart.getCartDetails().isEmpty()) {
+	            return "redirect:/user/cart";
+	        }
 
-			// Cập nhật thông tin user nếu cần
-			currentUser.setFullName(fullName);
-			currentUser.setPhone(phone);
-			currentUser.setEmail(email);
+	        currentUser.setFullName(fullName);
+	        currentUser.setPhone(phone);
+	        currentUser.setEmail(email);
 
-			// Tạo đơn hàng
-			Order order = orderService.createOrder(currentUser, cart);
+	        float finalPrice = cart.getTotalPrice();
+	        Promotion appliedPromotion = null;
 
-			// Xóa giỏ hàng sau khi đặt hàng thành công
-			// cartService.clearCart(session);
+	        if (promotionId != null) {
+	            Optional<Promotion> promotion = promotionService.findById(promotionId);
+	            if (promotion.isPresent()) {
+	                appliedPromotion = promotion.get();
+	                List<Integer> applicableProductIds = promotionService.getPromotionProductIds(promotionId);
+	                float totalDiscount = 0;
 
-			// Thông báo thành công
-			redirectAttributes.addFlashAttribute("successMessage",
-					"Đặt hàng thành công! Mã đơn hàng của bạn là: " + order.getOrderID());
+	                for (CartDetail detail : cart.getCartDetails()) {
+	                    if (applicableProductIds.contains(detail.getProduct().getProductID())) {
+	                        double itemTotal = detail.getPrice() * detail.getQuantity();
+	                        double discount = itemTotal * promotion.get().getDiscountRate();
+	                        totalDiscount += discount;
+	                    }
+	                }
 
-			return "redirect:/user/checkout/order/success/" + order.getOrderID();
+	                finalPrice -= totalDiscount;
+	            }
+	        }
 
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi đặt hàng: " + e.getMessage());
-			return "redirect:/user/checkout";
-		}
+	        // Truyền thêm promotion vào createOrder
+	        Order order = orderService.createOrder(currentUser, cart, isPaidByCard, finalPrice, appliedPromotion);
+
+	        cartService.clearCart(session);
+
+	        return "redirect:/user/orders";
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi đặt hàng: " + e.getMessage());
+	        return "redirect:/user/checkout";
+	    }
 	}
 
 	@GetMapping("/order/success/{orderId}")

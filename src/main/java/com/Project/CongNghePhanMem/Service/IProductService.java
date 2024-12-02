@@ -39,11 +39,11 @@ public interface IProductService {
 	List<Product> findRelatedProducts(String description, String kind, int productId);
 	
 	List<Product> productSearch(String keyword);
-	
-	List<Product> findProductsByKinds(List<String> kinds);
 	Product findProductById(int productId);
 	
 	 // Phương thức tạo ProductDTO mới cho quản lý sản phẩm
     ProductDTO getNewProductDTOForManager();
-
+	
+	
+	List<Product> findProductsByKinds(List<String> kinds);
 }

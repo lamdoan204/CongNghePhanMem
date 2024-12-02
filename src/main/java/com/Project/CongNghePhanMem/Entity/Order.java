@@ -39,7 +39,20 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    
+    
+    @ManyToOne
+    @JoinColumn(name = "promotion_id")
+    private Promotion appliedPromotion;  // Thêm trường này
 
+    // Thêm getter/setter
+    public Promotion getAppliedPromotion() {
+        return appliedPromotion;
+    }
+
+    public void setAppliedPromotion(Promotion appliedPromotion) {
+        this.appliedPromotion = appliedPromotion;
+    }
 
 	public Order() {
 		super();

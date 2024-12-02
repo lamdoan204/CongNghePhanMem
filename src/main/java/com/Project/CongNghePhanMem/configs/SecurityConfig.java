@@ -58,6 +58,10 @@ public class SecurityConfig {
 						.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/", "/register",
 								"/notifyVerify", "/forgotPassword", "/verifyOTP", "/resetPassword", "/verify",
 								"/createUser", "/user/**", "/it_shop_detail", "/search")
+								"/revolution/**",
+
+								"/createUser", "/user/**","/search","/it_shop","/user/cart","/user/shopdetail", "/api/promotions/validate")
+
 						.permitAll())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/signin")
 						.failureUrl("/login?error=true").successHandler(customsuccessHandler).permitAll())

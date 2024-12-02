@@ -84,5 +84,13 @@ public class Cart implements Serializable{
 		return "Cart [id=" + id + ", sum=" + sum + ", user=" + user + ", cartDetails=" + cartDetails + "]";
 	}
 	
+	public float getTotalPrice() {
+        if (cartDetails == null || cartDetails.isEmpty()) {
+            return 0;
+        }
+        return (float) cartDetails.stream()
+                .mapToDouble(detail -> detail.getPrice() * detail.getQuantity())
+                .sum();
+    }
 	
 }
