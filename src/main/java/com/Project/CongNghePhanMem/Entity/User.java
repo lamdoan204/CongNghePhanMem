@@ -34,11 +34,8 @@ public class User implements Serializable{
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "department_id") // Tên cột khóa ngoại
+    @JoinColumn(name = "department_id")
     private Department department;
-    
-    @OneToMany(mappedBy = "manager") 
-    private List<Department> managedDepartments;
 
     @Column(nullable = false, columnDefinition = "bit default 0")
     private boolean enabled = false;
