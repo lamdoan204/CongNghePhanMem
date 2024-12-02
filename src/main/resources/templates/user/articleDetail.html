@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{user/layout/header :: layout(~{::body})}">
+
+<body>
+
+	<!-- Container chính -->
+	<div class="container mt-5">
+		<div class="row">
+			<!-- Cột bên trái -->
+			<div class="col-md-3">
+				<!-- Bài viết yêu thích -->
+				<div class="mb-3">
+					<h6>Top các bài viết được yêu thích nhiều nhất</h6>
+					<ul class="list-group list-group-flush">
+						<!-- Hiển thị danh sách bài viết -->
+						<li class="list-group-item" th:each="article : ${articles}" th:text="${article.title}"></li>
+					</ul>
+				</div>
+				<!-- Thông báo -->
+				<div class="mb-3">
+					<h6>Các bài viết liên quan</h6>
+					<p th:text="'Mua máy tính đi'"></p>
+				</div>
+			</div>
+
+			<!-- Cột nội dung chính -->
+			<div class="col-md-6">
+				<!-- Tiêu đề bài viết chi tiết -->
+				<h2 th:text="${article.title}"></h2>
+				
+				<!-- Ngày đăng bài viết -->
+				<p class="text-muted">
+					<small>Ngày đăng: <span th:text="${#dates.format(article.orderDate, 'dd-MM-yyyy')}"></span></small>
+				</p>
+
+				<!-- Nội dung chi tiết bài viết -->
+				<div>
+					<p th:text="${article.content}"></p>
+				</div>
+
+				<!-- Thích bài viết -->
+				<div class="d-flex justify-content-between align-items-center mt-3">
+					<div class="d-flex align-items-center">
+						<!-- Button Like bài viết -->
+						<button class="btn btn-like" th:attr="data-id=${article.articleId}"
+							th:disabled="${likedArticles.contains(article.articleId)}"
+							style="border: none; background: none; cursor: pointer;">❤️</button>
+						<span class="likes-count" th:text="${article.likes}"></span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Cột bên phải -->
+			<div class="col-md-3">
+				<!-- Quảng cáo -->
+				<div class="mb-3">
+					<h6>Quảng cáo</h6>
+					<p>Khám phá sản phẩm mới tại cửa hàng của chúng tôi!</p>
+				</div>
+				<!-- Thống kê -->
+				<div class="mb-3">
+					<h6>Thống kê</h6>
+					<img src="https://via.placeholder.com/150" class="img-fluid mb-3" alt="Thống kê hình ảnh">
+					<p>Có 20 người đã xem trang của bạn hôm nay.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<div th:replace="user/layout/footer"></div>
+	
+
+</body>
+
+</html>

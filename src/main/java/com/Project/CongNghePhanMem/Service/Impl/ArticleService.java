@@ -3,6 +3,8 @@ package com.Project.CongNghePhanMem.Service.Impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.Project.CongNghePhanMem.Entity.Article;
@@ -28,5 +30,8 @@ public class ArticleService {
 
     public void deleteArticleById(int id) {
         articleRepository.deleteById(id);
+    }
+    public Page<Article> getArticles(Pageable pageable) {
+        return articleRepository.findAll(pageable);
     }
 }

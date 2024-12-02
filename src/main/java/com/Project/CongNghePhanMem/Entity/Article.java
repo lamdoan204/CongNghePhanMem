@@ -75,11 +75,11 @@ public class Article {
 		this.author = author;
 	}
 
-	public int getLike() {
+	public int getLikes() {
 		return likes;
 	}
 
-	public void setLike(int like) {
+	public void setLikes(int like) {
 		this.likes = like;
 	}
 

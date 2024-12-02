@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{user/layout/header :: layout(~{::body})}">
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Bài viết</title>
-	<!-- Link Bootstrap -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-
 <body>
 
 
@@ -19,7 +11,7 @@
 			<div class="col-md-3">
 				<!-- Card: Bài viết yêu thích -->
 				<div class="card mb-3">
-					<img src="https://via.placeholder.com/150" class="card-img-top" alt="Avatar">
+					<img th:src="@{/images/banner_right_2.png}" class="card-img-top" alt="Avatar">
 					<div class="card-body">
 						<h6 class="card-title">Top các bài viết được yêu thích nhiều nhất</h6>
 						<ul class="list-group list-group-flush">
@@ -42,13 +34,20 @@
 				<div class="card mb-3" th:each="article : ${articles}">
 					<img src="https://via.placeholder.com/600x200" class="card-img-top" alt="Bài viết hình ảnh">
 					<div class="card-body">
-						<h5 class="card-title" th:text="${article.title}"></h5>
+						<h5 class="card-title" th:text="${article.title}" th:attr="onclick='redirectToArticle(' + ${article.articleId} + ')'" style="cursor: pointer;"></h5>
 						<p class="card-text" th:text="${article.content}"></p>
-						<p class="text-muted"><small>Ngày đăng: <span th:text="${#dates.format(article.publishDate, 'dd-MM-yyyy')}"></span></small></p>
-						<div class="d-flex justify-content-between">
-							<button class="btn btn-primary btn-sm">👍 Like</button>
-							<button class="btn btn-secondary btn-sm">🔗 Share</button>
+						<p class="text-muted"><small>Ngày đăng: <span
+									th:text="${#dates.format(article.orderDate, 'dd-MM-yyyy')}"></span></small></p>
+						<div class="d-flex justify-content-between align-items-center">
+							<div class="d-flex align-items-center">
+								<button class="btn btn-like" th:attr="data-id=${article.articleId}"
+									th:disabled="${likedArticles.contains(article.articleId)}"
+									style="border: none; background: none; cursor: pointer;">❤️</button>
+								<span class="likes-count" th:text="${article.likes}"></span>
+							</div>
+
 						</div>
+
 					</div>
 				</div>
 			</div>
@@ -57,7 +56,7 @@
 			<div class="col-md-3">
 				<!-- Card: Quảng cáo -->
 				<div class="card mb-3">
-					<img src="https://via.placeholder.com/150" class="card-img-top" alt="Quảng cáo">
+					<img th:src="@{/images/showinhinhanh1.png}" class="card-img-top" alt="Quảng cáo">
 					<div class="card-body">
 						<h6 class="card-title">Quảng cáo</h6>
 						<p class="card-text">Khám phá sản phẩm mới tại cửa hàng của chúng tôi!</p>
@@ -74,11 +73,9 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div th:replace="user/layout/footer"></div>
 
-	<!-- Bootstrap JS -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
