@@ -28,6 +28,7 @@
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Discount Rate (%)</th>
+                            <th>Coupon</th> <!-- Thêm cột mới -->
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -39,6 +40,7 @@
                             <td th:text="${promotion.startDate}"></td>
                             <td th:text="${promotion.endDate}"></td>
                             <td th:text="${promotion.discountRate}"></td>
+                            <td th:text="${promotion.coupon}"></td> <!-- Hiển thị coupon -->
                             <td>
                                 <a th:href="@{manager/promotions/delete/{id}(id=${promotion.id})}" 
                                    class="btn btn-danger btn-sm"

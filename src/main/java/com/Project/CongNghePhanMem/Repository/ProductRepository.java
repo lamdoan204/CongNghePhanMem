@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,6 +14,9 @@ import com.Project.CongNghePhanMem.Entity.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>{
+	
+	// Tính số sản phẩm theo brand_id
+    long countByBrandId(int brandId);
 	
 
     List<Product> findByProductIDIn(List<Integer> ids);
@@ -37,5 +40,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
     	List<Product> searchProducts(@Param("keyword") String keyword);
 
     List<Product> findByKindIn(List<String> kinds);
+    
+    @Query("SELECT p FROM Product p WHERE " +
+            "(SELECT AVG(r.rating) FROM Review r WHERE r.product = p) >= :threshold")
+     List<Product> findFeaturedProducts(@Param("threshold") double threshold);
 
 }
