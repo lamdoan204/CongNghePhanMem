@@ -68,10 +68,10 @@ public class CheckoutController {
 
 	@PostMapping("/place-order")
 	public String placeOrder(
-	        @RequestParam String fullName, 
-	        @RequestParam String phone, 
+	        @RequestParam String fullName,
+	        @RequestParam String phone,
 	        @RequestParam String email,
-	        @RequestParam String address, 
+	        @RequestParam String address,
 	        @RequestParam(required = false) String note,
 	        @RequestParam boolean isPaidByCard,
 	        @RequestParam(required = false) Integer promotionId,
@@ -80,28 +80,25 @@ public class CheckoutController {
 	    try {
 	        User currentUser = (User) session.getAttribute("currentUser");
 	        Cart cart = cartService.getCurrentCart(session);
-	        
+
 	        if (currentUser == null || cart == null || cart.getCartDetails().isEmpty()) {
 	            return "redirect:/user/cart";
 	        }
 
-	        // Cập nhật thông tin user
 	        currentUser.setFullName(fullName);
 	        currentUser.setPhone(phone);
 	        currentUser.setEmail(email);
 
-	        // Tính tổng tiền ban đầu
 	        float finalPrice = cart.getTotalPrice();
+	        Promotion appliedPromotion = null;
 
-	        // Xử lý khuyến mãi nếu có
 	        if (promotionId != null) {
 	            Optional<Promotion> promotion = promotionService.findById(promotionId);
 	            if (promotion.isPresent()) {
-	                // Lấy danh sách sản phẩm được áp dụng khuyến mãi
+	                appliedPromotion = promotion.get();
 	                List<Integer> applicableProductIds = promotionService.getPromotionProductIds(promotionId);
 	                float totalDiscount = 0;
-	                
-	                // Tính giảm giá cho từng sản phẩm
+
 	                for (CartDetail detail : cart.getCartDetails()) {
 	                    if (applicableProductIds.contains(detail.getProduct().getProductID())) {
 	                        double itemTotal = detail.getPrice() * detail.getQuantity();
@@ -109,18 +106,16 @@ public class CheckoutController {
 	                        totalDiscount += discount;
 	                    }
 	                }
-	                
-	                // Trừ tổng giảm giá vào giá cuối
+
 	                finalPrice -= totalDiscount;
 	            }
 	        }
 
-	        // Tạo đơn hàng với giá đã giảm
-	        Order order = orderService.createOrder(currentUser, cart, isPaidByCard, finalPrice);
+	        // Truyền thêm promotion vào createOrder
+	        Order order = orderService.createOrder(currentUser, cart, isPaidByCard, finalPrice, appliedPromotion);
 
-	        // Xóa giỏ hàng
 	        cartService.clearCart(session);
-	        
+
 	        return "redirect:/user/orders";
 	    } catch (Exception e) {
 	        redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi đặt hàng: " + e.getMessage());
