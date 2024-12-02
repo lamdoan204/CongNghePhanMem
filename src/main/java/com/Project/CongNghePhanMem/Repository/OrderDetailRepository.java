@@ -37,7 +37,7 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Intege
 	               "JOIN order_detail od ON o.orderid = od.order_id " +
 	               "JOIN products p ON od.product_id = p.productid " +
 	               "JOIN product_detail pd ON p.productid = pd.product_id " +
-	               "WHERE o.status = 3 " +  // Chỉ tính các đơn hàng đã hoàn thành
+	               "WHERE o.status = 4 " +  // Chỉ tính các đơn hàng đã hoàn thành
 	               "GROUP BY MONTH(o.order_date), " +
 	               "YEAR(o.order_date), " +
 	               "p.name, " +

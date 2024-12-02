@@ -21,11 +21,13 @@ import com.Project.CongNghePhanMem.Entity.Promotion;
 import com.Project.CongNghePhanMem.Entity.RevenueStatistic;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Service.IManagerService;
+import com.Project.CongNghePhanMem.Service.IProductService;
 import com.Project.CongNghePhanMem.Service.IUserService;
 import com.Project.CongNghePhanMem.Service.IStatisticService;
 import com.Project.CongNghePhanMem.Service.Impl.ArticleService;
 import com.Project.CongNghePhanMem.Service.Impl.DepartmentService;
 import com.Project.CongNghePhanMem.Service.Impl.ManagerService;
+
 import com.Project.CongNghePhanMem.Service.Impl.PromotionService;
 import com.Project.CongNghePhanMem.Service.Impl.StatisticService;
 import com.Project.CongNghePhanMem.Service.Impl.UserService;
@@ -36,6 +38,9 @@ import com.Project.CongNghePhanMem.dto.StockReport;
 public class ManagerController {
 	@Autowired
 	IStatisticService statisticService = new StatisticService();
+	
+	@Autowired
+    IProductService productService ;
 
     @Autowired
     private PromotionService promotionService;
@@ -55,7 +60,12 @@ public class ManagerController {
         }
 
         String brand = managerService.get_DepartmentName(manager);
+        int managerBrandId = managerService.get_DepartmentBrandId(manager);
+        
+        long countProduct = productService.getProductCountByBrand(managerBrandId);
+        
         model.addAttribute("brand", brand);
+        model.addAttribute("countProduct", countProduct);
         model.addAttribute("managerName", manager.getFullName());
 
         return "manager/index"; 
@@ -299,7 +309,7 @@ public class ManagerController {
          String brand = managerService.get_DepartmentName(manager);
         
          // Ví dụ: Lấy brandId của manager từ session hoặc authentication
-         int managerBrandId = managerService.get_DepartmentBrandId(manager);; // Thay bằng cách lấy thực tế
+         int managerBrandId = managerService.get_DepartmentBrandId(manager); // Thay bằng cách lấy thực tế
         
          List<RevenueStatistic> monthlyRevenue = statisticService.getRevenueByMonthAndProduct(managerBrandId);
          List<StockReport> stockReport = statisticService.getStockReport(managerBrandId);
