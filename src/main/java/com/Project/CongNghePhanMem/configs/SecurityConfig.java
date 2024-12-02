@@ -57,6 +57,7 @@ public class SecurityConfig {
 						.requestMatchers("/admin/**").hasRole("ADMIN")
 						.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/", "/register",
 								"/notifyVerify", "/forgotPassword", "/verifyOTP", "/resetPassword", "/verify",
+								"/revolution/**",
 
 								"/createUser", "/user/**","/search","/it_shop","/user/cart","/user/shopdetail")
 
