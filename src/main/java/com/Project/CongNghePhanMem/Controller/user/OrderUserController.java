@@ -53,9 +53,9 @@ public class OrderUserController {
 			String email = principal.getName();
 			User user = userRepository.findByEmail(email);
 			model.addAttribute("user", user);
-			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.CANCELLED);
+			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.CONFIRMED);
 			model.addAttribute("orders", orders);
-			model.addAttribute("currentPage", "all"); // Thêm biến này
+			model.addAttribute("currentPage", "confirmed");
 		}
 		return "user/orders";
 	}
@@ -68,7 +68,7 @@ public class OrderUserController {
 			model.addAttribute("user", user);
 			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.IN_DELIVERY);
 			model.addAttribute("orders", orders);
-			model.addAttribute("currentPage", "all"); // Thêm biến này
+			model.addAttribute("currentPage", "shipping");
 		}
 		return "user/orders";
 	}
@@ -81,7 +81,7 @@ public class OrderUserController {
 			model.addAttribute("user", user);
 			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.DELIVERED);
 			model.addAttribute("orders", orders);
-			model.addAttribute("currentPage", "all"); // Thêm biến này
+			model.addAttribute("currentPage", "delivered");
 		}
 		return "user/orders";
 	}
@@ -94,7 +94,7 @@ public class OrderUserController {
 			model.addAttribute("user", user);
 			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.CANCELLED);
 			model.addAttribute("orders", orders);
-			model.addAttribute("currentPage", "all"); // Thêm biến này
+			model.addAttribute("currentPage", "cancelled");
 		}
 		return "user/orders";
 	}
