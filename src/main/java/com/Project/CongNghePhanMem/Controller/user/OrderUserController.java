@@ -1,5 +1,6 @@
 package com.Project.CongNghePhanMem.Controller.user;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.Project.CongNghePhanMem.Entity.Order;
 import com.Project.CongNghePhanMem.Entity.User;
+import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.IOrderService;
 
 import jakarta.servlet.http.HttpSession;
@@ -20,6 +22,10 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/user/orders")
 public class OrderUserController {
+	
+	@Autowired
+	UserRepository userRepository;
+	
 	@Autowired
 	private IOrderService orderService;
 
