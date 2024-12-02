@@ -179,6 +179,7 @@ public class UserController {
         model.addAttribute("notifications", notifications);
         
         System.out.println("notifica: " + notifications );
+    }
         
 
 
