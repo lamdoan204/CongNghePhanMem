@@ -147,16 +147,8 @@ public class UserController {
             return "redirect:/login";
         }
 
-
-
-		
-		List<Product> products = this.productService.fetchProducts();
-    	model.addAttribute("products", products);
-    	
-
-
-
-
+        List<Product> products = this.productService.fetchProducts();
+        model.addAttribute("products", products);
 
         // Lấy sản phẩm có phân trang
         Page<Product> productPage = productService.findAllProducts(PageRequest.of(page, size));
@@ -171,20 +163,20 @@ public class UserController {
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("totalItems", productPage.getTotalElements());
 
-        
-     // Lấy danh sách thông báo của người dùng theo userId
+        // Lấy danh sách thông báo của người dùng theo userId
         List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
         model.addAttribute("notifications", notifications);
-        
-        System.out.println("notifica: " + notifications );
-        
 
+        System.out.println("notifica: " + notifications);
+        return "user/home";
+
+    }
 
     @PostMapping("/updatePassword")
     public String updatePassword(HttpSession session, Principal p,
-                                 @RequestParam("oldPass") String oldPass,
-                                 @RequestParam("newPass") String newPass, RedirectAttributes redirectAttributes) {
-
+            @RequestParam("oldPass") String oldPass,
+            @RequestParam("newPass") String newPass, RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             return "redirect:/login";
         }
