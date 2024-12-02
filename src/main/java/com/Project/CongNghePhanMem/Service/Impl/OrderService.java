@@ -8,12 +8,18 @@ import java.util.ArrayList;
 
 import com.Project.CongNghePhanMem.Entity.Order;
 import com.Project.CongNghePhanMem.Repository.OrderRepository;
-
+import com.Project.CongNghePhanMem.Service.IOrderService;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Service
+public class OrderService implements IOrderService {
+
+	@Autowired
+	private OrderRepository orderRepository;
 import com.Project.CongNghePhanMem.Entity.Cart;
 import com.Project.CongNghePhanMem.Entity.CartDetail;
 import com.Project.CongNghePhanMem.Entity.Notification;
@@ -73,37 +79,49 @@ public class OrderService implements IOrderService{
         return orderRepository.findByUserOrderByOrderDateDesc(user);
     }
 
-    // Xác nhận đơn hàng
-    public Order confirmOrder(int orderID) {
-        // Tìm đơn hàng theo orderID
-        Order order = orderRepository.findByOrderID(orderID);
+	public List<Order> getAllOrders() {
+		return orderRepository.findAll();
+	}
 
-        if (order != null) {
-            // Thay đổi trạng thái đơn hàng thành "Đã xác nhận"
-            order.setStatus(1); // Giả sử trạng thái "1" là "Đã xác nhận"
-            // Lưu đơn hàng sau khi thay đổi trạng thái
-            orderRepository.save(order);
-            return order;
-        }
+	public List<Order> getOrdersByStatus(int status) {
+		return orderRepository.findByStatus(status);
+	}
 
-        return null; // Nếu không tìm thấy đơn hàng
-    }
+	public List<Order> getPendingOrders() {
+		return orderRepository.findByStatus(0);
+	}
 
-    // Hủy đơn hàng
-    public Order cancelOrder(int orderID) {
-        // Tìm đơn hàng theo orderID
-        Order order = orderRepository.findByOrderID(orderID);
+	public List<Order> getConfirmedOrders() {
+		return orderRepository.findByStatus(1);
+	}
 
-        if (order != null) {
-            // Thay đổi trạng thái đơn hàng thành "Đã hủy"
-            order.setStatus(2); // Giả sử trạng thái "2" là "Đã hủy"
-            // Lưu đơn hàng sau khi thay đổi trạng thái
-            orderRepository.save(order);
-            return order;
-        }
+	public List<Order> getInDeliveryOrders() {
+		return orderRepository.findByStatus(2);
+	}
 
-        return null; // Nếu không tìm thấy đơn hàng
-    }
+	public List<Order> getDeliveredOrders() {
+		return orderRepository.findByStatus(3);
+	}
+
+	public List<Order> getCancelledOrders() {
+		return orderRepository.findByStatus(4);
+	}
+	
+	public List<Order> searchOrders(String searchTerm) {
+	    if (searchTerm.startsWith("0")) {
+	        // Nếu `searchTerm` bắt đầu bằng số 0, tìm kiếm theo số điện thoại
+	        return orderRepository.findByUserPhoneContaining(searchTerm); // Tìm hóa đơn theo số điện thoại
+	    } else {
+	        try {
+	            // Nếu `searchTerm` không bắt đầu bằng 0, thử tìm kiếm theo mã hóa đơn (orderID)
+	            Integer orderID = Integer.parseInt(searchTerm);
+	            return orderRepository.findByOrderID(orderID); // Tìm hóa đơn theo mã hóa đơn
+	        } catch (NumberFormatException e) {
+	            // Nếu `searchTerm` không phải là số (và không bắt đầu bằng 0), không có kết quả
+	            return new ArrayList<>(); // Trả về danh sách rỗng nếu không tìm thấy kiểu hợp lệ
+	        }
+	    }
+	}
 
     // Lấy danh sách đơn hàng theo trạng thái
     @Override
