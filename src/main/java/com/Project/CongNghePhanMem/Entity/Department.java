@@ -22,8 +22,8 @@ public class Department {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@ManyToOne
-    @JoinColumn(name = "user_id", unique = false)
+	@OneToOne
+    @JoinColumn(name = "user_id")
     private User manager;
 	
 	@OneToMany

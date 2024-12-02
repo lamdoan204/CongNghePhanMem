@@ -23,7 +23,7 @@ public class Article {
 	private String title;
 	
 	@Temporal(TemporalType.DATE)
-    private Date orderDate;
+    private Date postdate;
 	
 	private String content;
 	
@@ -51,12 +51,30 @@ public class Article {
 		this.title = title;
 	}
 
-	public Date getOrderDate() {
-		return orderDate;
+
+
+	public Date getPostdate() {
+		return postdate;
 	}
 
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
+	public void setPostdate(Date postdate) {
+		this.postdate = postdate;
+	}
+
+	public int getLikes() {
+		return likes;
+	}
+
+	public void setLikes(int likes) {
+		this.likes = likes;
+	}
+
+	public int getShares() {
+		return shares;
+	}
+
+	public void setShares(int shares) {
+		this.shares = shares;
 	}
 
 	public String getContent() {
@@ -95,7 +113,7 @@ public class Article {
 		super();
 		this.articleId = articleId;
 		this.title = title;
-		this.orderDate = orderDate;
+		this.postdate = orderDate;
 		this.content = content;
 		this.author = author;
 		this.likes = like;

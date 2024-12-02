@@ -16,12 +16,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.Project.CongNghePhanMem.Entity.Article;
 import com.Project.CongNghePhanMem.Entity.Notification;
 import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.INotificationService;
 import com.Project.CongNghePhanMem.Service.IProductService;
+import com.Project.CongNghePhanMem.Service.Impl.ArticleService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -29,6 +31,17 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/user/")
 public class UserController {
 
+	@Autowired 
+	private ArticleService articleService;
+	
+	@Autowired
+	private UserRepository userRepo;
+	
+	@Autowired
+	private IProductService productService;
+	
+	@Autowired
+	private BCryptPasswordEncoder passEncoder;
 
 
     @Autowired
@@ -222,25 +235,28 @@ public class UserController {
         return "redirect:/user/changePass";
     }
 
-    @GetMapping("/changePass")
-    public String changePassword(HttpSession session, Model model) {
-        String msg = (String) session.getAttribute("msg");
-        if (msg != null) {
-            model.addAttribute("msg", msg);
-            session.removeAttribute("msg");
-        }
-        return "user/changePassword";
-    }
-
-    private boolean isValidPassword(String password) {
-        String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
-        return password.matches(regex);
-    }
-
-    @GetMapping("/article")
-    public String article() {
-        return "user/article";
-    }
-
+	@GetMapping("/changePass")
+	public String changePassword(HttpSession session, Model model) {
+		String msg = (String) session.getAttribute("msg");
+		if (msg != null) {
+			model.addAttribute("msg", msg);
+			session.removeAttribute("msg");
+		}
+		return "user/changePassword";
+	}
+	
+	 private boolean isValidPassword(String password) {
+	        String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+	        return password.matches(regex);
+	    }
+	
+	 @GetMapping("/article")
+	 public String article(Model model) {
+		 List<Article> article = articleService.getAllArticles();
+		 model.addAttribute("articles", article);
+		 
+		 return "user/article";
+	 }
+	 
 
 }
