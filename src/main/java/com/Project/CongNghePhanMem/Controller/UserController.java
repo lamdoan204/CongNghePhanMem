@@ -43,16 +43,6 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder passEncoder;
 
-
-    @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
-    private IProductService productService;
-
-    @Autowired
-    private BCryptPasswordEncoder passEncoder;
-
     @Autowired
     private  INotificationService notificationService;
 
@@ -192,7 +182,8 @@ public class UserController {
         model.addAttribute("notifications", notifications);
         
         System.out.println("notifica: " + notifications );
-        
+        return "user/home";
+    }
 
 
     @PostMapping("/updatePassword")
@@ -200,6 +191,7 @@ public class UserController {
                                  @RequestParam("oldPass") String oldPass,
                                  @RequestParam("newPass") String newPass, RedirectAttributes redirectAttributes) {
 
+    	User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             return "redirect:/login";
         }
