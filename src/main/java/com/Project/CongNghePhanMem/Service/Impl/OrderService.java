@@ -18,6 +18,7 @@ import com.Project.CongNghePhanMem.Entity.Cart;
 import com.Project.CongNghePhanMem.Entity.CartDetail;
 import com.Project.CongNghePhanMem.Entity.Notification;
 import com.Project.CongNghePhanMem.Entity.OrderDetail;
+import com.Project.CongNghePhanMem.Entity.Promotion;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.NotificationRepository;
 import com.Project.CongNghePhanMem.Repository.OrderDetailRepository;
@@ -36,32 +37,24 @@ public class OrderService implements IOrderService{
 	private NotificationRepository notificationRepository;
     
     @Override
-	public Order createOrder(User user, Cart cart, boolean isPaidByCard) {
+    public Order createOrder(User user, Cart cart, boolean isPaidByCard, float finalPrice, Promotion promotion) {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(new Date(System.currentTimeMillis()));
         order.setStatus(Order.PENDING);
         order.setPaidByCard(isPaidByCard);
-        
-        // Tính tổng tiền
-        float totalPrice = 0;
-        for (CartDetail cartDetail : cart.getCartDetails()) {
-            totalPrice += cartDetail.getPrice() * cartDetail.getQuantity();
-        }
-        order.setTotalPrice(totalPrice);
-        
-        // Lưu order
-        order = orderRepository.save(order);
-        
-        // Tạo và lưu order details
+        order.setTotalPrice(finalPrice); // Sử dụng giá đã giảm
+        order.setAppliedPromotion(promotion);
+
+        // Tạo order details
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (CartDetail cartDetail : cart.getCartDetails()) {
-            OrderDetail detail = new OrderDetail();
-            detail.setOrder(order);
-            detail.setProduct(cartDetail.getProduct());
-            detail.setQuantity(cartDetail.getQuantity());
-            detail.setPrice(cartDetail.getPrice());
-            orderDetails.add(orderDetailRepository.save(detail));
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+            orderDetail.setProduct(cartDetail.getProduct());
+            orderDetail.setQuantity(cartDetail.getQuantity());
+            orderDetail.setPrice(cartDetail.getPrice());
+            orderDetails.add(orderDetail);
         }
         
         order.setOrderDetails(orderDetails);
