@@ -12,8 +12,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.Project.CongNghePhanMem.Entity.User;
+
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Integer> {
+public interface OrderRepository extends JpaRepository<Order, Integer>{
+	List<Order> findByUserOrderByOrderDateDesc(User user);
+
 
 	// Tìm đơn hàng theo orderID
 	Order findByOrderID(int orderID);
@@ -29,6 +33,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 	// Tìm kiếm các hóa đơn theo số điện thoại khách hàng
 	List<Order> findByUserPhoneContaining(String phone);
 	
-//	// Truy vấn đơn hàng theo orderID và trạng thái khóa
-//    Optional<Order> findByOrderIDAndLocked(Integer orderID, boolean locked);   
+    Order findByOrderID(int orderID);
+    
+    List<Order> findByUserAndStatusOrderByOrderDateDesc(User user, int status);
 }

@@ -2,114 +2,182 @@
 <html lang="en" xmlns="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
 
 <head>
-	<meta charset="ISO-8859-1">
-	<title>Insert title here</title>
+    <meta charset="ISO-8859-1">
+    <title>Register Page</title>
+    <!-- Thêm Font Awesome cho các biểu tượng -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background: url('https://www.example.com/your-background-image.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        .input-group-text {
+            background-color: #f8f9fa;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
-
 <body id="default_theme" class="it_service">
-	<section class="mt-5">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-6 offset-md-3">
-					<div class="card shadow-lg">
-						<!-- Header -->
-						<div class="card-header text-center text-white bg-primary fs-4">
-							<i class="fas fa-user-plus me-2"></i>Register Page
-						</div>
-						<th:block th:if="${msg}">
-							<p class="text-center fs-4 fw-bold"
-								th:class="${msg.contains('successful') ? 'text-success' : 'text-danger'}"
-								th:text="${msg}" style="display: flex; justify-content: center; align-items: center;">
-							</p>
-						</th:block>
+    <section class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <div class="card shadow-lg">
+                        <!-- Header -->
+                        <div class="card-header text-center text-white bg-primary fs-4">
+                            <i class="fas fa-user-plus me-2"></i> Register Page
+                        </div>
+                        
+                        <th:block th:if="${msg}">
+                            <p class="text-center fs-4 fw-bold"
+                               th:class="${msg.contains('successful') ? 'text-success' : 'text-danger'}"
+                               th:text="${msg}" style="display: flex; justify-content: center; align-items: center;">
+                            </p>
+                        </th:block>
 
-						<!-- Body -->
-						<div class="card-body">
-							<form action="createUser" method="post">
-								<!-- Full Name -->
+                        <!-- Body -->
+                        <div class="card-body">
+                            <form id="registerForm" action="createUser" method="post">
+                                <!-- Full Name -->
+                                <div class="mb-3">
+                                    <label for="fullName" class="form-label">Enter Full Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        <input type="text" id="fullName" name="fullName" class="form-control"
+                                            placeholder="Enter your full name">
+                                    </div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Enter Email</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                        <input type="email" id="email" name="email" class="form-control"
+                                            placeholder="Enter your email" required>
+                                    </div>
+                                </div>
+
+                                <!-- Address -->
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Enter Address</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                        <input type="text" id="address" name="address" class="form-control"
+                                            placeholder="Enter your address" required>
+                                    </div>
+                                </div>
+
 								<div class="mb-3">
-									<label for="fullName" class="form-label">Enter Full Name</label>
-									<div class="input-group">
-										<span class="input-group-text"><i class="fas fa-user"></i></span>
-										<input type="text" id="fullName" name="fullName" class="form-control"
-											placeholder="Enter your full name">
-									</div>
+								    <label for="password" class="form-label">Enter Password</label>
+								    <div class="input-group">
+								        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+								        <input type="password" id="password" name="password" class="form-control"
+								            placeholder="Enter your password" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" required
+								            title="Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái và số">
+								    </div>
 								</div>
 
-								<!-- Email -->
-								<div class="mb-3">
-									<label for="email" class="form-label">Enter Email</label>
-									<div class="input-group">
-										<span class="input-group-text"><i class="fas fa-envelope"></i></span>
-										<input type="email" id="email" name="email" class="form-control"
-											placeholder="Enter your email">
-									</div>
-								</div>
+                                <!-- Confirm Password -->
+                                <div class="mb-3">
+                                    <label for="password1" class="form-label">Confirm Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                        <input type="password" id="password1" name="password1" class="form-control"
+                                            placeholder="Confirm your password">
+                                    </div>
+                                </div>
 
-								<!-- Address -->
-								<div class="mb-3">
-									<label for="address" class="form-label">Enter Address</label>
-									<div class="input-group">
-										<span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-										<input type="text" id="address" name="address" class="form-control"
-											placeholder="Enter your address">
-									</div>
-								</div>
+                                <!-- Phone -->
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Enter Phone</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                        <input type="text" id="phone" name="phone" class="form-control"
+                                            placeholder="Enter your phone" pattern="^\d{10}$" required
+                                            title="Số điện thoại phải gồm đúng 10 chữ số">
+                                    </div>
+                                </div>
 
-								<!-- Password -->
-								<div class="mb-3">
-									<label for="password" class="form-label">Enter Password</label>
-									<div class="input-group">
-										<span class="input-group-text"><i class="fas fa-lock"></i></span>
-										<input type="password" id="password" name="password" class="form-control"
-											placeholder="Enter your password">
-									</div>
-								</div>
-								<!-- Password -->
-								<div class="mb-3">
-									<label for="password1" class="form-label">Confirm Password</label>
-									<div class="input-group">
-										<span class="input-group-text"><i class="fas fa-lock"></i></span>
-										<input type="password" id="password1" name="password1" class="form-control"
-											placeholder="Enter your password">
-									</div>
-								</div>
+                                <!-- Submit Button -->
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Register
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector("#registerForm").addEventListener("submit", function (event) {
+                // Lấy giá trị các trường
+                const fullName = document.getElementById("fullName").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const address = document.getElementById("address").value.trim();
+                const password = document.getElementById("password").value.trim();
+                const confirmPassword = document.getElementById("password1").value.trim();
+                const phone = document.getElementById("phone").value.trim();
 
-								<!-- Phone -->
-								<div class="mb-3">
-									<label for="phone" class="form-label">Enter Phone</label>
-									<div class="input-group">
-										<span class="input-group-text"><i class="fas fa-phone"></i></span>
-										<input type="text" id="phone" name="phone" class="form-control"
-											placeholder="Enter your phone">
-									</div>
-								</div>
+                // Kiểm tra các trường không được để trống
+                if (!fullName || !email || !address || !password || !confirmPassword || !phone) {
+                    event.preventDefault();
+                    alert("Vui lòng điền đầy đủ tất cả các trường!");
+                    return;
+                }
 
-								<!-- Submit Button -->
-								<div class="d-grid">
-									<button type="submit" class="btn btn-primary">
-										<i class="fas fa-paper-plane"></i> Register
-									</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<script>
-		document.querySelector("form").addEventListener("submit", function (event) {
-			const password = document.getElementById("password").value;
-			const confirmPassword = document.getElementById("password1").value;
+                // Kiểm tra mật khẩu khớp
+                if (password !== confirmPassword) {
+                    event.preventDefault();
+                    alert("Mật khẩu không khớp. Vui lòng thử lại!");
+                    return;
+                }
 
-			if (password !== confirmPassword) {
-				event.preventDefault();
-				alert("Mật khẩu không khớp. Vui lòng thử lại!");
-			}
-		});
-	</script>
+                // Kiểm tra mật khẩu mạnh
+                if (!isStrongPassword(password)) {
+                    event.preventDefault();
+                    alert("Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+                    return;
+                }
+
+                // Kiểm tra số điện thoại
+                const phonePattern = /^\d{10}$/;
+                if (!phonePattern.test(phone)) {
+                    event.preventDefault();
+                    alert("Số điện thoại phải gồm đúng 10 chữ số. Vui lòng kiểm tra lại!");
+                    return;
+                }
+            });
+
+            // Hàm kiểm tra mật khẩu mạnh
+            function isStrongPassword(password) {
+                const minLength = 8;
+                const hasUpperCase = /[A-Z]/.test(password);
+                const hasLowerCase = /[a-z]/.test(password);
+                const hasDigits = /\d/.test(password);
+                const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+                return password.length >= minLength && hasUpperCase && hasLowerCase && hasDigits && hasSpecialChars;
+            }
+        });
+    </script>
 </body>
 
 </html>

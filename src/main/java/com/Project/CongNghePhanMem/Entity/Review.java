@@ -20,6 +20,18 @@ public class Review {
     @JoinColumn(name = "user_id")
 	private User reviewer;
 	
+	 @ManyToOne
+	 @JoinColumn(name = "product_id")  // Liên kết với bảng Product
+	 private Product product;  // Sửa từ int thành đối tượng Product
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
 	private String content;
 	
 	private double rating;
@@ -66,6 +78,12 @@ public class Review {
 
 	public Review() {
 		super();
+	}
+
+	@Override
+	public String toString() {
+		return "Review [id=" + id + ", reviewer=" + reviewer + ", product=" + product + ", content=" + content
+				+ ", rating=" + rating + "]";
 	}
 	
 	

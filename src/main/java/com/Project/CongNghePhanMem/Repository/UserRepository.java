@@ -1,5 +1,7 @@
 package com.Project.CongNghePhanMem.Repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer>{
     public User findByUserId(Integer userId);
 
     public User findByPhone(String phone);
+    
+    public List<User> findByRole(String role);
+    
 }
