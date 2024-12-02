@@ -24,14 +24,11 @@ public class Order {
     public static final int DELIVERED = 4; // Đã giao
     public static final int CANCELLED = 5; // Đã hủy
     
-    @Column(name = "is_paid_by_card")
-    private Boolean isPaidByCard = false; // true: thanh toán bằng thẻ, false: thanh toán khi nhận hàng
+    @Column
+    private String cancelReason;
     
     @Column
-    private String cancelReason; // lý do hủy
-    
-    @Column
-    private LocalDateTime cancelDate; // ngày hủy
+    private LocalDateTime cancelDate;
     
     
     private float totalPrice;
@@ -93,14 +90,6 @@ public class Order {
 	
 	
 
-
-	public boolean isPaidByCard() {
-		return isPaidByCard;
-	}
-
-	public void setPaidByCard(boolean isPaidByCard) {
-		this.isPaidByCard = isPaidByCard;
-	}
 
 	public String getCancelReason() {
 		return cancelReason;

@@ -58,7 +58,7 @@ public class CheckoutController {
 
 	@PostMapping("/place-order")
 	public String placeOrder(@RequestParam String fullName, @RequestParam String phone, @RequestParam String email,
-			@RequestParam String address, @RequestParam(required = false) String note, HttpSession session, @RequestParam boolean isPaidByCard,
+			@RequestParam String address, @RequestParam(required = false) String note, HttpSession session,
 			RedirectAttributes redirectAttributes) {
 		try {
 			// Lấy thông tin user và cart
@@ -75,13 +75,16 @@ public class CheckoutController {
 			currentUser.setEmail(email);
 
 			// Tạo đơn hàng
-			Order order = orderService.createOrder(currentUser, cart, isPaidByCard);
+			Order order = orderService.createOrder(currentUser, cart);
 
 			// Xóa giỏ hàng sau khi đặt hàng thành công
 			// cartService.clearCart(session);
-			
-			return "/user/orders";
 
+			// Thông báo thành công
+			redirectAttributes.addFlashAttribute("successMessage",
+					"Đặt hàng thành công! Mã đơn hàng của bạn là: " + order.getOrderID());
+
+			return "redirect:/user/checkout/order/success/" + order.getOrderID();
 
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi đặt hàng: " + e.getMessage());
@@ -100,5 +103,51 @@ public class CheckoutController {
 		return "redirect:/user";
 	}
 
-	
+	@PostMapping("/process-payment")
+	public String processPayment(@RequestParam String cardName, @RequestParam String cardNumber,
+			@RequestParam String expiryDate, @RequestParam String cvv, HttpSession session,
+			RedirectAttributes redirectAttributes) {
+		try {
+			// Lấy thông tin từ session
+			User currentUser = (User) session.getAttribute("currentUser");
+			Cart cart = cartService.getCurrentCart(session);
+
+			if (currentUser == null || cart == null) {
+				return "redirect:/user/cart";
+			}
+
+			// Giả lập xử lý thanh toán
+			boolean paymentSuccess = processPaymentWithBank(cardNumber, expiryDate, cvv, 987.99);
+
+			if (paymentSuccess) {
+				// Tạo đơn hàng
+				Order order = orderService.createOrder(currentUser, cart);
+
+				// Xóa giỏ hàng
+				cartService.clearCart(session);
+
+				// Chuyển đến trang quản lý đơn hàng thay vì trang success
+				redirectAttributes.addFlashAttribute("successMessage",
+						"Thanh toán thành công! Mã đơn hàng của bạn là: " + order.getOrderID());
+
+				return "redirect:/user/orders"; // Chuyển đến trang quản lý đơn hàng
+
+			} else {
+				redirectAttributes.addFlashAttribute("errorMessage", "Thanh toán thất bại!");
+				return "redirect:/user/checkout";
+			}
+
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("errorMessage",
+					"Có lỗi xảy ra trong quá trình thanh toán: " + e.getMessage());
+			return "redirect:/user/checkout";
+		}
+	}
+
+	// Phương thức giả lập xử lý thanh toán
+	private boolean processPaymentWithBank(String cardNumber, String expiryDate, String cvv, double amount) {
+		// Đây là nơi tích hợp với cổng thanh toán thật
+		// Hiện tại return true để test
+		return true;
+	}
 }

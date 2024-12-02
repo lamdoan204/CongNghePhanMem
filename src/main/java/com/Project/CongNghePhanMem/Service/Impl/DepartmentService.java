@@ -28,7 +28,6 @@ public class DepartmentService  {
     public Department getDepartmentByManager(User manager){
         return departmentRepository.findByManager( manager );
     }
-    
     public void addEmployeeToDepartment(int departmentId, User user) {
         Department department = departmentRepository.findById(departmentId)
                                     .orElseThrow(() -> new RuntimeException("Department not found"));
@@ -36,8 +35,6 @@ public class DepartmentService  {
         department.addEmployee(user); 
         departmentRepository.save(department);
     }
-
-
     public void deleteEmployeeToDepartment(int departmentId, User employee){
         Department department = departmentRepository.findById(departmentId)
         .orElseThrow(() -> new RuntimeException("Department not found"));

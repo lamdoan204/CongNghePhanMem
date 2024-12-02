@@ -284,6 +284,34 @@
 </div>
 </div>
 
+            </table>
+        </div>
+        </div>
+
+        <div id="yearly" class="tab-content">
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Năm</th>
+                    <th>Loại Sản Phẩm</th>
+                    <th>Doanh Thu</th>
+                </tr>
+                <tbody id="yearlyTable">
+               <th:block th:each="revenue : ${yearlyRevenue}">
+	            <tr>
+	                
+	                <td th:text="${revenue.year}"></td>
+	                <td th:text="${revenue.kind}"></td>
+	                <td th:text="${revenue.totalRevenue}"></td>
+	            </tr>
+	        </th:block>
+	         </tbody>
+
+            </table>
+            </div>
+        </div>
+       
+  </div>
   
 <div class="revenue-dashboard">
     <p class="lead" style="color: #007bff; font-weight: bold; font-size: 1.2em;">

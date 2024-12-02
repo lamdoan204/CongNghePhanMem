@@ -21,8 +21,6 @@ import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Service.BrandService;
 import com.Project.CongNghePhanMem.Service.IUserService;
 import com.Project.CongNghePhanMem.Service.Impl.DepartmentService;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @Controller
 @RequestMapping("/admin/")
@@ -44,8 +42,7 @@ public class AdminController {
 		
 		Page<Department> departments = departmentService.getDepartment1(PageRequest.of(page, 10));
 		List<Brand> brands = brandService.getAllBrand();
-		List<Brand> brandswithoutD = brandService.getListBrandWithouD();
-		model.addAttribute("brandswithoutD", brandswithoutD);
+
 		model.addAttribute("brands", brands);
 		model.addAttribute("departments", departments.getContent());
 		model.addAttribute("totalPages", departments.getTotalPages());
@@ -146,19 +143,6 @@ public class AdminController {
 	    return "redirect:/admin/";
 	}
 
-	@PostMapping("/createBrand")
-	public String createBrand(@RequestParam("brandName") String nameBrand) {
-		brandService.addBrand(nameBrand);
-		return "redirect:/admin/";
-	}
-	@PostMapping("/deleteBrand")
-	public String deleteBrand(@RequestParam("brandId") int brandId) {
-		brandService.deleteBrand(brandId);
-		
-		return "redirect:/admin/";
-	}
-	
-	
 
 
 }
