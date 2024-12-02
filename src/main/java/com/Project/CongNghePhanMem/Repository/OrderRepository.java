@@ -1,15 +1,8 @@
 package com.Project.CongNghePhanMem.Repository;
 
 import com.Project.CongNghePhanMem.Entity.Order;
-import com.google.api.gax.paging.Page;
-
-import java.awt.print.Pageable;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository

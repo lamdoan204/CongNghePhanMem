@@ -9,6 +9,7 @@ import com.google.api.gax.paging.Page;
 public interface IOrderService {
 	List<Order> getAllOrders();
 	
+
 	List<Order> getOrdersByStatus(int status);
 	
 	 List<Order> getPendingOrders() ;
@@ -22,4 +23,16 @@ public interface IOrderService {
 	 List<Order> getCancelledOrders();
 	 
 	 List<Order> searchOrders(String searchTerm);
+
+	List<Order> getPendingOrders();
+
+	List<Order> getConfirmedOrders();
+
+	List<Order> getInDeliveryOrders();
+
+	List<Order> getDeliveredOrders();
+
+	List<Order> getCancelledOrders();
+
+	List<Order> searchOrders(String searchTerm);
 }
