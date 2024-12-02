@@ -284,32 +284,7 @@ public class PageController {
 		}
 	}
 
-    @GetMapping("/it_shop_detail")
-    public String getProductDetail(@RequestParam("id") int productId, Model model,HttpSession session) {
-        Product product = productService.findProductById(productId);
-        model.addAttribute("product", product);
-        
-        User currentUser = (User) session.getAttribute("currentUser");
-     // Lấy thông tin sản phẩm hiện tại
-        String description = product.getDescription(); // Lấy mô tả sản phẩm
-        String kind = product.getKind(); // Lấy loại sản phẩm
-
-        // Lấy danh sách sản phẩm liên quan dựa trên description và kind
-        List<Product> relatedProducts = productService.findRelatedProducts(description, kind, productId);
-
-        // Truyền dữ liệu vào model để hiển thị trong view
-        model.addAttribute("relatedProducts", relatedProducts);
-        
-        List<Review> reviews = reviewService.getReviewsByProductId(productId);
-        model.addAttribute("reviews", reviews);
-
-     // Lấy danh sách thông báo của người dùng theo userId
-        List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
-        model.addAttribute("notifications", notifications);
-        
-        return "it_shop_detail";  // Tên của view sẽ được render
-    }
-
+    
     @GetMapping("/search")
     public String searchProducts(@RequestParam("query") String query, Model model) {
     	

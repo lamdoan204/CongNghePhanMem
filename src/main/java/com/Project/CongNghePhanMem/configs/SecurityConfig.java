@@ -59,7 +59,7 @@ public class SecurityConfig {
 								"/notifyVerify", "/forgotPassword", "/verifyOTP", "/resetPassword", "/verify",
 								"/revolution/**",
 
-								"/createUser", "/user/**","/it_shop_detail","/search","/it_shop","/user/cart")
+								"/createUser", "/user/**","/search","/it_shop","/user/cart","/user/shopdetail")
 
 						.permitAll())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/signin")

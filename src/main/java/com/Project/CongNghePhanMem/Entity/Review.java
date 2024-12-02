@@ -79,6 +79,12 @@ public class Review {
 	public Review() {
 		super();
 	}
+
+	@Override
+	public String toString() {
+		return "Review [id=" + id + ", reviewer=" + reviewer + ", product=" + product + ", content=" + content
+				+ ", rating=" + rating + "]";
+	}
 	
 	
 }

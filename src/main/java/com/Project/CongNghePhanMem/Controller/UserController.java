@@ -60,7 +60,6 @@ public class UserController {
                     session.setAttribute("currentUser", currentUser);
                 }
             }
-
             // Thêm vào model để view có thể sử dụng
             m.addAttribute("user", currentUser);
         }
@@ -150,12 +149,10 @@ public class UserController {
 
 
 
-        List<Product> products = this.productService.fetchProducts();
-        model.addAttribute("products", products);
-
-        // Lấy danh sách thông báo của người dùng theo userId
-        List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
-        model.addAttribute("notifications", notifications);
+		
+		List<Product> products = this.productService.fetchProducts();
+    	model.addAttribute("products", products);
+    	
 
 
 
@@ -176,8 +173,13 @@ public class UserController {
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("totalItems", productPage.getTotalElements());
 
-        return "user/home";
-    }
+        
+     // Lấy danh sách thông báo của người dùng theo userId
+        List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
+        model.addAttribute("notifications", notifications);
+        
+        System.out.println("notifica: " + notifications );
+        
 
 
     @PostMapping("/updatePassword")
@@ -185,7 +187,6 @@ public class UserController {
                                  @RequestParam("oldPass") String oldPass,
                                  @RequestParam("newPass") String newPass, RedirectAttributes redirectAttributes) {
 
-        User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             return "redirect:/login";
         }
