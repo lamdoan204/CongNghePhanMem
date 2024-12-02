@@ -1,6 +1,9 @@
 package com.Project.CongNghePhanMem.Controller.user;
 
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Project.CongNghePhanMem.Entity.Cart;
+import com.Project.CongNghePhanMem.Entity.CartDetail;
 import com.Project.CongNghePhanMem.Entity.Order;
+import com.Project.CongNghePhanMem.Entity.Promotion;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Service.IOrderService;
 import com.Project.CongNghePhanMem.Service.Impl.CartService;
+import com.Project.CongNghePhanMem.Service.Impl.PromotionService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -28,6 +34,10 @@ public class CheckoutController {
 
 	@Autowired
 	private IOrderService orderService;
+	
+	@Autowired
+    private PromotionService promotionService;
+
 
 	@GetMapping
 	public String showCheckoutPage(Model model, HttpSession session) {
@@ -57,36 +67,65 @@ public class CheckoutController {
 	}
 
 	@PostMapping("/place-order")
-	public String placeOrder(@RequestParam String fullName, @RequestParam String phone, @RequestParam String email,
-			@RequestParam String address, @RequestParam(required = false) String note, HttpSession session, @RequestParam boolean isPaidByCard,
-			RedirectAttributes redirectAttributes) {
-		try {
-			// Lấy thông tin user và cart
-			User currentUser = (User) session.getAttribute("currentUser");
-			Cart cart = cartService.getCurrentCart(session);
+	public String placeOrder(
+	        @RequestParam String fullName, 
+	        @RequestParam String phone, 
+	        @RequestParam String email,
+	        @RequestParam String address, 
+	        @RequestParam(required = false) String note,
+	        @RequestParam boolean isPaidByCard,
+	        @RequestParam(required = false) Integer promotionId,
+	        HttpSession session,
+	        RedirectAttributes redirectAttributes) {
+	    try {
+	        User currentUser = (User) session.getAttribute("currentUser");
+	        Cart cart = cartService.getCurrentCart(session);
+	        
+	        if (currentUser == null || cart == null || cart.getCartDetails().isEmpty()) {
+	            return "redirect:/user/cart";
+	        }
 
-			if (currentUser == null || cart == null || cart.getCartDetails().isEmpty()) {
-				return "redirect:/user/cart";
-			}
+	        // Cập nhật thông tin user
+	        currentUser.setFullName(fullName);
+	        currentUser.setPhone(phone);
+	        currentUser.setEmail(email);
 
-			// Cập nhật thông tin user nếu cần
-			currentUser.setFullName(fullName);
-			currentUser.setPhone(phone);
-			currentUser.setEmail(email);
+	        // Tính tổng tiền ban đầu
+	        float finalPrice = cart.getTotalPrice();
 
-			// Tạo đơn hàng
-			Order order = orderService.createOrder(currentUser, cart, isPaidByCard);
+	        // Xử lý khuyến mãi nếu có
+	        if (promotionId != null) {
+	            Optional<Promotion> promotion = promotionService.findById(promotionId);
+	            if (promotion.isPresent()) {
+	                // Lấy danh sách sản phẩm được áp dụng khuyến mãi
+	                List<Integer> applicableProductIds = promotionService.getPromotionProductIds(promotionId);
+	                float totalDiscount = 0;
+	                
+	                // Tính giảm giá cho từng sản phẩm
+	                for (CartDetail detail : cart.getCartDetails()) {
+	                    if (applicableProductIds.contains(detail.getProduct().getProductID())) {
+	                        double itemTotal = detail.getPrice() * detail.getQuantity();
+	                        double discount = itemTotal * promotion.get().getDiscountRate();
+	                        totalDiscount += discount;
+	                    }
+	                }
+	                
+	                // Trừ tổng giảm giá vào giá cuối
+	                finalPrice -= totalDiscount;
+	            }
+	        }
 
-			// Xóa giỏ hàng sau khi đặt hàng thành công
-			cartService.clearCart(session);
-			
-			return "/user/orders";
+	        // Tạo đơn hàng với giá đã giảm
+	        Order order = orderService.createOrder(currentUser, cart, isPaidByCard, finalPrice);
 
-
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi đặt hàng: " + e.getMessage());
-			return "redirect:/user/checkout";
-		}
+	        // Xóa giỏ hàng
+	        cartService.clearCart(session);
+	        
+	        return "redirect:/user/orders";
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi đặt hàng: " + e.getMessage());
+	        return "redirect:/user/checkout";
+	    }
 	}
 
 	@GetMapping("/order/success/{orderId}")

@@ -31,6 +31,10 @@ public class PromotionService {
         promotionRepository.deleteById(id);
     }
     
+    public Optional<Promotion> findById(Integer id) {
+        return promotionRepository.findById(id);
+    }
+    
     public List<Integer> getPromotionProductIds(int promotionId) {
         // Lấy promotion
         Optional<Promotion> promotion = promotionRepository.findById(promotionId);
