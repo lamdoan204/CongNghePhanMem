@@ -259,26 +259,20 @@ public class ManagerController {
 
     @PostMapping("/blog/create")
     public String createBlog(@ModelAttribute("blog") Article article, @RequestParam("image") MultipartFile imageFile) throws IOException {
-        if (!imageFile.isEmpty()) {
-            // You can directly get the file name and create the image path without uploading it
-            String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
-            
-            // Set the image path (do not move the file)
-            article.setImage("/uploads/" + fileName);
-        }
-
-        // Set current user as author
-        User currentUser = userService.getUserCurentLogged();
-        article.setAuthor(currentUser);
-
-        // Initialize likes and shares to 0
-        article.setLike(0);
-        article.setShare(0);
-
-        // Save the article with the image path in the database
-        articleService.saveArticle(article);
-        
-        return "redirect:/manager/blog";
+    	if (!imageFile.isEmpty()) {
+    		String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+    		article.setImage("/uploads/" + fileName);
+    	}
+    	
+    	User currentUser = userService.getUserCurentLogged(); 
+    	article.setAuthor(currentUser);
+    	
+    	article.setLike(0); 
+    	article.setShare(0);
+    	
+    	articleService.saveArticle(article);
+    	
+    	return "redirect:/manager/blog";
     }
 
 

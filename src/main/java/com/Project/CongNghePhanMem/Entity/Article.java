@@ -16,104 +16,106 @@ import jakarta.persistence.TemporalType;
 @Table(name = "articles")
 public class Article {
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int articleId;
-	
-	private String title;
-	
-	@Temporal(TemporalType.DATE)
+    private int articleId;
+    
+    private String title;
+    
+    @Temporal(TemporalType.DATE)
     private Date orderDate;
-	
-	private String content;
-	
-	private String image;
-	
-	@ManyToOne
+    
+    private String content;
+    
+    private String image;
+    
+    @ManyToOne
     @JoinColumn(name = "user_id")
-	private User author;
-	
-	private int likes;
-	
-	private int shares;
+    private User author;
+    
+    private int likes;
+    
+    private int shares;
 
-	public int getArticleId() {
-		return articleId;
-	}
+    // Getters and setters
 
-	public void setArticleId(int articleId) {
-		this.articleId = articleId;
-	}
+    public int getArticleId() {
+        return articleId;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setArticleId(int articleId) {
+        this.articleId = articleId;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public Date getOrderDate() {
-		return orderDate;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
-	}
+    public Date getOrderDate() {
+        return orderDate;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public User getAuthor() {
-		return author;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public void setAuthor(User author) {
-		this.author = author;
-	}
+    public User getAuthor() {
+        return author;
+    }
 
-	public int getLike() {
-		return likes;
-	}
+    public void setAuthor(User author) {
+        this.author = author;
+    }
 
-	public void setLike(int like) {
-		this.likes = like;
-	}
+    public int getLike() {
+        return likes;
+    }
 
-	public int getShare() {
-		return shares;
-	}
+    public void setLike(int like) {
+        this.likes = like;
+    }
 
-	public void setShare(int share) {
-		this.shares = share;
-	}
+    public int getShare() {
+        return shares;
+    }
 
-	public Article(int articleId, String title, Date orderDate, String content, User author, int like, int share, String image) {
-		super();
-		this.articleId = articleId;
-		this.title = title;
-		this.orderDate = orderDate;
-		this.content = content;
-		this.author = author;
-		this.likes = like;
-		this.shares = share;
-		this.setImage(image);
-	}
+    public void setShare(int share) {
+        this.shares = share;
+    }
 
-	public Article() {
-		super();
-	}
+    public String getImage() {
+        return image;
+    }
 
-	public String getImage() {
-		return image;
-	}
+    public void setImage(String image) {
+        this.image = image;
+    }
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+    public Article(int articleId, String title, Date orderDate, String content, User author, int like, int share, String image) {
+        super();
+        this.articleId = articleId;
+        this.title = title;
+        this.orderDate = orderDate;
+        this.content = content;
+        this.author = author;
+        this.likes = like;
+        this.shares = share;
+        this.image = image;
+    }
+
+    public Article() {
+        super();
+    }
 }
