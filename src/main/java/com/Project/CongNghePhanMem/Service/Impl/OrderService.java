@@ -21,7 +21,7 @@ import com.Project.CongNghePhanMem.Entity.OrderDetail;
 import com.Project.CongNghePhanMem.Entity.Promotion;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.NotificationRepository;
-import com.Project.CongNghePhanMem.Repository.OrderDetailRepository;
+
 
 import com.Project.CongNghePhanMem.Service.IOrderService;
 
@@ -30,8 +30,7 @@ public class OrderService implements IOrderService{
 	@Autowired
     private OrderRepository orderRepository;
     
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
+ 
     
     @Autowired
 	private NotificationRepository notificationRepository;
