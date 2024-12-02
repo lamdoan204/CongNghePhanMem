@@ -309,5 +309,14 @@ public class ProductService implements IProductService {
 	        productDTO.setQuantity(0); // Giá trị mặc định
 	        return productDTO;
 	    }
+
+
+
+
+	@Override
+	public List<Product> findProductsByKinds(List<String> kinds) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
