@@ -83,6 +83,49 @@
 			</div>
 		</section>
 
+		<!-- Quản lý Brand -->
+		<!-- Quản lý Brand -->
+		<section id="brands" class="mb-5">
+			<h2 class="mb-4">Quản lý Brand</h2>
+			<div class="card">
+				<div class="card-body">
+					<!-- Form thêm brand -->
+					<form action="/admin/createBrand" method="post" class="mb-4">
+						<div class="row g-3 mb-3">
+							<div class="col-md-6">
+								<label for="brandName" class="form-label">Tên Brand</label>
+								<input type="text" class="form-control" id="brandName" name="brandName"
+									placeholder="Nhập tên Brand" required>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-primary">Thêm Brand</button>
+						<button type="reset" class="btn btn-secondary">Reset</button>
+					</form>
+
+					<!-- Xóa brand -->
+					<h3 class="mb-3">Xóa Brand</h3>
+					<form action="/admin/deleteBrand" method="post">
+						<div class="row g-3 align-items-end">
+							<div class="col-md-6">
+								<label for="selectBrand" class="form-label">Chọn Brand</label>
+								<select class="form-select" id="selectBrand" name="brandId" required>
+									<option value="" disabled selected>Chọn brand cần xóa</option>
+									<th:block th:each="brand : ${brandswithoutD}">
+										<option th:value="${brand.brandId}" th:text="${brand.brand}"></option>
+									</th:block>
+								</select>
+							</div>
+							<div class="col-md-3">
+								<button type="submit" class="btn btn-danger">Xóa Brand</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</section>
+
+
+
 		<!-- Báo cáo -->
 		<section id="reports" class="mb-5">
 			<h2 class="mb-4">Danh sách Manager</h2>

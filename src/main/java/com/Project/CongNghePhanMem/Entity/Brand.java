@@ -35,8 +35,4 @@ public class Brand {
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
-	
-	
-	
-
 }

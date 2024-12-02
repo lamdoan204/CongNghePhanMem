@@ -146,7 +146,7 @@
 							<i class="fas fa-star text-warning"></i>
 							<span class="text-muted">(1 đánh giá)</span>
 						</div>
-						<a href="#" class="btn btn-success w-100 mb-2">Chi tiết sản phẩm</a>
+						<a href="/user/shopdetail" class="btn btn-success w-100 mb-2">Chi tiết sản phẩm</a>
 						<a href="#" class="btn btn-primary w-100">Thêm vào giỏ hàng</a>
 					</div>
 				</div>
@@ -165,40 +165,34 @@
 			<!-- Product Card -->
 			<div class="col product-card" th:each="product : ${products}">
 				<div class="card">
-					<!-- Product Image -->
 					<img th:src="@{'/images/products/' + ${product.image}}" class="card-img-top"
 						th:alt="${product.name}">
 
-					<!-- Product Details -->
 					<div class="card-body">
-						<h5 class="card-title" th:text="${product.name}">Card đồ họa RTX 4090</h5>
-
-						<!-- Price -->
+						<h5 class="card-title" th:text="${product.name}"></h5>
 						<p class="price mb-2"
-							th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">
-						</p>
+							th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></p>
 
-						<!-- Rating -->
-						<div class="mb-3">
-							<div class="rating-stars">
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star-half-alt"></i>
-								<span class="rating-count ms-2">(120 đánh giá)</span>
-							</div>
+						<!-- Hiển thị trạng thái tồn kho -->
+						<div th:if="${@productDetailService.isInStock(product)}" class="mb-2">
+							<span class="badge bg-success">Còn hàng</span>
+						</div>
+						<div th:unless="${@productDetailService.isInStock(product)}" class="mb-2">
+							<span class="badge bg-danger">Hết hàng</span>
 						</div>
 
-						<!-- Action Buttons -->
+						<!-- Nút mua hàng -->
 						<div class="d-grid gap-2">
-							<a th:href="@{/product/{id}(id=${product.productID})}" class="btn btn-success w-100 mb-2">
+							<a th:href="@{/user/shopdetail/{id}(id=${product.productID})}" class="btn btn-success w-100 mb-2">
 								Chi tiết sản phẩm
 							</a>
 							<form th:action="@{/user/add-product-to-cart/{id}(id=${product.productID})}" method="post">
-								<input type="hidden" name="quantity" value="1">
-								<button type="submit" class="btn btn-primary w-100">
-									<i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+								<button type="submit" class="btn btn-primary w-100"
+									th:disabled="${!@productDetailService.isInStock(product)}">
+									<i class="fas fa-shopping-cart"></i>
+									<span th:text="${@productDetailService.isInStock(product)} ? 
+                                      'Thêm vào giỏ' : 'Hết hàng'">
+									</span>
 								</button>
 							</form>
 						</div>
