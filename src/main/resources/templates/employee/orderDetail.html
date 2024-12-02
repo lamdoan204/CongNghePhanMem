@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi Tiết Đơn Hàng</title>
+</head>
+<body>
+	<h1>
+		Chi Tiết Đơn Hàng #<span th:text="${order.orderID}">Order ID</span>
+	</h1>
+	<p>
+		Ngày Tạo: <span th:text="${order.orderDate}">Order Date</span>
+	</p>
+	<p>
+		Tổng Giá Trị: <span th:text="${order.totalPrice}">Total Price</span>
+	</p>
+	<p>
+		Trạng Thái: <span th:text="${order.status}">Order Status</span>
+	</p>
+
+
+	<p>
+		<strong>Chi Tiết Sản Phẩm:</strong>
+	</p>
+	<ul>
+		<li th:each="orderDetail : ${order.orderDetails}"><span
+			th:text="${orderDetail.product.productName}">Product Name</span> - <span
+			th:text="${orderDetail.quantity}">Quantity</span> x <span
+			th:text="${orderDetail.price}">Price</span></li>
+	</ul>
+
+
+	<a href="/employee/orderManagement">Quay lại danh sách đơn hàng</a>
+</body>
+</html>
