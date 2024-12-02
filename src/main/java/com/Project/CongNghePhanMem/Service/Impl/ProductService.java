@@ -61,48 +61,48 @@ public class ProductService implements IProductService {
 		if (user != null) {
 			Cart cart = this.cartRepository.findByUser(user);
 
-			if (cart == null) {
-				Cart newCart = new Cart();
-				newCart.setSum(0);
-				newCart.setUser(user);
-				cart = this.cartRepository.save(newCart);
-			}
+            if (cart == null) {
+                // tao moi cart
+                Cart newCart = new Cart();
+                newCart.setSum(0);
+                newCart.setUser(user);
+                cart = this.cartRepository.save(newCart);
+            }
 
-			// save cart detail
-			// tim product
-			Optional<Product> p = this.productRepository.findById(id);
+            // save cart detail
+            // tim product
+            Optional<Product> p = this.productRepository.findById(id);
 
-			if (p.isPresent()) {
-				Product realProduct = p.get();
-				CartDetail oldDetail = this.cartDetailRepository.findByCartAndProduct(cart, realProduct);
+            if (p.isPresent()) {
+                Product realProduct = p.get();
+                CartDetail oldDetail = this.cartDetailRepository.findByCartAndProduct(cart, realProduct);
 
-				if (oldDetail == null) {
-					CartDetail cartDetail = new CartDetail();
+                if (oldDetail == null) {
+                    CartDetail cartDetail = new CartDetail();
 
-					cartDetail.setCart(cart);
-					cartDetail.setProduct(realProduct);
-					cartDetail.setPrice(realProduct.getPrice());
-					cartDetail.setQuantity(1);
+                    cartDetail.setCart(cart);
+                    cartDetail.setProduct(realProduct);
+                    cartDetail.setPrice(realProduct.getPrice());
+                    cartDetail.setQuantity(1);
 
-					this.cartDetailRepository.save(cartDetail);
-					
-					cart.setSum(cart.getSum() + 1);
-					this.cartRepository.save(cart);
-				} else {
-					oldDetail.setQuantity(oldDetail.getQuantity() + 1);
-					this.cartDetailRepository.save(oldDetail);
-				}
+                    this.cartDetailRepository.save(cartDetail);
 
-			}
-			
+                    cart.setSum(cart.getSum() + 1);
+                    this.cartRepository.save(cart);
+                } else {
+                    oldDetail.setQuantity(oldDetail.getQuantity() + 1);
+                    this.cartDetailRepository.save(oldDetail);
+                }
 
-		} else {
-			throw new RuntimeException("User not found");
-		}
-	}
-	
-	@Override
-	public void handleRemoveCartDetail(int cartDetailId, HttpSession session) {
+            }
+
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
+    @Override
+    public void handleRemoveCartDetail(int cartDetailId, HttpSession session) {
         Optional<CartDetail> cartDetailOptional = this.cartDetailRepository.findById(cartDetailId);
         if (cartDetailOptional.isPresent()) {
             CartDetail cartDetail = cartDetailOptional.get();
@@ -125,21 +125,21 @@ public class ProductService implements IProductService {
             }
         }
     }
-	
-	@Override
-	public Cart fetchByUser(User user) {
-		return this.cartRepository.findByUser(user);
-	}
 
-	@Override
-	public List<Product> fetchProducts() {
-		return this.productRepository.findAll();
-	}
+    @Override
+    public Cart fetchByUser(User user) {
+        return this.cartRepository.findByUser(user);
+    }
 
-	@Override
-	public Page<Product> findAllProducts(Pageable pageable) {
-		return productRepository.findAll(pageable);
-	}
+    @Override
+    public List<Product> fetchProducts() {
+        return this.productRepository.findAll();
+    }
+
+    @Override
+    public Page<Product> findAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
 
 	@Override
     public ProductDTO getProductDetailById(int id) {

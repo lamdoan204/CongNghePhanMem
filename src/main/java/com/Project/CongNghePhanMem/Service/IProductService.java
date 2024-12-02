@@ -44,4 +44,6 @@ public interface IProductService {
 	 // Phương thức tạo ProductDTO mới cho quản lý sản phẩm
     ProductDTO getNewProductDTOForManager();
 	
+	
+	List<Product> findProductsByKinds(List<String> kinds);
 }

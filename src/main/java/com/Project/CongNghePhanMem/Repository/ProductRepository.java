@@ -36,6 +36,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
     	       "LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     	List<Product> searchProducts(@Param("keyword") String keyword);
 
-	
+    List<Product> findByKindIn(List<String> kinds);
 
 }

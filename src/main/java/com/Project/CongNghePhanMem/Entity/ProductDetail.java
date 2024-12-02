@@ -56,6 +56,8 @@ public class ProductDetail {
 		this.date = date;
 	}
 	
-	
+	public boolean isInStock() {
+        return quantity > 0;
+    }
 	
 }

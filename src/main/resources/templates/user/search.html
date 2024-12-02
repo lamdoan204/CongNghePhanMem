@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{user/layout/header :: layout(~{::body})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<!-- Danh sách sản phẩm tìm kiếm -->
+<div class="section padding_layout_1 product_list_main">
+    <div class="container">
+        <div class="row">
+    <div class="col-md-9">
+        <!-- Kiểm tra nếu không có sản phẩm -->
+        <div th:if="${SearchProducts == null || SearchProducts.isEmpty()}" class="no-results">
+            <h3 style="color: red; text-align: center;">Không tìm thấy sản phẩm nào phù hợp.</h3>
+        </div>
+
+        <!-- Hiển thị kết quả tìm kiếm sản phẩm nếu có -->
+        <div th:if="${SearchProducts != null && !SearchProducts.isEmpty()}" class="row">
+            <div th:each="product : ${SearchProducts}" class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin_bottom_30_all">
+                <div class="product_list">
+                    <!-- Hiển thị ảnh sản phẩm -->
+                    <div class="product_img">
+                        <img class="img-responsive" th:src="@{/images/products/{filename}(filename=${product.image})}" alt="product image"/>
+                    </div>
+                    <div class="product_detail_btm">
+                        <div class="center">
+                            <!-- Hiển thị tên sản phẩm -->
+                            <h4>
+                                <a th:href="@{/user/shopdetail/{id}(id=${product.productID})}" th:text="${product.name}"></a>
+                            </h4>
+                        </div>
+                        <div class="product_price">
+                            <p>
+                                <span class="old_price" th:text="${product.price}"></span> – 
+                                <span class="new_price" th:text="${product.price}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Kết thúc hiển thị sản phẩm -->
+    </div>
+</div>
+
+</body>
+</html>

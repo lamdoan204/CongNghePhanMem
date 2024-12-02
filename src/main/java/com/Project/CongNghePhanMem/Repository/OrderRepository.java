@@ -14,10 +14,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer>{
 	List<Order> findByUserOrderByOrderDateDesc(User user);
 
 
-    // Tìm đơn hàng theo orderID
     Order findByOrderID(int orderID);
 
-    // Tìm tất cả các đơn hàng có status
     List<Order> findByStatus(int status);
     
     List<Order> findByUserAndStatusOrderByOrderDateDesc(User user, int status);

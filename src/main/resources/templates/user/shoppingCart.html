@@ -116,7 +116,14 @@
 													alt="Product" width="80" height="80" class="rounded me-3">
 												<div>
 													<h6 class="mb-1" th:text="${cartDetail.product.name}"></h6>
-													<span class="badge bg-success">Còn hàng</span>
+													<!-- Hiển thị trạng thái -->
+													<span th:if="${cartDetail.inStock && cartDetail.hasEnoughQuantity}"
+														class="badge bg-success">Còn
+														hàng</span>
+													<span th:unless="${cartDetail.inStock}" class="badge bg-danger">Hết
+														hàng</span>
+													<span th:if="${cartDetail.inStock && !cartDetail.hasEnoughQuantity}"
+														class="badge bg-danger">Số lượng sản phẩm không đủ</span>
 												</div>
 											</div>
 										</td>
@@ -125,22 +132,23 @@
 										<td>
 											<div class="d-flex justify-content-center align-items-center">
 												<button class="btn btn-sm btn-outline-secondary me-2"
-													th:onclick="'updateQuantity(' + ${cartDetail.id} + ', -1)'">
+													th:onclick="'updateQuantity(' + ${cartDetail.id} + ', -1)'"
+													th:disabled="${!cartDetail.inStock}">
 													<i class="fas fa-minus"></i>
 												</button>
 
 												<input type="number" class="form-control text-center"
 													style="width: 60px" min="1" th:value="${cartDetail.quantity}"
-													th:onchange="'updateQuantityInput(' + ${cartDetail.id} + ', this.value)'">
+													th:disabled="${!cartDetail.inStock}">
 
 												<button class="btn btn-sm btn-outline-secondary ms-2"
-													th:onclick="'updateQuantity(' + ${cartDetail.id} + ', 1)'">
+													th:onclick="'updateQuantity(' + ${cartDetail.id} + ', 1)'"
+													th:disabled="${!cartDetail.hasEnoughQuantity || !cartDetail.inStock}">
 													<i class="fas fa-plus"></i>
 												</button>
 											</div>
-										</td>
 
-										<!-- Prices -->
+											<!-- Prices -->
 										<td class="text-end fw-bold"
 											th:text="${#numbers.formatDecimal(cartDetail.price, 0, 'COMMA', 0, 'POINT') + 'đ'}">
 										</td>
@@ -180,12 +188,22 @@
 							<div class="d-flex justify-content-between mb-4">
 								<span class="h5">Tổng cộng</span>
 								<span class="h5 text-primary"
-									th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + 'đ'}">
-								</span>
+									th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + 'đ'}"></span>
 							</div>
-							<a th:href="@{/user/checkout}" class="btn btn-primary w-100 mb-3">
+
+							<!-- Nút thanh toán có điều kiện -->
+							<a th:href="@{/user/checkout}" class="btn btn-primary w-100 mb-3"
+								th:classappend="${!cartDetails.?[inStock && hasEnoughQuantity].size().equals(cartDetails.size())} ? 'disabled'"
+								th:disabled="${!cartDetails.?[inStock && hasEnoughQuantity].size().equals(cartDetails.size())}">
 								Tiến hành thanh toán
 							</a>
+
+							<!-- Thông báo nếu có sản phẩm không đủ điều kiện -->
+							<div th:if="${!cartDetails.?[inStock && hasEnoughQuantity].size().equals(cartDetails.size())}"
+								class="alert alert-warning text-center mb-3">
+								Một số sản phẩm trong giỏ hàng đã hết hoặc không đủ số lượng
+							</div>
+
 							<a th:href="@{/user/}" class="btn btn-outline-primary w-100">
 								Tiếp tục mua sắm
 							</a>
@@ -231,6 +249,29 @@
 		.shadow-sm {
 			box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
 		}
+
+
+		.badge {
+			padding: 0.5em 0.8em;
+			font-weight: 500;
+		}
+
+		.badge.bg-success {
+			background-color: #28a745 !important;
+		}
+
+		.badge.bg-danger {
+			background-color: #dc3545 !important;
+		}
+
+		.text-danger.small {
+			font-size: 0.875rem;
+		}
+
+		.btn:disabled {
+			opacity: 0.65;
+			cursor: not-allowed;
+		}
 	</style>
 
 	<script>
@@ -239,11 +280,24 @@
 				`/user/update-cart/add/${cartDetailId}` :
 				`/user/update-cart/remove/${cartDetailId}`;
 
-			fetch(url, {method: 'POST'})
-				.then(response => {
+			fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			})
+				.then(async response => {
 					if (response.ok) {
 						location.reload();
+					} else {
+						const error = await response.text();
+						// Hiển thị message lỗi từ server
+						alert(error);
 					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert('Có lỗi xảy ra khi cập nhật số lượng');
 				});
 		}
 
@@ -267,19 +321,7 @@
 		}
 	</script>
 
-	<!-- Cart specific scripts -->
-	<script th:inline="javascript">
-		$(document).ready(function () {
-			// Quantity update handlers
-			$(".btn-plus, .btn-minus").click(function (e) {
-				e.preventDefault();
-				const form = $(this).closest("form");
-				$.post(form.attr("action"), form.serialize(), function () {
-					location.reload();
-				});
-			});
-		});
-	</script>
+
 
 
 	<!-- Footer -->

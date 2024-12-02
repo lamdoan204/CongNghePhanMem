@@ -40,6 +40,94 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
       <![endif]-->
+	<style>
+		.footer {
+			background-color: #f7f7f7;
+			padding-top: 40px;
+			padding-bottom: 20px;
+			position: relative;
+		}
+
+		.footer .footer-title {
+			font-size: 18px;
+			font-weight: bold;
+			color: #d31e2c;
+			margin-bottom: 20px;
+		}
+
+		.footer a {
+			color: #333;
+			text-decoration: none;
+		}
+
+		.footer a:hover {
+			color: #d31e2c;
+		}
+
+		.footer .social-icons {
+			margin-top: 10px;
+		}
+
+		.footer .social-icon {
+			margin-right: 10px;
+			display: inline-block;
+		}
+
+		.footer .social-icon img {
+			width: 25px;
+			height: 25px;
+		}
+
+		.footer .footer-bottom {
+			background-color: #e8e8e8;
+			padding: 20px 0;
+		}
+
+		.footer-bottom p {
+			margin-bottom: 0;
+		}
+
+		.footer-hotline {
+			font-size: 16px;
+			color: #d31e2c;
+			font-weight: bold;
+		}
+
+		.footer-hotline:hover {
+			text-decoration: underline;
+		}
+
+		/* Responsive Design */
+		@media (max-width: 768px) {
+			.footer .row {
+				text-align: center;
+			}
+
+			.footer .footer-bottom {
+				text-align: center;
+			}
+		}
+		html, body {
+		    height: 100%;
+		    margin: 0;
+		    display: flex;
+		    flex-direction: column;
+		}
+
+		main {
+		    flex: 1; /* Nội dung chiếm không gian còn lại */
+		}
+
+		footer {
+		    background-color: #f7f7f7;
+		    padding-top: 40px;
+		    padding-bottom: 20px;
+		    position: relative;
+		    bottom: 0;
+		    width: 100%;
+		}
+	</style>
+	
 </head>
 
 <body id="default_theme" class="it_service">
@@ -91,7 +179,7 @@
 				<div class="row">
 					<div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
 						<!-- logo start -->
-						<div class="logo"> <a href="it_home.html"><img src="images/logos/it_logo.png" alt="logo" /></a>
+						<div class="logo"> <a href="it_home.html"><img src="images/logos/logo.png" alt="logo" /></a>
 						</div>
 						<!-- logo end -->
 					</div>
@@ -132,7 +220,7 @@
 												[[${user.fullName}]]
 											</a>
 											<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-												<li><a class="dropdown-item" href="/profile"><i class="fas fa-user"></i>
+												<li><a class="dropdown-item" href="/user/profilePage"><i class="fas fa-user"></i>
 														Profile</a></li>
 												<li><a class="dropdown-item" href="user/changePass"><i
 															class="fas fa-lock"></i> Change Password</a></li>
@@ -163,6 +251,15 @@
 	</header>
 	<!-- Nội dung động -->
 	<div th:replace="${content}"></div>
+	
+	<footer class="footer_style_2">
+		<div th:replace="user/layout/footer"></div>
+	</footer>
+
+	<!-- Thêm Bootstrap JS và jQuery -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<!-- Bootstrap Scripts -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -297,7 +394,8 @@
 	</script>
 	<!-- google map js -->
 	<script
-		src="https://maps.app.goo.gl/eoz5uKJhiziPq7DL6"></script>
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script>
+
 </body>
 
 </html>

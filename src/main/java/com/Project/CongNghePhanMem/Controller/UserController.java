@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.Project.CongNghePhanMem.Entity.Notification;
 import com.Project.CongNghePhanMem.Entity.Product;
 import com.Project.CongNghePhanMem.Entity.User;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
+import com.Project.CongNghePhanMem.Service.INotificationService;
 import com.Project.CongNghePhanMem.Service.IProductService;
 
 import jakarta.servlet.http.HttpSession;
@@ -38,6 +40,9 @@ public class UserController {
 	
 	@Autowired
 	private BCryptPasswordEncoder passEncoder;
+	
+	@Autowired
+	private  INotificationService notificationService;
 
 	@ModelAttribute
     private void userDetails(Model m, Principal p, HttpSession session) {
@@ -54,10 +59,43 @@ public class UserController {
                 }
             }
             
+            
+            
             // Thêm vào model để view có thể sử dụng
             m.addAttribute("user", currentUser);
         }
     }
+
+    @GetMapping("/profilePage")
+    public String getUserInfoPage(Principal principal, Model model) {
+        if (principal != null) {
+            String email = principal.getName();
+            User user = userRepo.findByEmail(email);
+            model.addAttribute("user", user);
+        }
+        return "user/profile";
+    }
+
+    @PostMapping("/updateProfile")
+    public String updateUserProfile(@ModelAttribute User updatedUser, Principal principal, Model model) {
+        if (principal != null) {
+            String email = principal.getName();
+            User user = userRepo.findByEmail(email);
+
+            user.setFullName(updatedUser.getFullName());
+            user.setAddress(updatedUser.getAddress());
+            user.setEmail(updatedUser.getEmail());
+            user.setPhone(updatedUser.getPhone());
+
+            userRepo.save(user);
+
+            model.addAttribute("user", user);
+            model.addAttribute("msg", "Cập nhật thông tin thành công");
+        }
+        return "redirect:/user/profilePage";
+    }
+
+
     @GetMapping("/profile")
     public ResponseEntity<User> getUserInfo(Principal principal) {
         if (principal != null) {
@@ -81,6 +119,15 @@ public class UserController {
         if (currentUser == null) {
             return "redirect:/login";
         }
+
+		
+		
+		List<Product> products = this.productService.fetchProducts();
+    	model.addAttribute("products", products);
+    	
+
+
+
         
         // Lấy sản phẩm có phân trang
         Page<Product> productPage = productService.findAllProducts(PageRequest.of(page, size));
@@ -97,8 +144,15 @@ public class UserController {
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("totalItems", productPage.getTotalElements());
         
+     // Lấy danh sách thông báo của người dùng theo userId
+        List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
+        model.addAttribute("notifications", notifications);
+        
+        System.out.println("notifica: " + notifications );
+        
         return "user/home";
     }
+
 
 	@PostMapping("/updatePassword")
     public String updatePassword(HttpSession session, Principal p, 
@@ -156,7 +210,10 @@ public class UserController {
 	        return password.matches(regex);
 	    }
 	
-	 
+	 @GetMapping("/article")
+	 public String article() {
+		 return "user/article";
+	 }
 	 
 
 }

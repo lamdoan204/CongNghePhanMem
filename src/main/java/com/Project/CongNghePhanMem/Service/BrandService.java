@@ -25,4 +25,20 @@ public class BrandService {
     public List<Brand> getAllBrand(){
     	return brandRepository.findAll();
     }
+
+    public void addBrand(String brand){
+        Brand x = new Brand();
+        x.setBrand(brand);
+        brandRepository.save(x);
+    }
+
+    public void deleteBrand(int  brandId){
+        Brand x =  brandRepository.findByBrandId(brandId);
+        brandRepository.delete(x);
+    }
+
+    public List<Brand>  getListBrandWithouD(){
+        return brandRepository.findBrandsWithoutDepartment();
+    }
+
 }
