@@ -30,7 +30,7 @@ public class ArticleService {
 
     public void deleteArticleById(int id) {
         articleRepository.deleteById(id);
-    }
+        }
     public Page<Article> getArticles(Pageable pageable) {
         return articleRepository.findAll(pageable);
     }

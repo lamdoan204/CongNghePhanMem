@@ -29,16 +29,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="blog : ${blogs}">
-                            <td th:text="${blog.articleId}"></td>
-                            <td th:text="${blog.title}"></td>
-                            <td th:text="${blog.orderDate}"></td>
-                            <td th:text="${blog.content}"></td>
-                            <td th:text="${blog.author.username}"></td>
+                        <tr th:each="article : ${articles}">
+                            <td th:text="${article.articleId}"></td>
+                            <td th:text="${article.title}"></td>
+                            <td th:text="${article.orderDate}"></td>
+                            <td th:text="${article.content}"></td>
+                            <td th:text="${article.author.fullName}"></td>
                             <td>
-                                <a th:href="@{/manager/blog/edit/{id}(id=${blog.articleId})}" 
+                                <a th:href="@{/manager/blog/edit/{id}(id=${article.articleId})}" 
                                    class="btn btn-warning btn-sm">Edit</a>
-                                <a th:href="@{/manager/blog/delete/{id}(id=${blog.articleId})}" 
+                                <a th:href="@{/manager/blog/delete/{id}(id=${article.articleId})}" 
                                    class="btn btn-danger btn-sm"
                                    onclick="return confirm('Are you sure you want to delete this blog?');">Delete</a>
                             </td>

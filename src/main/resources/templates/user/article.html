@@ -32,10 +32,13 @@
 			<div class="col-md-6">
 				<!-- Card: Bài viết 1 -->
 				<div class="card mb-3" th:each="article : ${articles}">
-					<img src="https://via.placeholder.com/600x200" class="card-img-top" alt="Bài viết hình ảnh">
+
 					<div class="card-body">
-						<h5 class="card-title" th:text="${article.title}" th:attr="onclick='redirectToArticle(' + ${article.articleId} + ')'" style="cursor: pointer;"></h5>
-						<p class="card-text" th:text="${article.content}"></p>
+						<img th:src="@{${article.image}}" alt="Article Image" class="img-fluid" style="max-width: 70%; height: auto;">
+
+						<h5 class="card-title" th:text="${article.title}"
+							th:attr="onclick='redirectToArticle(' + ${article.articleId} + ')'"
+							style="cursor: pointer;"></h5>
 						<p class="text-muted"><small>Ngày đăng: <span
 									th:text="${#dates.format(article.orderDate, 'dd-MM-yyyy')}"></span></small></p>
 						<div class="d-flex justify-content-between align-items-center">
@@ -66,7 +69,7 @@
 				<div class="card">
 					<div class="card-body">
 						<h6 class="card-title">Thống kê</h6>
-						<img src="https://via.placeholder.com/150" class="img-fluid mb-3" alt="Thống kê hình ảnh">
+						<img th:src="@{/images/slide-fs-2024_35f9b22d96e94f6bb82836e62fff88a3_large.png}" class="img-fluid mb-3" alt="Thống kê hình ảnh">
 						<p class="card-text">Có 20 người đã xem trang của bạn hôm nay.</p>
 					</div>
 				</div>

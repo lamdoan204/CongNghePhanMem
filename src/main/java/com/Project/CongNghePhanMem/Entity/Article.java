@@ -33,7 +33,11 @@ public class Article {
     @JoinColumn(name = "user_id")
     private User author;
     
-    private int likes;
+    public void setAuthor(User author) {
+		this.author = author;
+	}
+
+	private int likes;
     
     private int shares;
 

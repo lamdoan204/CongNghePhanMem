@@ -172,9 +172,6 @@ public class UserController {
 
         return "user/home";
 
-		System.out.println("notifica: " + notifications);
-		return "user/home";
-
 	}
 
 	@PostMapping("/updatePassword")

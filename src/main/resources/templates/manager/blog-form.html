@@ -37,8 +37,8 @@
 						<input type="date" id="orderDate" th:field="*{orderDate}" class="form-control" required>
 					</div>
 					<div class="mb-3">
-						<label for="image" class="form-label">Image:</label>
-						<input type="file" id="image" name="image" class="form-control" onchange="previewImage(event)">
+						<label for="imageFile" class="form-label">Image:</label>
+						<input type="file" id="imageFile" name="imageFile" class="form-control"  required onchange="previewImage(event)">
 					</div>
 					<div class="mb-3">
 						<img id="imagePreview" src="#" alt="Image Preview"
