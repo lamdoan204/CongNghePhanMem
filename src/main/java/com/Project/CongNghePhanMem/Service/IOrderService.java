@@ -32,18 +32,6 @@ public interface IOrderService {
 	 
 	 List<Order> searchOrders(String searchTerm);
 
-	List<Order> getPendingOrders();
-
-	List<Order> getConfirmedOrders();
-
-	List<Order> getInDeliveryOrders();
-
-	List<Order> getDeliveredOrders();
-
-	List<Order> getCancelledOrders();
-
-	List<Order> searchOrders(String searchTerm);
-
 	Order createOrder(User user, Cart cart, boolean isPaidByCard);
 
 	List<Order> getOrdersByUser(User user);
@@ -53,9 +41,7 @@ public interface IOrderService {
 	 // Cập nhật trạng thái đơn hàng và đồng bộ với notifications
     void updateOrderStatus(int orderId, int newStatus);
 
-	List<Order> getOrdersByUserAndStatus(User user, int status);
-
-	List<Order> getOrdersByStatus(int status);
+//	List<Order> getOrdersByUserAndStatus(User user, int status);
 
 	void cancelOrder(Integer orderId, String cancelReason);
 

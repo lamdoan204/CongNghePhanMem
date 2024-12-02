@@ -126,13 +126,6 @@ public class OrderService implements IOrderService{
 	    }
 	}
 
-    // Lấy danh sách đơn hàng theo trạng thái
-    @Override
-	public List<Order> getOrdersByStatus(int status) {
-        return orderRepository.findByStatus(status);
-    }
-
-
     @Override
     public void updateOrderStatus(int orderId, int newStatus) {
         // Tìm đơn hàng theo ID
@@ -178,10 +171,10 @@ public class OrderService implements IOrderService{
         }
     
 
-    @Override
-	public List<Order> getOrdersByUserAndStatus(User user, int status) {
-        return orderRepository.findByUserAndStatusOrderByOrderDateDesc(user, status);
-    }
+//    @Override
+//	public List<Order> getOrdersByUserAndStatus(User user, int status) {
+//        return orderRepository.findByUserAndStatusOrderByOrderDateDesc(user, status);
+//    }
     
     @Override
 	public void cancelOrder(Integer orderId, String cancelReason) {
@@ -194,4 +187,11 @@ public class OrderService implements IOrderService{
         
         orderRepository.save(order);
     }
+
+
+//	@Override
+//	public List<Order> getOrdersByUserAndStatus(User user, int status) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 }
