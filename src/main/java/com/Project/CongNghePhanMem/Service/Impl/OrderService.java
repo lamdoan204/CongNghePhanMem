@@ -4,26 +4,20 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import com.Project.CongNghePhanMem.Entity.Cart;
+import com.Project.CongNghePhanMem.Entity.CartDetail;
+import com.Project.CongNghePhanMem.Entity.Notification;
 import com.Project.CongNghePhanMem.Entity.Order;
+import com.Project.CongNghePhanMem.Entity.OrderDetail;
+import com.Project.CongNghePhanMem.Entity.Promotion;
+import com.Project.CongNghePhanMem.Entity.User;
+import com.Project.CongNghePhanMem.Repository.NotificationRepository;
 import com.Project.CongNghePhanMem.Repository.OrderRepository;
 import com.Project.CongNghePhanMem.Service.IOrderService;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-@Service
-public class OrderService implements IOrderService {
-
-	@Autowired
-	private OrderRepository orderRepository;
-import com.Project.CongNghePhanMem.Entity.Cart;
-import com.Project.CongNghePhanMem.Entity.CartDetail;
-import com.Project.CongNghePhanMem.Entity.Notification;
-import com.Project.CongNghePhanMem.Entity.OrderDetail;
-import com.Project.CongNghePhanMem.Entity.Promotion;
-import com.Project.CongNghePhanMem.Entity.User;
-import com.Project.CongNghePhanMem.Repository.NotificationRepository;
 
 @Service
 public class OrderService implements IOrderService {
@@ -66,15 +60,11 @@ public class OrderService implements IOrderService {
 	// Method để lấy danh sách đơn hàng của user
 	@Override
 	public List<Order> getOrdersByUser(User user) {
-        return orderRepository.findByUserOrderByOrderDateDesc(user);
-    }
+		return orderRepository.findByUserOrderByOrderDateDesc(user);
+	}
 
 	public List<Order> getAllOrders() {
 		return orderRepository.findAll();
-	}
-
-	public List<Order> getOrdersByStatus(int status) {
-		return orderRepository.findByStatus(status);
 	}
 
 	public List<Order> getPendingOrders() {
@@ -113,16 +103,19 @@ public class OrderService implements IOrderService {
 		}
 	}
 
+//	@Override
+//	public void updateOrderStatus(int orderId, int newStatus) {
+//		// Tìm đơn hàng theo ID
+//		Order order = orderRepository.findById(orderId)
+//				.orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+//	}
+
+	// Lấy danh sách đơn hàng theo trạng thái
 	@Override
 	public void updateOrderStatus(int orderId, int newStatus) {
 		// Tìm đơn hàng theo ID
 		Order order = orderRepository.findById(orderId)
 				.orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
-    // Lấy danh sách đơn hàng theo trạng thái
-    @Override
-	public List<Order> getOrdersByStatus(int status) {
-        return orderRepository.findByStatus(status);
-    }
 
 		// Cập nhật trạng thái mới
 		order.setStatus(newStatus);
@@ -162,27 +155,12 @@ public class OrderService implements IOrderService {
 		notificationRepository.save(notification);
 	}
 
-//    @Override
-//	public List<Order> getOrdersByUserAndStatus(User user, int status) {
-//        return orderRepository.findByUserAndStatusOrderByOrderDateDesc(user, status);
-//    }
-
-	@Override
+	public List<Order> getOrdersByUserAndStatus(User user, int status) {
+        return orderRepository.findByUserAndStatusOrderByOrderDateDesc(user, status);
+    }
+    
+    @Override
 	public void cancelOrder(Integer orderId, String cancelReason) {
-		Order order = orderRepository.findById(orderId)
-				.orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
-
-		order.setStatus(Order.CANCELLED);
-		order.setCancelReason(cancelReason);
-		order.setCancelDate(LocalDateTime.now());
-
-		orderRepository.save(order);
-	}
-
-	public Order getOrderById(int orderID) {
-		// Sử dụng phương thức tìm kiếm đơn hàng kèm theo các items
-		return orderRepository.findById(orderID).orElse(null);
-	}
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
             
@@ -192,4 +170,18 @@ public class OrderService implements IOrderService {
         
         orderRepository.save(order);
     }
+
+	public Order getOrderById(int orderID) {
+		// Sử dụng phương thức tìm kiếm đơn hàng kèm theo các items
+		return orderRepository.findById(orderID).orElse(null);
+	}
+
+	@Override
+	public List<Order> getOrdersByStatus(int status) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 }

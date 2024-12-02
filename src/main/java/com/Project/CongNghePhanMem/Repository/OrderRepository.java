@@ -25,8 +25,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer>{
 
 	// Tìm kiếm các hóa đơn theo số điện thoại khách hàng
 	List<Order> findByUserPhoneContaining(String phone);
-	
-    Order findByOrderID(int orderID);
     
     List<Order> findByUserAndStatusOrderByOrderDateDesc(User user, int status);
 }
