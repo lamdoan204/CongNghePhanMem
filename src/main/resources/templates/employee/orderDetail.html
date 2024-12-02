@@ -24,11 +24,12 @@
 		<strong>Chi Tiết Sản Phẩm:</strong>
 	</p>
 	<ul>
-		<li th:each="orderDetail : ${order.orderDetails}"><span
-			th:text="${orderDetail.product.productName}">Product Name</span> - <span
-			th:text="${orderDetail.quantity}">Quantity</span> x <span
-			th:text="${orderDetail.price}">Price</span></li>
-	</ul>
+        <li th:each="orderDetail : ${order.orderDetails}">
+            <span th:text="${orderDetail.product.name}">Product Name</span> - 
+            <span th:text="${orderDetail.quantity}">Quantity</span> x
+            <span th:text="${orderDetail.price}">Price</span>
+        </li>
+    </ul>
 
 
 	<a href="/employee/orderManagement">Quay lại danh sách đơn hàng</a>
