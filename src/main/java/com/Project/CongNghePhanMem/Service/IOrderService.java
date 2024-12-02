@@ -1,5 +1,6 @@
 package com.Project.CongNghePhanMem.Service;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 import com.Project.CongNghePhanMem.Entity.Order;
@@ -11,18 +12,18 @@ public interface IOrderService {
 	List<Order> getAllOrders();
 
 	List<Order> getOrdersByStatus(int status);
-
-	List<Order> getPendingOrders();
-
-	List<Order> getConfirmedOrders();
-
-	List<Order> getInDeliveryOrders();
-
-	List<Order> getDeliveredOrders();
-
-	List<Order> getCancelledOrders();
-
-	List<Order> searchOrders(String searchTerm);
+	
+	 List<Order> getPendingOrders() ;
+	 
+	 List<Order> getConfirmedOrders();
+	 
+	 List<Order> getInDeliveryOrders();
+	 
+	 List<Order> getDeliveredOrders();
+	 
+	 List<Order> getCancelledOrders();
+	 
+	 List<Order> searchOrders(String searchTerm);
 
 	Order createOrder(User user, Cart cart, boolean isPaidByCard, float finalPrice, Promotion promotion);
 
