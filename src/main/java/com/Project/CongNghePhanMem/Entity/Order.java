@@ -25,7 +25,7 @@ public class Order {
     public static final int CANCELLED = 5; // Đã hủy
     
     @Column(name = "is_paid_by_card")
-    private boolean isPaidByCard = false; // true: thanh toán bằng thẻ, false: thanh toán khi nhận hàng
+    private Boolean isPaidByCard = false; // true: thanh toán bằng thẻ, false: thanh toán khi nhận hàng
     
     @Column
     private String cancelReason; // lý do hủy

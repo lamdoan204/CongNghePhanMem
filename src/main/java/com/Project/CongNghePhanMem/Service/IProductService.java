@@ -26,4 +26,6 @@ public interface IProductService {
 	List<Product> findRelatedProducts(String description, String kind, int productId);
 	
 	List<Product> productSearch(String keyword);
+	
+	List<Product> findProductsByKinds(List<String> kinds);
 }

@@ -177,4 +177,9 @@ public class ProductService implements IProductService {
         return products;  // Kiểm tra xem có sản phẩm nào được trả về không
     }
 
+	@Override
+	public List<Product> findProductsByKinds(List<String> kinds) {
+		return productRepository.findByKindIn(kinds);
+	}
+
 }
