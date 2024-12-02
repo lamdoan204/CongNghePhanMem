@@ -22,6 +22,8 @@ public class PromotionService {
         return promotionRepository.save(promotion);
     }
     
+    
+    
     public void deletePromotionById(int id) {
         promotionRepository.deleteById(id);
     }

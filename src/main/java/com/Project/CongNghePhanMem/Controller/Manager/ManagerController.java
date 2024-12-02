@@ -2,6 +2,14 @@ package com.Project.CongNghePhanMem.Controller.Manager;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -194,12 +202,11 @@ public class ManagerController {
         if (manager == null) {
             throw new RuntimeException("Không tìm thấy người dùng");
         }
-        // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
         model.addAttribute("managerName", manager.getFullName());
         model.addAttribute("promotions", promotionService.getAllPromotions());
-        return "manager/promotion-list"; // Cập nhật đường dẫn template
+        return "manager/promotion-list";
     }
 
     @GetMapping("/promotions/create")
@@ -208,17 +215,16 @@ public class ManagerController {
         if (manager == null) {
             throw new RuntimeException("Không tìm thấy người dùng");
         }
-        // Gọi Service để lấy tên thương hiệu
         String brand = managerService.get_DepartmentName(manager);
         model.addAttribute("brand", brand);
         model.addAttribute("managerName", manager.getFullName());
         model.addAttribute("promotion", new Promotion());
-        return "manager/promotion_form"; // Cập nhật đường dẫn template
+        return "manager/promotion_form";
     }
 
     @PostMapping("/promotions/create")
     public String createPromotion(@ModelAttribute Promotion promotion) {
-        promotionService.savePromotion(promotion);
+        promotionService.savePromotion(promotion); // Lưu cả thông tin coupon
         return "redirect:/manager/promotions";
     }
 
@@ -262,23 +268,56 @@ public class ManagerController {
     }
 
     @PostMapping("/blog/create")
-    public String createBlog(@ModelAttribute("article") Article article) {
-        articleService.saveArticle(article);
-        return "redirect:/manager/blog";
-    }
-    // Sửa bài viết
-    @GetMapping("/blog/edit/{id}")
-    public String showEditBlogForm(@PathVariable("id") int id, Model model) {
-        Article article = articleService.getArticleById(id);
-        if (article != null) {
-            model.addAttribute("article", article);
-            return "manager/blog-form";
-        }
-        return "redirect:/manager/blog";
+    public String createBlog(@ModelAttribute("blog") Article article, @RequestParam("image") MultipartFile imageFile) throws IOException {
+    	if (!imageFile.isEmpty()) {
+    		String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+    		article.setImage("/uploads/" + fileName);
+    	}
+    	
+    	User currentUser = userService.getUserCurentLogged(); 
+    	article.setAuthor(currentUser);
+    	
+    	article.setLike(0); 
+    	article.setShare(0);
+    	
+    	articleService.saveArticle(article);
+    	
+    	return "redirect:/manager/blog";
     }
 
+
     @PostMapping("/blog/edit")
-    public String editBlog(@ModelAttribute("article") Article article) {
+    public String editBlog(@ModelAttribute("blog") Article article, @RequestParam(value = "image", required = false) MultipartFile imageFile) throws IOException {
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // Delete old image if exists
+            if (article.getImage() != null) {
+                String oldImagePath = "src/main/resources/static" + article.getImage();
+                Files.deleteIfExists(Paths.get(oldImagePath));
+            }
+            
+            // Save new image
+            String uploadDir = "src/main/resources/static/uploads/";
+            String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+            
+            File dir = new File(uploadDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            
+            Path path = Paths.get(uploadDir + fileName);
+            Files.copy(imageFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            
+            article.setImage("/uploads/" + fileName);
+        }
+        
+        // Preserve existing author
+        Article existingArticle = articleService.getArticleById(article.getArticleId());
+        if (existingArticle != null) {
+            article.setAuthor(existingArticle.getAuthor());
+            article.setLike(existingArticle.getLike());
+            article.setShare(existingArticle.getShare());
+        }
+        
         articleService.saveArticle(article);
         return "redirect:/manager/blog";
     }
