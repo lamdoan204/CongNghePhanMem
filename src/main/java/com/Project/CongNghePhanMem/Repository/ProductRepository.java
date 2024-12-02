@@ -32,5 +32,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
     	List<Product> searchProducts(@Param("keyword") String keyword);
 
     List<Product> findByKindIn(List<String> kinds);
+    
+    @Query("SELECT p FROM Product p WHERE " +
+            "(SELECT AVG(r.rating) FROM Review r WHERE r.product = p) >= :threshold")
+     List<Product> findFeaturedProducts(@Param("threshold") double threshold);
 
 }

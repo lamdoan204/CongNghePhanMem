@@ -151,6 +151,13 @@ public class UserController {
         
         System.out.println("notifica: " + notifications );
         
+        double ratingThreshold = 4.0; // Ngưỡng đánh giá để xác định sản phẩm nổi bật
+        List<Product> featuredProducts = productService.getFeaturedProducts(ratingThreshold);
+
+        model.addAttribute("featuredProducts", featuredProducts);
+        
+        System.out.println("featuredProducts: " + featuredProducts );
+        
         return "user/home";
     }
 

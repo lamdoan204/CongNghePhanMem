@@ -28,4 +28,6 @@ public interface IProductService {
 	List<Product> productSearch(String keyword);
 	
 	List<Product> findProductsByKinds(List<String> kinds);
+	
+	List<Product> getFeaturedProducts(double threshold);
 }

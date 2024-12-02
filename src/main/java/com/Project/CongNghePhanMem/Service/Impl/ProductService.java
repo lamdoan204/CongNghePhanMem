@@ -182,4 +182,9 @@ public class ProductService implements IProductService {
 		return productRepository.findByKindIn(kinds);
 	}
 
+	@Override
+	public List<Product> getFeaturedProducts(double threshold) {
+		return productRepository.findFeaturedProducts(threshold);
+	}
+
 }
