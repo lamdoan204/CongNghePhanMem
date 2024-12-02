@@ -33,4 +33,9 @@ public class MessagingController {
     public void listenForMessages(@PathVariable String userId) {
         messagingService.listenForMessages(userId);
     }
+
+    @GetMapping("/listen/all")
+    public void listenForAllMessages() {
+        messagingService.listenForAllMessages();
+    }
 }
