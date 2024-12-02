@@ -3,6 +3,8 @@ package com.Project.CongNghePhanMem.Controller;
 import java.security.Principal;
 import java.util.List;
 
+import com.Project.CongNghePhanMem.Entity.Review;
+import com.Project.CongNghePhanMem.Repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,11 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Project.CongNghePhanMem.Entity.Notification;
@@ -41,7 +39,10 @@ public class UserController {
     private BCryptPasswordEncoder passEncoder;
 
     @Autowired
-    private INotificationService notificationService;
+    private  INotificationService notificationService;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     @ModelAttribute
     private void userDetails(Model m, Principal p, HttpSession session) {
@@ -57,7 +58,6 @@ public class UserController {
                     session.setAttribute("currentUser", currentUser);
                 }
             }
-
             // Thêm vào model để view có thể sử dụng
             m.addAttribute("user", currentUser);
         }
@@ -103,6 +103,34 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @PostMapping("/review")
+    public String addReview(@RequestParam("content") String content,
+                            @RequestParam("rating") double rating,
+                            @RequestParam("productId") int productId,
+                            Principal principal,
+                            Model model) {
+        if (principal != null) {
+            String email = principal.getName();
+            User user = userRepo.findByEmail(email);
+
+            Product product = productService.findProductById(productId);
+
+            // Create a new Review object
+            Review review = new Review();
+            review.setContent(content);
+            review.setRating(rating);
+            review.setReviewer(user); // assuming the current user is logged in
+
+            review.setProduct(product);
+
+            reviewRepository.save(review);
+            model.addAttribute("successMessage", "Review submitted successfully!");
+        }
+
+        return "redirect:/it_shop_detail?id=" + productId;
+    }
+
 
     @GetMapping("/")
     public String home(
