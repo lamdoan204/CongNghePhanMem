@@ -189,7 +189,7 @@
 	        <i class="fas fa-cogs"></i> <!-- Thêm icon cogs từ Font Awesome -->
 	        Thương hiệu quản lý: 
 	    </strong>
-	    <span th:text="${brand}"></span>
+	    <span th:text="${product.brandName}"></span>
 	</div>
     </div>
 
@@ -246,6 +246,9 @@
         Loại
     </label>
 </div>
+ <!-- Trường số lượng -->
+    <input type="hidden" th:field="*{quantity}" />
+
 
             
             <!-- Hiển thị hình ảnh hiện tại của sản phẩm nếu có -->

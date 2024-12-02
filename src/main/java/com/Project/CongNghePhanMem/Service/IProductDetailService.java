@@ -10,5 +10,8 @@ public interface IProductDetailService {
 	boolean isInStock(Product product);
 
 	boolean checkAvailableQuantity(Product product, int requestedQuantity);
+	 void saveProductDetail(ProductDetail productDetail);
+
+
 
 }
