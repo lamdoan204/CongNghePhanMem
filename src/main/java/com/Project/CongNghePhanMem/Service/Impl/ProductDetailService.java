@@ -29,22 +29,12 @@ public class ProductDetailService implements IProductDetailService {
 	public boolean isInStock(Product product) {
 		ProductDetail detail = productDetailRepository.findByProduct(product);
 		return detail != null && detail.getQuantity() > 0;
+
 	}
-import jakarta.transaction.Transactional;
 
-@Service 
-public class ProductDetailService implements IProductDetailService {
-	@Autowired
-    private ProductDetailRepository productDetailRepository;
-
-    @Override
-    public void saveProductDetail(ProductDetail productDetail) {
-        // Lưu ProductDetail vào cơ sở dữ liệu
-        productDetailRepository.save(productDetail);
-    }
-
-    
-
-    
-
+	@Override
+	public void saveProductDetail(ProductDetail productDetail) {
+		// Lưu ProductDetail vào cơ sở dữ liệu
+		productDetailRepository.save(productDetail);
+	}
 }

@@ -55,11 +55,6 @@ public class ProductService implements IProductService {
 	 
 	
 
-	@Override
-	public void handleAddProductToCart(String email, int id) {
-		User user = this.userService.getUserById(id);
-		if (user != null) {
-			Cart cart = this.cartRepository.findByUser(user);
 
     // logic luu product vao gio hang
     @Override
