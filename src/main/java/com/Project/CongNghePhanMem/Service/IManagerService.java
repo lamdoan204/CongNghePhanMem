@@ -12,5 +12,7 @@ public interface IManagerService {
     public void delete_Employee(User employee);
     public String get_DepartmentName(User manager);
     public List<User> getListEmployee(User manager);
+    public int get_DepartmentBrandId(User manager);
+    //public String get_ManagerName(User manager);
 
 }

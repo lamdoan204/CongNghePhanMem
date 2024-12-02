@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Admin Dashboard</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body th:with="msg=${msg}">
+	<div class="container-fluid">
+		<!-- Navbar -->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+			<div class="container">
+				<a class="navbar-brand" href="#">Admin Dashboard</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="#managers">Quản lý Manager</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#reports">Xem báo cáo</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/logout">Đăng xuất</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<!-- Quản lý Manager -->
+		<section id="managers" class="mb-5">
+			<h2 class="mb-4">Quản lý Manager</h2>
+			<div class="card">
+				<div class="card-body">
+					<form action="/admin/createManager" method="post">
+						<div class="row g-3 mb-3">
+							<div class="col-md-4">
+								<label for="managerName" class="form-label">Tên Manager</label>
+								<input type="text" class="form-control" id="managerName" name="fullName"
+									placeholder="Nhập tên Manager" required>
+							</div>
+							<div class="col-md-4">
+								<label for="managerEmail" class="form-label">Email</label>
+								<input type="email" class="form-control" id="managerEmail" name="email"
+									placeholder="Nhập email" required>
+							</div>
+							<div class="col-md-4">
+								<label for="managerPassword" class="form-label">Mật khẩu</label>
+								<input type="password" class="form-control" id="managerPassword" name="password"
+									placeholder="Nhập mật khẩu" required>
+							</div>
+							<div class="col-md-4">
+								<label for="managerAddress" class="form-label">Địa chỉ</label>
+								<input type="text" class="form-control" id="managerAddress" name="address"
+									placeholder="Nhập địa chỉ" required>
+							</div>
+							<div class="col-md-4">
+								<label for="managerPhone" class="form-label">Số điện thoại</label>
+								<input type="tel" class="form-control" id="managerPhone" name="phone"
+									placeholder="Nhập số điện thoại" required>
+							</div>
+							<div class="col-md-4">
+								<label for="brand" class="form-label">Brand</label>
+								<select class="form-select" id="brand" name="brand" required>
+									<option value="">Chọn brand</option>
+									<th:block th:each="brand : ${brands}">
+										<option th:value="${brand.brandId}" th:text="${brand.brand}"></option>
+									</th:block>
+								</select>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-success">Thêm mới</button>
+						<button type="reset" class="btn btn-secondary">Reset</button>
+					</form>
+				</div>
+			</div>
+		</section>
+
+		<!-- Quản lý Brand -->
+		<!-- Quản lý Brand -->
+		<section id="brands" class="mb-5">
+			<h2 class="mb-4">Quản lý Brand</h2>
+			<div class="card">
+				<div class="card-body">
+					<!-- Form thêm brand -->
+					<form action="/admin/createBrand" method="post" class="mb-4">
+						<div class="row g-3 mb-3">
+							<div class="col-md-6">
+								<label for="brandName" class="form-label">Tên Brand</label>
+								<input type="text" class="form-control" id="brandName" name="brandName"
+									placeholder="Nhập tên Brand" required>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-primary">Thêm Brand</button>
+						<button type="reset" class="btn btn-secondary">Reset</button>
+					</form>
+
+					<!-- Xóa brand -->
+					<h3 class="mb-3">Xóa Brand</h3>
+					<form action="/admin/deleteBrand" method="post">
+						<div class="row g-3 align-items-end">
+							<div class="col-md-6">
+								<label for="selectBrand" class="form-label">Chọn Brand</label>
+								<select class="form-select" id="selectBrand" name="brandId" required>
+									<option value="" disabled selected>Chọn brand cần xóa</option>
+									<th:block th:each="brand : ${brandswithoutD}">
+										<option th:value="${brand.brandId}" th:text="${brand.brand}"></option>
+									</th:block>
+								</select>
+							</div>
+							<div class="col-md-3">
+								<button type="submit" class="btn btn-danger">Xóa Brand</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</section>
+
+
+
+		<!-- Báo cáo -->
+		<section id="reports" class="mb-5">
+			<h2 class="mb-4">Danh sách Manager</h2>
+			<div class="card">
+				<div class="card-body">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Tên Manager</th>
+								<th>Email</th>
+								<th>Vai trò</th>
+								<th>Brand</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="department, iterStat : ${departments}">
+								<td th:text="${iterStat.count}"></td>
+								<td
+									th:text="${department.manager != null ? department.manager.fullName : 'Chưa có Manager'}">
+								</td>
+								<td th:text="${department.manager != null ? department.manager.email : 'N/A'}"></td>
+								<td th:text="${department.manager != null ? department.manager.role : 'N/A'}"></td>
+								<td th:text="${department.brand.brand}"></td>
+								<td>
+									<form action="/admin/deleteManager" method="post" style="display: inline;">
+										<input type="hidden"
+											th:value="${department.manager != null ? department.manager.userId : ''}"
+											name="managerId">
+										<button type="submit" class="btn btn-danger btn-sm"
+											th:disabled="${department.manager == null}">Xóa</button>
+									</form>
+
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+
+					<!-- Pagination -->
+					<nav>
+						<ul class="pagination">
+							<li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+								<a class="page-link" th:href="@{'/admin/?page=' + i}" th:text="${i + 1}"></a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</section>
+
+	</div>
+	<!-- Modal thông báo -->
+	<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="messageModalLabel">Thông báo</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- Hiển thị thông báo từ backend -->
+					<p th:text="${msg}">Thông báo sẽ hiển thị ở đây.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Script để tự động bật modal -->
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			let message = "[[${msg}]]";
+			if (message.trim() !== '') {
+				let modal = new bootstrap.Modal(document.getElementById('messageModal'));
+				modal.show();
+			}
+		});
+	</script>
+
+</body>
+
+</html>

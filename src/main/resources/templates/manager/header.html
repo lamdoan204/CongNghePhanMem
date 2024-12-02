@@ -35,10 +35,10 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <!-- Logo hoặc tên trang -->
-            <a class="navbar-brand" href="/manager/">PHÒNG BAN QUẢN LÝ THƯƠNG HIỆU: <span th:text="${brand}"></span></a>
-
-
-
+            <a class="navbar-brand" href="/manager/">THƯƠNG HIỆU: [[${brand}]]
+                <div> Quản lý: [[${managerName}]] </div>
+            </a>
+            
             <!-- Menu toggle cho màn hình nhỏ -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,10 +56,13 @@
                         <a class="nav-link" href="/manager/employeeManagement">NHÂN VIÊN</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#revenue">DOANH THU</a>
+                        <a class="nav-link" href="/manager/revenue">DOANH THU</a>
+                    </li>
+					<li class="nav-item">
+                        <a class="nav-link" href="/manager/promotions">CHƯƠNG TRÌNH KHUYẾN MÃI</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#manage-employees">CHƯƠNG TRÌNH KHUYẾN MÃI</a>
+                        <a class="nav-link" href="/manager/blog">BÀI VIẾT</a>
                     </li>
                     <li class="nav-item">
                         <form action="/logout" method="POST" class="d-inline">
@@ -69,6 +72,7 @@
                             </button>
                         </form>
                     </li>
+
 
                 </ul>
             </div>

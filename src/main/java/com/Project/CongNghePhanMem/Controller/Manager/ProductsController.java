@@ -4,145 +4,199 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.Project.CongNghePhanMem.Entity.Product;
+import com.Project.CongNghePhanMem.Entity.User;
+import com.Project.CongNghePhanMem.Service.IUserService;
+import com.Project.CongNghePhanMem.Service.Impl.UserService;
 import com.Project.CongNghePhanMem.Service.IProductService;
+import com.Project.CongNghePhanMem.Service.Impl.ManagerService;
+import com.Project.CongNghePhanMem.Service.IManagerService;
+import com.Project.CongNghePhanMem.dto.ProductDTO;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/manager/manage-products")
 public class ProductsController {
+
     @Autowired
     private IProductService productService;
+    
+    @Autowired
+    IUserService userService = new UserService();
+    
+    @Autowired
+    IManagerService managerService = new ManagerService();
 
     // Hiển thị danh sách sản phẩm với phân trang
     @GetMapping
-    public String listProducts(@RequestParam(defaultValue = "0") int page, 
-                               @RequestParam(defaultValue = "5") int size, 
-                               @RequestParam(defaultValue = "") String keyword, 
+    public String listProducts(@RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "5") int size,
+                               @RequestParam(defaultValue = "") String keyword,
                                Model model) {
-        Page<Product> products = productService.searchProducts(keyword, PageRequest.of(page, size));
+    	
+    	 User manager = userService.getUserCurentLogged();
+         if (manager == null) {
+             throw new RuntimeException("Không tìm thấy người dùng");
+         }
+         
+      // Gọi Service để lấy tên thương hiệu
+         String brand = managerService.get_DepartmentName(manager);
+         int brandId = managerService.get_DepartmentBrandId(manager);
+        Page<ProductDTO> products = productService.searchProductsByBrand(brandId, keyword, page, size);
+        
+       
+        model.addAttribute("brand", brand);
         model.addAttribute("products", products);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("managerName", manager.getFullName());
         return "manager/productmanagement";
     }
- // Hiển thị chi tiết sản phẩm
+
+    // Hiển thị chi tiết sản phẩm
     @GetMapping("/detail/{productID}")
     public String viewProductDetail(@PathVariable int productID, Model model) {
         try {
-            // Lấy thông tin sản phẩm theo ID
-            Product product = productService.findProductById(productID);
-            
-            if (product == null) {
-                model.addAttribute("errorMessage", "Sản phẩm không tồn tại.");
-                return "error"; // Chuyển đến trang lỗi nếu không tìm thấy sản phẩm
+        	User manager = userService.getUserCurentLogged();
+            if (manager == null) {
+                throw new RuntimeException("Không tìm thấy người dùng");
             }
-
-            // Gửi thông tin sản phẩm đến giao diện
-            model.addAttribute("product", product);
-            return "manager/product-detail"; // Giao diện chi tiết sản phẩm
-        } catch (Exception e) {
-            e.printStackTrace(); // Ghi log lỗi
-            model.addAttribute("errorMessage", "Đã xảy ra lỗi khi xem chi tiết sản phẩm.");
-            return "error"; // Trang lỗi nếu có lỗi xảy ra
+            
+         // Gọi Service để lấy tên thương hiệu
+            String brand = managerService.get_DepartmentName(manager);
+            
+            
+            ProductDTO productDTO = productService.getProductDetailById(productID);
+            model.addAttribute("product", productDTO);
+            model.addAttribute("brand", brand);
+            model.addAttribute("managerName", manager.getFullName());
+            return "manager/product-detail";
+        } catch (RuntimeException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error";
         }
     }
 
     // Hiển thị form thêm sản phẩm
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("product", new Product());
+    	User manager = userService.getUserCurentLogged();
+        if (manager == null) {
+            throw new RuntimeException("Không tìm thấy người dùng");
+        }
+        
+     // Gọi Service để lấy tên thương hiệu
+        String brand = managerService.get_DepartmentName(manager);
+        
+        model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
+        model.addAttribute("product", productService.getNewProductDTOForManager());
         return "manager/product-add";
     }
 
     // Lưu sản phẩm
     @PostMapping("/save")
-    public String saveProduct(@ModelAttribute Product product, RedirectAttributes redirectAttributes) {
-        try {
-            productService.saveProduct(product);  // Lưu sản phẩm vào cơ sở dữ liệu
-            
-            // Thêm thông báo thành công vào RedirectAttributes
-            redirectAttributes.addFlashAttribute("message", "Sản phẩm đã được thêm thành công.");
-            
-            return "redirect:/manager/manage-products";  // Quay lại trang quản lý sản phẩm
-        } catch (Exception e) {
-            e.printStackTrace();  // In lỗi ra console
-            return "error";  // Gửi người dùng đến trang lỗi nếu có lỗi xảy ra
+    public String saveProduct(@Valid @ModelAttribute("product") ProductDTO productDTO,
+                              BindingResult result,
+                              @RequestParam("imageFile") MultipartFile imageFile,
+                              RedirectAttributes redirectAttributes) {
+    	User manager = userService.getUserCurentLogged();
+    	// Gọi Service để lấy tên thương hiệu
+        String brand = managerService.get_DepartmentName(manager);
+        int brandId = managerService.get_DepartmentBrandId(manager);
+        if (result.hasErrors()) {
+        	result.getAllErrors().forEach(error -> {
+                System.out.println(error.getDefaultMessage());  // In lỗi ra log
+            });
+            return "manager/product-add";
         }
+        try {
+        	productDTO.setBrandId(brandId);
+        	productDTO.setBrandName(brand);
+            productService.saveProductWithImage(productDTO, imageFile);
+            redirectAttributes.addFlashAttribute("message", "Sản phẩm đã được lưu thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi lưu sản phẩm: " + e.getMessage());
+        }
+        return "redirect:/manager/manage-products";
     }
 
     // Hiển thị form chỉnh sửa sản phẩm
     @GetMapping("/edit/{productID}")
     public String showEditForm(@PathVariable int productID, Model model) {
-        Product product = productService.findProductById(productID);  // Sử dụng productID thay vì id
-        model.addAttribute("product", product);
+    	
+    	User manager = userService.getUserCurentLogged();
+        if (manager == null) {
+            throw new RuntimeException("Không tìm thấy người dùng");
+        }
+        
+     // Gọi Service để lấy tên thương hiệu
+        String brand = managerService.get_DepartmentName(manager);
+        
+        model.addAttribute("brand", brand);
+        model.addAttribute("managerName", manager.getFullName());
+    	
+        model.addAttribute("product", productService.getProductDetailById(productID));
         return "manager/product-edit";
     }
- // Lưu sản phẩm sau khi chỉnh sửa
-    @PostMapping("/save/{productID}")
-    public String saveEditedProduct(@PathVariable int productID, @ModelAttribute Product product, RedirectAttributes redirectAttributes) {
-    	 try {
-    	        // Lấy sản phẩm theo ID để cập nhật
-    	        Product existingProduct = productService.findProductById(productID);
-    	        
-    	        if (existingProduct != null) {
-    	            // Cập nhật thông tin sản phẩm
-    	            existingProduct.setName(product.getName());
-    	            existingProduct.setImage(product.getImage());
-    	            existingProduct.setPrice(product.getPrice());
-    	            existingProduct.setKind(product.getKind());  // Cập nhật loại sản phẩm
-    	            existingProduct.setBrandId(product.getBrandId());  // Cập nhật thương hiệu
-    	            existingProduct.setDescription(product.getDescription());  // Cập nhật mô tả
 
-    	            // Lưu lại thông tin đã chỉnh sửa
-    	            productService.saveProduct(existingProduct);
-    	            
-    	            // Thêm thông báo thành công vào RedirectAttributes
-    	            redirectAttributes.addFlashAttribute("message", "Sản phẩm đã được chỉnh sửa thành công.");
-    	        }
-    	        
-    	        return "redirect:/manager/manage-products";  // Quay lại trang quản lý sản phẩm
-    	    } catch (Exception e) {
-    	        e.printStackTrace();  // In lỗi ra console
-    	        return "error";  // Gửi người dùng đến trang lỗi nếu có lỗi xảy ra
-    	    }
+    // Lưu sản phẩm sau khi chỉnh sửa
+    @PostMapping("/save/{productID}")
+    public String saveEditedProduct(@PathVariable int productID,
+                                    @Valid @ModelAttribute("product") ProductDTO productDTO,
+                                    BindingResult result,
+                                    @RequestParam("productImage") MultipartFile imageFile,
+                                    RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "manager/product-edit";
+        }
+        try {
+            productService.updateProduct(productID, productDTO, imageFile);
+            redirectAttributes.addFlashAttribute("message", "Sản phẩm đã được chỉnh sửa thành công.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi chỉnh sửa sản phẩm: " + e.getMessage());
+        }
+        return "redirect:/manager/manage-products";
     }
 
+ // Xóa sản phẩm
     @GetMapping("/delete/{productID}")
     public String deleteProduct(@PathVariable int productID, RedirectAttributes redirectAttributes) {
-        // Gọi service để xóa sản phẩm
-        productService.deleteProduct(productID);
-        
-        // Thêm thông báo thành công vào RedirectAttributes
-        redirectAttributes.addFlashAttribute("message", "Xóa sản phẩm thành công!");
-        
-        // Chuyển hướng lại trang quản lý sản phẩm
+        try {
+          
+            
+            // Nếu sản phẩm tồn tại, xóa chi tiết sản phẩm (product detail)
+            productService.deleteProductById(productID);
+            
+            // Thêm thông báo thành công
+            redirectAttributes.addFlashAttribute("message", "Xóa sản phẩm thành công!");
+        } catch (RuntimeException e) {
+            // Thêm thông báo lỗi nếu có
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi xóa sản phẩm: " + e.getMessage());
+        }
         return "redirect:/manager/manage-products";
     }
 
 
- // Phương thức xóa các sản phẩm đã chọn
+    // Xóa các sản phẩm đã chọn
     @PostMapping("/delete-selected")
     public String deleteSelected(@RequestParam List<Integer> selectedItems, RedirectAttributes redirectAttributes) {
         if (selectedItems != null && !selectedItems.isEmpty()) {
             try {
-                System.out.println("Đang xóa các sản phẩm với IDs: " + selectedItems);  // Log ID để kiểm tra
-                productService.deleteProductsByIds(selectedItems);  // Gọi service để xóa sản phẩm
-                
-                // Thêm thông báo thành công vào RedirectAttributes
+                productService.deleteProducts(selectedItems);
                 redirectAttributes.addFlashAttribute("message", "Đã xóa thành công " + selectedItems.size() + " sản phẩm.");
-                return "redirect:/manager/manage-products";  // Quay lại trang quản lý sản phẩm
             } catch (Exception e) {
-                e.printStackTrace();  // In lỗi ra console
-                return "error";  // Gửi người dùng đến trang lỗi nếu có lỗi xảy ra
+                redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi xóa các sản phẩm: " + e.getMessage());
             }
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng chọn ít nhất một sản phẩm để xóa.");
         }
-        // Nếu không có sản phẩm chọn, quay lại trang
-        return "redirect:/manager/manage-products";  
+        return "redirect:/manager/manage-products";
     }
-
 }

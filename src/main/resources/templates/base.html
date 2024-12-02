@@ -40,6 +40,94 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
       <![endif]-->
+	<style>
+		.footer {
+			background-color: #f7f7f7;
+			padding-top: 40px;
+			padding-bottom: 20px;
+			position: relative;
+		}
+
+		.footer .footer-title {
+			font-size: 18px;
+			font-weight: bold;
+			color: #d31e2c;
+			margin-bottom: 20px;
+		}
+
+		.footer a {
+			color: #333;
+			text-decoration: none;
+		}
+
+		.footer a:hover {
+			color: #d31e2c;
+		}
+
+		.footer .social-icons {
+			margin-top: 10px;
+		}
+
+		.footer .social-icon {
+			margin-right: 10px;
+			display: inline-block;
+		}
+
+		.footer .social-icon img {
+			width: 25px;
+			height: 25px;
+		}
+
+		.footer .footer-bottom {
+			background-color: #e8e8e8;
+			padding: 20px 0;
+		}
+
+		.footer-bottom p {
+			margin-bottom: 0;
+		}
+
+		.footer-hotline {
+			font-size: 16px;
+			color: #d31e2c;
+			font-weight: bold;
+		}
+
+		.footer-hotline:hover {
+			text-decoration: underline;
+		}
+
+		/* Responsive Design */
+		@media (max-width: 768px) {
+			.footer .row {
+				text-align: center;
+			}
+
+			.footer .footer-bottom {
+				text-align: center;
+			}
+		}
+		html, body {
+		    height: 100%;
+		    margin: 0;
+		    display: flex;
+		    flex-direction: column;
+		}
+
+		main {
+		    flex: 1; /* Nội dung chiếm không gian còn lại */
+		}
+
+		footer {
+		    background-color: #f7f7f7;
+		    padding-top: 40px;
+		    padding-bottom: 20px;
+		    position: relative;
+		    bottom: 0;
+		    width: 100%;
+		}
+	</style>
+	
 </head>
 
 <body id="default_theme" class="it_service">
@@ -48,7 +136,7 @@
 	<!-- end loader -->
 	<!-- header -->
 	<header id="default_header" class="header_style_1">
-		
+
 		<!-- header top -->
 		<div class="header_top">
 			<div class="container">
@@ -58,11 +146,11 @@
 							<div class="topbar-left">
 								<ul class="list-inline">
 									<li> <span class="topbar-label"><i class="fa  fa-home"></i></span> <span
-											class="topbar-hightlight">540 Lorem Ipsum New York, AB 90218</span>
+											class="topbar-hightlight">Số 1 Võ Văn Ngân, Thành Phố Thủ Đức</span>
 									</li>
 									<li> <span class="topbar-label"><i class="fa fa-envelope-o"></i></span> <span
 											class="topbar-hightlight"><a
-												href="mailto:info@yourdomain.com">info@yourdomain.com</a></span>
+												href="mailto:info@yourdomain.com">utegears.cnpnm.group3@hcmute.com</a></span>
 									</li>
 								</ul>
 							</div>
@@ -72,22 +160,13 @@
 						<div class="float-left">
 							<div class="social_icon">
 								<ul class="list-inline">
-									<li><a class="fa fa-facebook" href="https://www.facebook.com/" title="Facebook"
-											target="_blank"></a></li>
-									<li><a class="fa fa-google-plus" href="https://plus.google.com/" title="Google+"
-											target="_blank"></a></li>
-									<li><a class="fa fa-twitter" href="https://twitter.com" title="Twitter"
-											target="_blank"></a></li>
-									<li><a class="fa fa-linkedin" href="https://www.linkedin.com" title="LinkedIn"
-											target="_blank"></a></li>
-									<li><a class="fa fa-instagram" href="https://www.instagram.com" title="Instagram"
-											target="_blank"></a></li>
+									<li><a class="fa fa-facebook" href="https://www.facebook.com/thanhanskt"
+											title="Facebook" target="_blank"></a></li>
+									<li><a class="fa fa-instagram"
+											href="https://www.instagram.com/_qlam.4_?fbclid=IwY2xjawG1_4FleHRuA2FlbQIxMAABHTqOfz3_WQdeJKHZ_kO-_RRBCKnwXp6FGBloXuZL2MQu7JBpKqGR-imctw_aem_wYmda8fLz_YnU1qtVOu1XA"
+											title="Instagram" target="_blank"></a></li>
 								</ul>
 							</div>
-						</div>
-						<div class="float-right">
-							<div class="make_appo"> <a class="btn white_btn" href="make_appointment.html">Make
-									Appointment</a> </div>
 						</div>
 					</div>
 				</div>
@@ -100,7 +179,7 @@
 				<div class="row">
 					<div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
 						<!-- logo start -->
-						<div class="logo"> <a href="it_home.html"><img src="images/logos/it_logo.png" alt="logo" /></a>
+						<div class="logo"> <a href="it_home.html"><img src="images/logos/logo.png" alt="logo" /></a>
 						</div>
 						<!-- logo end -->
 					</div>
@@ -110,54 +189,28 @@
 							<div id="navbar_menu">
 								<ul class="first-ul">
 									<li> <a class="active" href="/">Home</a>
-										<ul>
-											<li><a href="user/">It Home Page</a></li>
-											<li><a href="it_home_dark">It Dark Home Page</a></li>
-										</ul>
+										
 									</li>
 									<li><a href="it_about.html">About Us</a></li>
-									<li> <a href="it_service.html">Service</a>
-										<ul>
-											<li><a href="it_service_list.html">Services list</a></li>
-											<li><a href="it_service_detail.html">Services Detail</a></li>
-										</ul>
-									</li>
 									<li> <a href="it_blog.html">Blog</a>
-										<ul>
-											<li><a href="it_blog.html">Blog List</a></li>
-											<li><a href="it_blog_grid.html">Blog Grid</a></li>
-											<li><a href="it_blog_detail.html">Blog Detail</a></li>
-										</ul>
-									</li>
-									<li> <a href="#">Pages</a>
-										<ul>
-											<li><a href="it_career.html">Career</a></li>
-											<li><a href="it_price.html">Pricing</a></li>
-											<li><a href="it_faq.html">Faq</a></li>
-											<li><a href="it_privacy_policy.html">Privacy Policy</a></li>
-											<li><a href="it_error.html">Error 404</a></li>
-										</ul>
+
 									</li>
 									<li> <a href="it_shop.html">Shop</a>
 										<ul>
-											<li><a href="it_shop.html">Shop List</a></li>
-											<li><a href="it_shop_detail.html">Shop Detail</a></li>
 											<li><a href="it_cart.html">Shopping Cart</a></li>
-											<li><a href="it_checkout.html">Checkout</a></li>
 										</ul>
 									</li>
 									<li> <a href="it_contact.html">Contact</a>
 										<ul>
-											<li><a href="it_contact.html">Contact Page 1</a></li>
-											<li><a href="it_contact_2.html">Contact Page 2</a></li>
 										</ul>
 									</li>
 									<!-- Menu động dựa trên trạng thái người dùng -->
-									<th:block th:if="${user == null}">
+									<th:block
+										th:if="${user == null} or ${user.role == 'MANAGER'} or ${user.role == 'EMPLOYEE'} or ${user.role == 'ADMIN'}">
 										<li><a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
 										<li><a href="/register"><i class="fas fa-user-plus"></i> Register</a></li>
 									</th:block>
-									<th:block th:if="${user != null}">
+									<th:block th:if="${user != null} and ${user.role == 'USER'}">
 										<li class="nav-item dropdown">
 											<a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
 												id="userDropdown" role="button" data-bs-toggle="dropdown"
@@ -167,7 +220,7 @@
 												[[${user.fullName}]]
 											</a>
 											<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-												<li><a class="dropdown-item" href="/profile"><i class="fas fa-user"></i>
+												<li><a class="dropdown-item" href="/user/profilePage"><i class="fas fa-user"></i>
 														Profile</a></li>
 												<li><a class="dropdown-item" href="user/changePass"><i
 															class="fas fa-lock"></i> Change Password</a></li>
@@ -198,6 +251,15 @@
 	</header>
 	<!-- Nội dung động -->
 	<div th:replace="${content}"></div>
+	
+	<footer class="footer_style_2">
+		<div th:replace="user/layout/footer"></div>
+	</footer>
+
+	<!-- Thêm Bootstrap JS và jQuery -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<!-- Bootstrap Scripts -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -232,99 +294,99 @@
 		function initMap() {
 			var map = new google.maps.Map(document.getElementById('map'), {
 				zoom: 11,
-				center: {lat: 40.645037, lng: -73.880224},
+				center: { lat: 40.645037, lng: -73.880224 },
 				styles: [
 					{
 						elementType: 'geometry',
-						stylers: [{color: '#fefefe'}]
+						stylers: [{ color: '#fefefe' }]
 					},
 					{
 						elementType: 'labels.icon',
-						stylers: [{visibility: 'off'}]
+						stylers: [{ visibility: 'off' }]
 					},
 					{
 						elementType: 'labels.text.fill',
-						stylers: [{color: '#616161'}]
+						stylers: [{ color: '#616161' }]
 					},
 					{
 						elementType: 'labels.text.stroke',
-						stylers: [{color: '#f5f5f5'}]
+						stylers: [{ color: '#f5f5f5' }]
 					},
 					{
 						featureType: 'administrative.land_parcel',
 						elementType: 'labels.text.fill',
-						stylers: [{color: '#bdbdbd'}]
+						stylers: [{ color: '#bdbdbd' }]
 					},
 					{
 						featureType: 'poi',
 						elementType: 'geometry',
-						stylers: [{color: '#eeeeee'}]
+						stylers: [{ color: '#eeeeee' }]
 					},
 					{
 						featureType: 'poi',
 						elementType: 'labels.text.fill',
-						stylers: [{color: '#757575'}]
+						stylers: [{ color: '#757575' }]
 					},
 					{
 						featureType: 'poi.park',
 						elementType: 'geometry',
-						stylers: [{color: '#e5e5e5'}]
+						stylers: [{ color: '#e5e5e5' }]
 					},
 					{
 						featureType: 'poi.park',
 						elementType: 'labels.text.fill',
-						stylers: [{color: '#9e9e9e'}]
+						stylers: [{ color: '#9e9e9e' }]
 					},
 					{
 						featureType: 'road',
 						elementType: 'geometry',
-						stylers: [{color: '#eee'}]
+						stylers: [{ color: '#eee' }]
 					},
 					{
 						featureType: 'road.arterial',
 						elementType: 'labels.text.fill',
-						stylers: [{color: '#3d3523'}]
+						stylers: [{ color: '#3d3523' }]
 					},
 					{
 						featureType: 'road.highway',
 						elementType: 'geometry',
-						stylers: [{color: '#eee'}]
+						stylers: [{ color: '#eee' }]
 					},
 					{
 						featureType: 'road.highway',
 						elementType: 'labels.text.fill',
-						stylers: [{color: '#616161'}]
+						stylers: [{ color: '#616161' }]
 					},
 					{
 						featureType: 'road.local',
 						elementType: 'labels.text.fill',
-						stylers: [{color: '#9e9e9e'}]
+						stylers: [{ color: '#9e9e9e' }]
 					},
 					{
 						featureType: 'transit.line',
 						elementType: 'geometry',
-						stylers: [{color: '#e5e5e5'}]
+						stylers: [{ color: '#e5e5e5' }]
 					},
 					{
 						featureType: 'transit.station',
 						elementType: 'geometry',
-						stylers: [{color: '#000'}]
+						stylers: [{ color: '#000' }]
 					},
 					{
 						featureType: 'water',
 						elementType: 'geometry',
-						stylers: [{color: '#c8d7d4'}]
+						stylers: [{ color: '#c8d7d4' }]
 					},
 					{
 						featureType: 'water',
 						elementType: 'labels.text.fill',
-						stylers: [{color: '#b1a481'}]
+						stylers: [{ color: '#b1a481' }]
 					}
 				]
 			});
 			var image = 'images/it_service/location_icon_map_cont.png';
 			var beachMarker = new google.maps.Marker({
-				position: {lat: 40.645037, lng: -73.880224},
+				position: { lat: 40.645037, lng: -73.880224 },
 				map: map,
 				icon: image
 			});
@@ -333,6 +395,7 @@
 	<!-- google map js -->
 	<script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script>
+
 </body>
 
 </html>
