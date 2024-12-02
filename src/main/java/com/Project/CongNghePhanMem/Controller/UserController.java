@@ -152,6 +152,8 @@ public class UserController {
         System.out.println("notifica: " + notifications );
         
         return "user/home";
+
+        
     }
 
 
