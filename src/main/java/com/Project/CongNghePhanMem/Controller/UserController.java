@@ -3,8 +3,6 @@ package com.Project.CongNghePhanMem.Controller;
 import java.security.Principal;
 import java.util.List;
 
-import com.Project.CongNghePhanMem.Entity.Review;
-import com.Project.CongNghePhanMem.Repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,12 +11,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Project.CongNghePhanMem.Entity.Notification;
 import com.Project.CongNghePhanMem.Entity.Product;
+import com.Project.CongNghePhanMem.Entity.Review;
 import com.Project.CongNghePhanMem.Entity.User;
+import com.Project.CongNghePhanMem.Repository.ReviewRepository;
 import com.Project.CongNghePhanMem.Repository.UserRepository;
 import com.Project.CongNghePhanMem.Service.INotificationService;
 import com.Project.CongNghePhanMem.Service.IProductService;
@@ -39,7 +43,7 @@ public class UserController {
     private BCryptPasswordEncoder passEncoder;
 
     @Autowired
-    private  INotificationService notificationService;
+    private INotificationService notificationService;
 
     @Autowired
     private ReviewRepository reviewRepository;
@@ -106,10 +110,10 @@ public class UserController {
 
     @PostMapping("/review")
     public String addReview(@RequestParam("content") String content,
-                            @RequestParam("rating") double rating,
-                            @RequestParam("productId") int productId,
-                            Principal principal,
-                            Model model) {
+            @RequestParam("rating") double rating,
+            @RequestParam("productId") int productId,
+            Principal principal,
+            Model model) {
         if (principal != null) {
             String email = principal.getName();
             User user = userRepo.findByEmail(email);
@@ -131,7 +135,6 @@ public class UserController {
         return "redirect:/it_shop_detail?id=" + productId;
     }
 
-
     @GetMapping("/")
     public String home(
             Model model,
@@ -144,12 +147,16 @@ public class UserController {
             return "redirect:/login";
         }
 
-        List<Product> products = this.productService.fetchProducts();
-        model.addAttribute("products", products);
 
-        // Lấy danh sách thông báo của người dùng theo userId
-        List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
-        model.addAttribute("notifications", notifications);
+
+		
+		List<Product> products = this.productService.fetchProducts();
+    	model.addAttribute("products", products);
+    	
+
+
+
+
 
         // Lấy sản phẩm có phân trang
         Page<Product> productPage = productService.findAllProducts(PageRequest.of(page, size));
@@ -164,17 +171,20 @@ public class UserController {
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("totalItems", productPage.getTotalElements());
 
-        return "user/home";
-
         
-    }
+     // Lấy danh sách thông báo của người dùng theo userId
+        List<Notification> notifications = notificationService.getNotificationsByUserId(currentUser.getUserId());
+        model.addAttribute("notifications", notifications);
+        
+        System.out.println("notifica: " + notifications );
+        
+
 
     @PostMapping("/updatePassword")
     public String updatePassword(HttpSession session, Principal p,
-            @RequestParam("oldPass") String oldPass,
-            @RequestParam("newPass") String newPass, RedirectAttributes redirectAttributes) {
+                                 @RequestParam("oldPass") String oldPass,
+                                 @RequestParam("newPass") String newPass, RedirectAttributes redirectAttributes) {
 
-        User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             return "redirect:/login";
         }
