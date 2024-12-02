@@ -51,6 +51,12 @@ public class ProductService implements IProductService {
 		this.userRepository = userRepository;
 		this.userService = userService;
 	}
+	
+	// Phương thức tính số sản phẩm theo brand_id
+	@Override
+    public long getProductCountByBrand(int brandId) {
+        return productRepository.countByBrandId(brandId);
+    }
 
 	 
 	

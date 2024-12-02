@@ -14,6 +14,7 @@ import com.Project.CongNghePhanMem.dto.ProductDTO;
 import jakarta.servlet.http.HttpSession;
 
 public interface IProductService {
+	long getProductCountByBrand(int brandId);
 	void handleAddProductToCart(String email, int id);
 	List<Product> fetchProducts();
 	Page<Product> findAllProducts(Pageable pageable);

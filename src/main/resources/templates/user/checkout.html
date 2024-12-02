@@ -267,18 +267,43 @@
 							<!-- Products list -->
 							<div class="order-products mb-4">
 								<div class="product-item d-flex justify-content-between mb-3"
-									th:each="item : ${cartDetails}">
+									th:each="item : ${cartDetails}" th:data-product-id="${item.product.productID}">
+									<!-- Thêm data attribute này -->
 									<div class="d-flex align-items-center">
 										<img th:src="@{'/images/products/' + ${item.product.image}}" class="rounded"
 											width="50" height="50">
 										<div class="ms-3">
 											<h6 class="mb-0" th:text="${item.product.name}"></h6>
 											<small class="text-muted" th:text="'x' + ${item.quantity}"></small>
+											<div class="discount-info" style="display: none;">
+												<small class="text-danger">Giảm giá: <span
+														class="discount-value">0đ</span></small>
+											</div>
 										</div>
 									</div>
-									<span class="text-end"
-										th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT') + 'đ'}">
-									</span>
+									<div class="text-end">
+										<span class="original-price"
+											th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT') + 'đ'}"></span>
+										<div class="final-price" style="display: none;">
+											<span class="text-success"></span>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="card-body border-bottom">
+								<form id="coupon-form" class="d-flex gap-2">
+									<input type="text" id="coupon-input" class="form-control"
+										placeholder="Nhập mã giảm giá">
+									<button type="submit" class="btn btn-outline-primary" style="width: auto;">Áp
+										dụng</button>
+								</form>
+								<!-- Discount message will appear here -->
+								<div id="discount-message" class="mt-2" style="display: none;">
+									<small class="text-success">
+										<i class="fas fa-check-circle"></i>
+										<span id="discount-text"></span>
+									</small>
 								</div>
 							</div>
 
@@ -289,6 +314,12 @@
 									<span
 										th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + 'đ'}"></span>
 								</div>
+								<!-- Add this new discount row -->
+								<div class="d-flex justify-content-between mb-2" id="discount-row"
+									style="display: none !important;">
+									<span>Giảm giá</span>
+									<span class="text-danger" id="discount-amount">-0đ</span>
+								</div>
 								<div class="d-flex justify-content-between mb-2">
 									<span>Phí vận chuyển</span>
 									<span>0đ</span>
@@ -296,13 +327,10 @@
 								<hr>
 								<div class="d-flex justify-content-between mb-4">
 									<strong>Tổng cộng</strong>
-									<strong class="text-primary"
+									<strong class="text-primary" id="final-total"
 										th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + 'đ'}">
 									</strong>
 								</div>
-								<!--<button class="btn btn-primary w-100">
-									Đặt hàng
-								</button>-->
 							</div>
 						</div>
 					</div>
@@ -427,6 +455,10 @@
 			border-color: #f5c6cb;
 			color: #721c24;
 		}
+
+		.text-warning {
+			color: #ffc107 !important;
+		}
 	</style>
 
 	<script>
@@ -503,6 +535,127 @@
 				// Nếu validate thành công thì submit form
 				this.submit();
 			});
+		});
+
+
+		document.addEventListener('DOMContentLoaded', function () {
+			const couponForm = document.getElementById('coupon-form');
+			const discountMessage = document.getElementById('discount-message');
+			const discountText = document.getElementById('discount-text');
+			const discountRow = document.getElementById('discount-row');
+			const discountAmount = document.getElementById('discount-amount');
+			const finalTotal = document.getElementById('final-total');
+			let originalTotal = parseFloat(finalTotal.textContent.replace(/[^\d]/g, ''));
+
+			couponForm.addEventListener('submit', function (e) {
+				e.preventDefault();
+				const couponCode = document.getElementById('coupon-input').value;
+
+				fetch('/api/promotions/validate?coupon=' + couponCode)
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Network response was not ok');
+						}
+						return response.json();
+					})
+					.then(data => {
+						if (data.valid) {
+							let hasApplicableProducts = false;
+							let totalDiscount = 0;
+							let newTotalPrice = 0;
+
+							// Duyệt qua từng sản phẩm trong giỏ hàng
+							document.querySelectorAll('.product-item').forEach(item => {
+								const productId = parseInt(item.dataset.productId);
+								const priceElement = item.querySelector('.original-price');
+								const originalPrice = parseFloat(priceElement.textContent.replace(/[^\d]/g, ''));
+								const discountInfo = item.querySelector('.discount-info');
+								const finalPriceElement = item.querySelector('.final-price');
+
+								// Kiểm tra nếu sản phẩm được áp dụng giảm giá
+								if (data.applicableProducts.includes(productId)) {
+									hasApplicableProducts = true;
+									const discountValue = originalPrice * data.discountRate;
+									const finalPrice = originalPrice - discountValue;
+
+									// Hiển thị thông tin giảm giá
+									discountInfo.style.display = 'block';
+									discountInfo.querySelector('.discount-value').textContent = '-' + formatCurrency(discountValue);
+
+									// Hiển thị giá sau giảm
+									finalPriceElement.style.display = 'block';
+									finalPriceElement.querySelector('span').textContent = formatCurrency(finalPrice);
+
+									totalDiscount += discountValue;
+									newTotalPrice += finalPrice;
+								} else {
+									// Ẩn thông tin giảm giá cho sản phẩm không áp dụng
+									discountInfo.style.display = 'none';
+									finalPriceElement.style.display = 'none';
+									newTotalPrice += originalPrice;
+								}
+							});
+
+							if (!hasApplicableProducts) {
+								// Không có sản phẩm nào áp dụng được
+								discountMessage.style.display = 'block';
+								discountMessage.querySelector('small').className = 'text-warning';
+								discountText.textContent = 'Không có sản phẩm nào trong giỏ hàng áp dụng được mã giảm giá này';
+								resetDiscount();
+								return;
+							}
+
+							// Hiển thị thông tin giảm giá nếu có sản phẩm áp dụng được
+							discountMessage.style.display = 'block';
+							discountMessage.querySelector('small').className = 'text-success';
+							discountText.textContent = `Áp dụng mã giảm giá ${data.discountRate * 100}%`;
+
+							// Cập nhật tổng giảm giá và tổng tiền
+							discountRow.style.display = 'flex';
+							discountAmount.textContent = '-' + formatCurrency(totalDiscount);
+							finalTotal.textContent = formatCurrency(newTotalPrice);
+
+							// Lưu promotion ID
+							let promoInput = document.querySelector('input[name="promotionId"]');
+							if (!promoInput) {
+								promoInput = document.createElement('input');
+								promoInput.type = 'hidden';
+								promoInput.name = 'promotionId';
+								document.getElementById('checkout-form').appendChild(promoInput);
+							}
+							promoInput.value = data.promotionId;
+
+						} else {
+							discountMessage.style.display = 'block';
+							discountMessage.querySelector('small').className = 'text-danger';
+							discountText.textContent = 'Mã giảm giá không hợp lệ hoặc đã hết hạn';
+							resetDiscount();
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+						discountMessage.style.display = 'block';
+						discountMessage.querySelector('small').className = 'text-danger';
+						discountText.textContent = 'Có lỗi xảy ra khi áp dụng mã giảm giá';
+						resetDiscount();
+					});
+			});
+
+			function resetDiscount() {
+				discountRow.style.display = 'none';
+				discountAmount.textContent = '-0đ';
+				finalTotal.textContent = formatCurrency(originalTotal);
+				const promoInput = document.querySelector('input[name="promotionId"]');
+				if (promoInput) promoInput.remove();
+			}
+
+			function formatCurrency(amount) {
+				return new Intl.NumberFormat('vi-VN', {
+					style: 'currency',
+					currency: 'VND',
+					maximumFractionDigits: 0
+				}).format(amount);
+			}
 		});
 	</script>
 
