@@ -11,7 +11,6 @@ import com.Project.CongNghePhanMem.Entity.User;
 public interface OrderRepository extends JpaRepository<Order, Integer>{
 	List<Order> findByUserOrderByOrderDateDesc(User user);
 
-
 	// Tìm đơn hàng theo orderID
 	Order findByOrderID(int orderID);
 
