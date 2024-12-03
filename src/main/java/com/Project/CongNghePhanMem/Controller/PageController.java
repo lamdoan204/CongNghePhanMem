@@ -53,31 +53,30 @@ public class PageController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
-	@Autowired 
-	private UserDetailsService detailsService; 
+
+	@Autowired
+	private UserDetailsService detailsService;
 
 	@Autowired
 	private IProductService productService;
-	
+
 	@ModelAttribute
 	private void userDetails(Model m, Principal p) {
-		if(p!= null) {
+		if (p != null) {
 			String email = p.getName();
 			User user = userRepo.findByEmail(email);
-			
-			m.addAttribute("user", user);	
+
+			m.addAttribute("user", user);
 		}
 	}
-	
-    @GetMapping("/")
-    public String Home(Model model) {
-    	List<Product> products = this.productService.fetchProducts();
-    	model.addAttribute("products", products);
-    	
-        return "index" ;
-    }
-    
+
+	@GetMapping("/")
+	public String Home(Model model) {
+		List<Product> products = this.productService.fetchProducts();
+		model.addAttribute("products", products);
+
+		return "index";
+	}
 
 	@GetMapping("/it_home_dark")
 	public String Home_dark() {
@@ -115,23 +114,26 @@ public class PageController {
 
 	@PostMapping("/login")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody UserRequest authRequest) throws Exception {
-	    try {
-	        authenticationManager.authenticate(
-	                new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
-	    } catch (BadCredentialsException e) {
-	        throw new Exception("Incorrect username or password", e);
-	    }
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+		} catch (BadCredentialsException e) {
+			throw new Exception("Incorrect username or password", e);
+		}
 
-	    UserDetails userDetails = detailsService.loadUserByUsername(authRequest.getEmail());
+		UserDetails userDetails = detailsService.loadUserByUsername(authRequest.getEmail());
 
-	    final String jwt = jwtService.generateToken(userDetails.getUsername());
+		final String jwt = jwtService.generateToken(userDetails.getUsername());
 
-	    return ResponseEntity.ok(new AuthResponse(jwt));
+		return ResponseEntity.ok(new AuthResponse(jwt));
 	}
+
 	@PostMapping("/createUser")
 	public String createUser(@ModelAttribute User user, RedirectAttributes redirectAttributes,
 			@RequestParam("password") String password, @RequestParam("password1") String password1,
 			HttpServletRequest request) {
+
+		System.out.println("User :"+user);
 		String url = request.getRequestURL().toString();
 		url = url.replace(request.getServletPath(), "");
 
@@ -273,29 +275,24 @@ public class PageController {
 		}
 	}
 
-    
-    @GetMapping("/search")
-    public String searchProducts(@RequestParam("query") String query, Model model) {
-    	
-    	
-        // Gửi yêu cầu tìm kiếm đến Service
-        List<Product> SearchProducts = productService.productSearch(query);
+	@GetMapping("/search")
+	public String searchProducts(@RequestParam("query") String query, Model model) {
 
-        if (SearchProducts.isEmpty()) {
-            // Thêm thông báo lỗi vào model
-            model.addAttribute("errorMessage", "Không tìm thấy sản phẩm nào với từ khóa: " + query);
-        } else {
-            // Nếu tìm thấy sản phẩm, thêm danh sách sản phẩm vào model
-            model.addAttribute("SearchProducts", SearchProducts);
-        }
+		// Gửi yêu cầu tìm kiếm đến Service
+		List<Product> SearchProducts = productService.productSearch(query);
 
-        // Luôn thêm query vào model để hiển thị lại từ khóa trong ô input
-        model.addAttribute("query", query);
+		if (SearchProducts.isEmpty()) {
+			// Thêm thông báo lỗi vào model
+			model.addAttribute("errorMessage", "Không tìm thấy sản phẩm nào với từ khóa: " + query);
+		} else {
+			// Nếu tìm thấy sản phẩm, thêm danh sách sản phẩm vào model
+			model.addAttribute("SearchProducts", SearchProducts);
+		}
 
-        return "it_shop"; // Trả về view it_shop.html
-    }
+		// Luôn thêm query vào model để hiển thị lại từ khóa trong ô input
+		model.addAttribute("query", query);
 
-
-    
+		return "it_shop"; // Trả về view it_shop.html
+	}
 
 }

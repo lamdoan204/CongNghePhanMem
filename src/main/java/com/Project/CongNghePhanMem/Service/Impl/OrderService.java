@@ -26,7 +26,6 @@ public class OrderService implements IOrderService {
 
 	@Autowired
 	private NotificationRepository notificationRepository;
-
 	@Override
 	public Order createOrder(User user, Cart cart, boolean isPaidByCard, float finalPrice, Promotion promotion) {
 		Order order = new Order();

@@ -48,15 +48,16 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/com.google.firebase/firebase-admin -->
+
+		<!--
+		https://mvnrepository.com/artifact/com.google.firebase/firebase-admin -->
 		<dependency>
-    		<groupId>com.google.firebase</groupId>
-    		<artifactId>firebase-admin</artifactId>
-    		<version>9.4.1</version>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>9.4.1</version>
 		</dependency>
 
-		
+
 		<!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
@@ -197,6 +198,11 @@
 			<groupId>com.nimbusds</groupId>
 			<artifactId>nimbus-jose-jwt</artifactId>
 			<version>9.31</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>9.2.0</version>
 		</dependency>
 
 
