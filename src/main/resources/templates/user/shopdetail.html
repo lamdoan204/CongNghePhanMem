@@ -50,12 +50,22 @@
 					<div class="detail-contant">
 						<p th:text="'Loại sản phẩm: ' + ${product.kind}">Loại sản phẩm</p>
 						<p th:text="'Mô tả sản phẩm: ' + ${product.description}">Mô tả sản phẩm</p>
-						<form class="cart" method="post" action="#">
-							<div class="quantity">
-								<input type="number" step="1" min="1" max="5" name="quantity" value="1"
-									class="input-text qty text">
+						<!-- Thay thế form giỏ hàng hiện tại-->
+						<form th:action="@{/user/add-product-to-cart/{id}(id=${product.productID})}" method="post"
+							class="cart">
+							<div class="d-flex align-items-center gap-3 mb-3">
+								<!--<div class="quantity d-flex align-items-center">
+									<input type="number" step="1" min="1" max="5" name="quantity" value="1"
+										class="form-control" style="width: 80px;">
+								</div>-->
+								<button type="submit" class="btn btn-primary"
+									th:disabled="${!@productDetailService.isInStock(product)}">
+									<i class="fas fa-shopping-cart me-2"></i>
+									<span th:text="${@productDetailService.isInStock(product)} ? 
+                          'Thêm vào giỏ hàng' : 'Hết hàng'">
+									</span>
+								</button>
 							</div>
-							<button type="submit" class="btn btn-primary">Thêm vào giỏ hàng</button>
 						</form>
 					</div>
 
@@ -129,6 +139,29 @@
 
 		</div>
 	</div>
+
+	<style>
+		.quantity input {
+			padding: 0.375rem 0.75rem;
+			border: 1px solid #ced4da;
+			border-radius: 0.25rem;
+		}
+
+		.btn-primary {
+			transition: all 0.3s ease;
+		}
+
+		.btn-primary:hover:not(:disabled) {
+			transform: translateY(-2px);
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+		}
+
+		.btn-primary:disabled {
+			cursor: not-allowed;
+			opacity: 0.6;
+		}
+	</style>
+
 	<script th:src="@{/js/jquery.min.js}"></script>
 	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
