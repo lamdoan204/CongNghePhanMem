@@ -135,6 +135,7 @@ public class PageController {
 			@RequestParam("password") String password, @RequestParam("password1") String password1,
 			HttpServletRequest request) {
 
+		System.out.println("User :"+user);
 		String url = request.getRequestURL().toString();
 		url = url.replace(request.getServletPath(), "");
 
