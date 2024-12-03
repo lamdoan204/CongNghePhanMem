@@ -242,7 +242,7 @@ public class ManagerController {
 	// Danh sách bài viết
 	@GetMapping("/blog")
 	public String showBlogList(Model model) {
-		
+
 		List<Article> articles = articleService.getAllArticles();
 		User manager = userService.getUserCurentLogged();
 		if (manager == null) {
@@ -273,45 +273,41 @@ public class ManagerController {
 
 	@PostMapping("/blog/create")
 	public String createBlog(@ModelAttribute("blog") Article article,
-	        @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-	    // Lấy tên file gốc và phần mở rộng
-	    String originalFilename = imageFile.getOriginalFilename();
-	    String fileExtension = originalFilename.substring(originalFilename.lastIndexOf('.'));
-	    
-	    // Tạo tên file mới để tránh trùng lặp
-	    String fileName = System.currentTimeMillis() + "_" + originalFilename; 
+			@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+		// Lấy tên file gốc và phần mở rộng
+		String originalFilename = imageFile.getOriginalFilename();
+		String fileExtension = originalFilename.substring(originalFilename.lastIndexOf('.'));
 
-	    // Đường dẫn đến thư mục lưu ảnh
-	    String uploadDir = "src/main/resources/static/images/";
+		// Tạo tên file mới để tránh trùng lặp
+		String fileName = System.currentTimeMillis() + "_" + originalFilename;
 
-	    // Kiểm tra và tạo thư mục nếu không tồn tại
-	    File uploadFolder = new File(uploadDir);
-	    if (!uploadFolder.exists()) {
-	        uploadFolder.mkdirs();
-	    }
+		// Đường dẫn đến thư mục lưu ảnh
+		String uploadDir = "src/main/resources/static/images/";
 
-	    // Đường dẫn tệp ảnh sẽ lưu vào
-	    Path filePath = Paths.get(uploadDir, fileName);
-	    Files.write(filePath, imageFile.getBytes());
+		// Kiểm tra và tạo thư mục nếu không tồn tại
+		File uploadFolder = new File(uploadDir);
+		if (!uploadFolder.exists()) {
+			uploadFolder.mkdirs();
+		}
 
-	    // Gán đường dẫn ảnh để lưu vào cơ sở dữ liệu (lưu trữ trên server)
-	    article.setImage("/images/" + fileName); // Đảm bảo là đường dẫn từ thư mục static
+		// Đường dẫn tệp ảnh sẽ lưu vào
+		Path filePath = Paths.get(uploadDir, fileName);
+		Files.write(filePath, imageFile.getBytes());
 
-	    // Gán tác giả (người dùng hiện tại)
-	    User currentUser = userService.getUserCurentLogged();
-	    article.setAuthor(currentUser);
+		// Gán đường dẫn ảnh để lưu vào cơ sở dữ liệu (lưu trữ trên server)
+		article.setImage("/images/" + fileName); // Đảm bảo là đường dẫn từ thư mục static
 
-	    // Gán các giá trị mặc định
-	    article.setLike(0);
-	    article.setShare(0);
+		// Gán tác giả (người dùng hiện tại)
+		User currentUser = userService.getUserCurentLogged();
+		article.setAuthor(currentUser);
 
-	    // Lưu bài viết vào cơ sở dữ liệu
-	    articleService.saveArticle(article);
+		article.setLike(0);
+		article.setShare(0);
 
-	    // Chuyển hướng về trang danh sách bài viết
-	    return "redirect:/manager/blog";
+		articleService.saveArticle(article);
+
+		return "redirect:/manager/blog";
 	}
-
 
 	@PostMapping("/blog/edit")
 	public String editBlog(@ModelAttribute("blog") Article article,

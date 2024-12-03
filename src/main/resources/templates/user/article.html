@@ -23,7 +23,7 @@
 				<div class="card">
 					<div class="card-body">
 						<h6 class="card-title">Các bài viết liên quan</h6>
-						<p class="card-text" th:text="'Bạn có ' + ${notifications} + ' thông báo chưa đọc.'"></p>
+						<p class="card-text" th:text="'Bạn có 12 thông báo chưa đọc.'"></p>
 					</div>
 				</div>
 			</div>
@@ -34,7 +34,8 @@
 				<div class="card mb-3" th:each="article : ${articles}">
 
 					<div class="card-body">
-						<img th:src="@{${article.image}}" alt="Article Image" class="img-fluid" style="max-width: 70%; height: auto;">
+						<img th:src="@{${article.image}}" alt="Article Image" class="img-fluid"
+							style="max-width: 70%; height: auto;">
 
 						<h5 class="card-title" th:text="${article.title}"
 							th:attr="onclick='redirectToArticle(' + ${article.articleId} + ')'"
@@ -61,15 +62,18 @@
 				<div class="card mb-3">
 					<img th:src="@{/images/showinhinhanh1.png}" class="card-img-top" alt="Quảng cáo">
 					<div class="card-body">
-						<h6 class="card-title">Quảng cáo</h6>
+						<h6 class="card-title" style="cursor: pointer;" onclick="redirectToProduct()">Quảng cáo</h6>
+
 						<p class="card-text">Khám phá sản phẩm mới tại cửa hàng của chúng tôi!</p>
+
 					</div>
 				</div>
 				<!-- Card: Thống kê -->
 				<div class="card">
 					<div class="card-body">
 						<h6 class="card-title">Thống kê</h6>
-						<img th:src="@{/images/slide-fs-2024_35f9b22d96e94f6bb82836e62fff88a3_large.png}" class="img-fluid mb-3" alt="Thống kê hình ảnh">
+						<img th:src="@{/images/slide-fs-2024_35f9b22d96e94f6bb82836e62fff88a3_large.png}"
+							class="img-fluid mb-3" alt="Thống kê hình ảnh">
 						<p class="card-text">Có 20 người đã xem trang của bạn hôm nay.</p>
 					</div>
 				</div>

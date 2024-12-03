@@ -269,6 +269,7 @@
 					<li><a class="dropdown-item" href="#">Xin chào, User</a></li>
 					<li><a class="dropdown-item" href="/user/profilePage">Thông tin cá nhân</a></li>
 					<li><a class="dropdown-item" th:href="@{/user/orders}">Quản lý đơn hàng</a></li>
+					<li><a class="dropdown-item" th:href="@{/user/changePass}">Đổi mật khẩu</a></li>
 					<li><a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a></li>
 				</ul>
 
@@ -330,6 +331,13 @@
 			window.location.href = "/user/article/" + articleId;
 		}
 	</script>
+	
+	<script>
+			function redirectToProduct() {
+				// Chuyển hướng đến trang chi tiết bài viết
+				window.location.href = "/user/";
+			}
+		</script>
 
 	<!-- Common JS -->
 	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
