@@ -42,7 +42,7 @@ public class OrderService implements IOrderService{
         order.setOrderDate(new Date(System.currentTimeMillis()));
         order.setStatus(Order.PENDING);
         order.setPaidByCard(isPaidByCard);
-        order.setTotalPrice(finalPrice); // Sử dụng giá đã giảm
+        order.setTotalPrice(finalPrice); 
         order.setAppliedPromotion(promotion);
 
         // Tạo order details

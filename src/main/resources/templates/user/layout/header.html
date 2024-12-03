@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
+
 	<title>Shop PC Components</title>
 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
@@ -127,6 +127,47 @@
 				display: none;
 			}
 		}
+
+		/* Nút Like */
+		.btn-like {
+			background-color: white;
+			color: #ccc;
+			border: 1px solid transparent;
+			border-radius: 50%;
+			font-size: 20px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 36px;
+			height: 36px;
+			transition: all 0.3s ease;
+		}
+
+		.btn-like:hover {
+			color: #ff6666;
+			border-color: #ff6666;
+			transform: scale(1.1);
+		}
+
+		.btn-like.liked {
+			color: red;
+			border-color: red;
+			transform: scale(1.2);
+		}
+
+		/* Số lượt thích */
+		.likes-count {
+			margin-left: 5px;
+			font-size: 14px;
+			font-weight: bold;
+			color: #333;
+		}
+
+		/* Điều chỉnh khoảng cách giữa các phần tử */
+		.d-flex.align-items-center {
+			gap: 5px;
+			/* Khoảng cách giữa icon tim và số lượt thích */
+		}
 	</style>
 </head>
 
@@ -240,6 +281,55 @@
 	<div th:replace="${body}">
 		<!-- Content will be replaced here -->
 	</div>
+	<script>
+		document.querySelectorAll('.btn-like').forEach(button => {
+			button.addEventListener('click', () => {
+				button.classList.toggle('liked');
+			});
+		});
+	</script>
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			const likeButtons = document.querySelectorAll(".btn-like");
+
+			likeButtons.forEach(button => {
+				button.addEventListener("click", () => {
+					const articleId = button.getAttribute("data-id");
+
+					fetch(`/user/article/like?articleId=${articleId}`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						}
+					})
+						.then(response => {
+							if (response.ok) {
+								return response.text();
+							}
+							throw new Error("Có lỗi xảy ra khi cập nhật lượt tim!");
+						})
+						.then(data => {
+							const likesCount = button.nextElementSibling;
+							likesCount.textContent = parseInt(likesCount.textContent) + 1;
+							alert(data);
+						})
+						.catch(error => {
+							console.error(error);
+							alert("Không thể thực hiện hành động này.");
+						});
+				});
+			});
+		});
+
+
+	</script>
+
+	<script>
+		function redirectToArticle(articleId) {
+			// Chuyển hướng đến trang chi tiết bài viết
+			window.location.href = "/user/article/" + articleId;
+		}
+	</script>
 
 	<!-- Common JS -->
 	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
