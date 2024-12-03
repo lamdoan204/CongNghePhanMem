@@ -362,7 +362,6 @@ public class ManagerController {
 		// Gọi Service để lấy tên thương hiệu
 		String brand = managerService.get_DepartmentName(manager);
 
-		// Ví dụ: Lấy brandId của manager từ session hoặc authentication
 		int managerBrandId = managerService.get_DepartmentBrandId(manager); // Thay bằng cách lấy thực tế
 
 		List<RevenueStatistic> monthlyRevenue = statisticService.getRevenueByMonthAndProduct(managerBrandId);

@@ -167,7 +167,7 @@ public class ProductController {
 
 		// Lấy giỏ hàng hiện tại
 		Cart cart = cartService.getCurrentCart(session);
-		if (cart != null) {
+	
 			List<CartDetail> cartDetails = cart.getCartDetails();
 			float totalPrice = cartService.calculateTotalPrice(cart);
 
@@ -181,12 +181,8 @@ public class ProductController {
 			}
 
 			model.addAttribute("cartDetails", cartDetails);
-			model.addAttribute("totalPrice", String.format("%.2f", totalPrice));
-		} else {
-			model.addAttribute("cartDetails", new ArrayList<CartDetail>());
-			model.addAttribute("totalPrice", "0.00");
-		}
-
+			model.addAttribute("totalPrice",  totalPrice);
+		
 		return "user/shoppingCart";
 	}
 
