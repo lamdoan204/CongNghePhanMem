@@ -74,6 +74,7 @@ public class UserService implements IUserService {
 
 	@Override
 	public boolean checkEmail(String email) {
+		
 		return userRepo.existsByEmail(email);
 	}
 

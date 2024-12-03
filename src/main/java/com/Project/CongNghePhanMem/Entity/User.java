@@ -12,10 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
 
 @Entity
-@Data
 @Table(name = "Users")
 public class User implements Serializable{
 
@@ -34,7 +32,7 @@ public class User implements Serializable{
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "department_id") // Tên cột khóa ngoại
+    @JoinColumn(name = "department_id")
     private Department department;
     
     @OneToMany(mappedBy = "manager") 
