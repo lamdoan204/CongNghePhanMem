@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+src/main/java/com/Project/CongNghePhanMem/Controller/employee/ChatController.java
+src/main/java/com/Project/CongNghePhanMem/Controller/employee/MessagingController.java
+src/main/java/com/Project/CongNghePhanMem/Controller/employee/ChatController.java
+src/main/java/com/Project/CongNghePhanMem/Controller/employee/MessagingController.java
+src/main/java/com/Project/CongNghePhanMem/Service/Impl/MessagingService.java

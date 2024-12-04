@@ -12,7 +12,13 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderID;
-
+    
+//    @Column(name = "locked", nullable = false)
+//    private Boolean locked = false;
+//    
+//    @Column(name = "locked_by")
+//    private Integer lockedBy;
+    
     @Temporal(TemporalType.DATE)
     private Date orderDate;
     
@@ -69,6 +75,22 @@ public class Order {
         this.orderID = orderID;
     }
 
+//    public boolean isLocked() {
+//        return locked;
+//    }
+//
+//    public void setLocked(Boolean locked) {
+//        this.locked = (locked != null) ? locked : false;  // Nếu locked là null, gán false
+//    }
+//
+//    public Integer getLockedBy() {
+//        return lockedBy;
+//    }
+//
+//    public void setLockedBy(Integer lockedBy) {
+//        this.lockedBy = lockedBy;
+//    }
+    
     public Date getOrderDate() {
         return orderDate;
     }
@@ -106,6 +128,14 @@ public class Order {
 	
 	
 
+	@Override
+	public String toString() {
+		return "Order [orderID=" + orderID + ", orderDate="
+				+ orderDate + ", status=" + status + ", totalPrice=" + totalPrice + ", orderDetails=" + orderDetails
+				+ ", user=" + user + "]";
+	}
+
+	
 
 	public boolean isPaidByCard() {
 		return isPaidByCard;
