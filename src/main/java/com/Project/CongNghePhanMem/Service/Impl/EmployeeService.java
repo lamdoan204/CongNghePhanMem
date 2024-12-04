@@ -13,13 +13,13 @@ public class EmployeeService {
     @Autowired
     private CartRepository customerRepository;
 
-    public Customer getBestCustomer() {
+    //public Customer getBestCustomer() {
         // Truy vấn khách hàng mua hàng nhiều nhất, ví dụ theo số lượng đơn hàng
-        return customerRepository.findTopByOrderByTotalPurchasesDesc();
-    }
+     //   return customerRepository.findTopByOrderByTotalPurchasesDesc();
+    //}
 
-    public Order getHighestBill() {
+   // public Order getHighestBill() {
         // Truy vấn hóa đơn có giá trị cao nhất
-        return orderRepository.findTopByOrderByTotalPriceDesc();
-    }
+       // return orderRepository.findTopByOrderByTotalPriceDesc();
+    //}
 }

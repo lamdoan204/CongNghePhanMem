@@ -40,7 +40,7 @@ public class OrderUserController {
 	@GetMapping("/pending")
 	public String pendingOrders(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("currentUser");
-		List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.PENDING);
+		List<Order> orders = orderService.getOrdersByStatus(Order.PENDING);
 		model.addAttribute("orders", orders);
 		model.addAttribute("currentPage", "pending");
 
@@ -53,7 +53,7 @@ public class OrderUserController {
 			String email = principal.getName();
 			User user = userRepository.findByEmail(email);
 			model.addAttribute("user", user);
-			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.CONFIRMED);
+			List<Order> orders = orderService.getOrdersByUser(user);
 			model.addAttribute("orders", orders);
 			model.addAttribute("currentPage", "confirmed");
 		}
@@ -66,7 +66,7 @@ public class OrderUserController {
 			String email = principal.getName();
 			User user = userRepository.findByEmail(email);
 			model.addAttribute("user", user);
-			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.IN_DELIVERY);
+			List<Order> orders = orderService.getOrdersByUser(user);
 			model.addAttribute("orders", orders);
 			model.addAttribute("currentPage", "shipping");
 		}
@@ -79,7 +79,7 @@ public class OrderUserController {
 			String email = principal.getName();
 			User user = userRepository.findByEmail(email);
 			model.addAttribute("user", user);
-			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.DELIVERED);
+			List<Order> orders = orderService.getOrdersByUser(user);
 			model.addAttribute("orders", orders);
 			model.addAttribute("currentPage", "delivered");
 		}
@@ -92,7 +92,7 @@ public class OrderUserController {
 			String email = principal.getName();
 			User user = userRepository.findByEmail(email);
 			model.addAttribute("user", user);
-			List<Order> orders = orderService.getOrdersByUserAndStatus(user, Order.CANCELLED);
+			List<Order> orders = orderService.getOrdersByUser(user);
 			model.addAttribute("orders", orders);
 			model.addAttribute("currentPage", "cancelled");
 		}
