@@ -161,6 +161,11 @@ public class AdminController {
 	}
 	
 	
+	
+	@GetMapping("/report")
+	public String showReport() {
+		return "manager/revenueManagement";
+	}
 
 
 }

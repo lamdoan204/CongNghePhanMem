@@ -74,8 +74,8 @@ public class StatisticService implements IStatisticService {
             String productName = (String) row[1];
             String productKind = (String) row[2];
          // Kiểm tra kiểu của row[3] và ép kiểu Long thành Integer
-            Long quantityInStock = (Long) row[3];  // Giả sử row[3] là Long
-            int totalQuantityInStock = quantityInStock.intValue();  // Chuyển Long thành int
+            int quantityInStock = (int) row[3];  // Giả sử row[3] là Long
+            int totalQuantityInStock = quantityInStock;  // Chuyển Long thành int
             
             StockReport stockReport = new StockReport(stockDate, productName, productKind, totalQuantityInStock);
             stockReports.add(stockReport);
